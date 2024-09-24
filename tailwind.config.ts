@@ -24,6 +24,17 @@ module.exports = {
         red: "#ea1b25",
         green: "#2a8c16"
       },
+      fontFamily: {
+        mtthin: ["Montserrat-Thin", "sans-serif"],
+        mtextralight: ["Montserrat-ExtraLight", "sans-serif"],
+        mtlight: ["Montserrat-Light", "sans-serif"],
+        mtregular: ["Montserrat-Regular", "sans-serif"],
+        mtmedium: ["Montserrat-Medium", "sans-serif"],
+        mtsemibold: ["Montserrat-SemiBold", "sans-serif"],
+        mtbold: ["Montserrat-Bold", "sans-serif"],
+        mtextrabold: ["Montserrat-ExtraBold", "sans-serif"],
+        mtblack: ["Montserrat-Black", "sans-serif"],
+      },
     },
   },
   plugins: [],
