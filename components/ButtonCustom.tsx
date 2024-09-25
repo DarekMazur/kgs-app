@@ -9,7 +9,7 @@ interface IButtonProps {
   isLoading?: boolean;
 }
 
-const Button: FC<IButtonProps> = ({
+const ButtonCustom: FC<IButtonProps> = ({
   title,
   handlePress,
   containerStyles,
@@ -32,4 +32,4 @@ const Button: FC<IButtonProps> = ({
   );
 };
 
-export default Button;
+export default ButtonCustom;

@@ -1,8 +1,8 @@
-import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { images } from '../constants';
-import Button from '@/components/Button';
+import ButtonCustom from '@/components/ButtonCustom';
 
 const Index = () => {
   return (
@@ -30,7 +30,7 @@ const Index = () => {
             Zdobywaj najwyższe szczyty w najstarszych polskich górach!
           </Text>
 
-          <Button
+          <ButtonCustom
             title='Zaloguj się'
             handlePress={() => router.push('./sign-in')}
             containerStyles='w-full mt-7'
