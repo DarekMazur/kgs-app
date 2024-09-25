@@ -4,6 +4,9 @@
         "es2021": true
     },
     "extends": [
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
@@ -27,6 +30,9 @@
         "react/function-component-definition": "off",
         "arrow-body-style": "off",
         "@typescript-eslint/no-require-imports": "off",
-        "global-require": "off"
+        "global-require": "off",
+        "import/prefer-default-export": "off",
+        "import/no-unresolved":  "off",
+        "import/extensions": "off"
     }
 }
