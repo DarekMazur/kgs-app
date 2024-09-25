@@ -2,6 +2,7 @@ import { Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { images } from '../constants';
+import Button from '@/components/Button';
 
 const Index = () => {
   return (
@@ -29,14 +30,12 @@ const Index = () => {
             Zdobywaj najwyższe szczyty w najstarszych polskich górach!
           </Text>
 
-          <TouchableOpacity
-            onPress={() => router.push('./sign-in')}
-            className='w-full bg-green rounded-2xl m-8 p-5'
-          >
-            <Text className='text-2xl font-mtbold text-gray-100 text-center'>
-              Zaloguj się
-            </Text>
-          </TouchableOpacity>
+          <Button
+            title='Zaloguj się'
+            handlePress={() => router.push('./sign-in')}
+            containerStyles='w-full mt-7'
+            textStyles='text-2xl'
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
