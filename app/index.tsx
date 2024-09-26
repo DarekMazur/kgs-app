@@ -32,7 +32,7 @@ const Index = () => {
 
           <ButtonCustom
             title='Zaloguj się'
-            handlePress={() => router.push('./sign-in')}
+            handlePress={() => router.push('/sign-in')}
             containerStyles='w-full mt-7'
             textStyles='text-2xl'
           />

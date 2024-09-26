@@ -1,38 +1,55 @@
-import { Text, ScrollView, View, Image, TextInput } from 'react-native';
+import { Text, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
+import { useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
+import InputCustom from '@/components/InputCustom';
+
+interface IUserProps {
+  email: string | null;
+  password: string | null;
+}
+
+const initUser: IUserProps = {
+  email: null,
+  password: null,
+};
 
 const signIn = () => {
+  const [user, setUser] = useState<IUserProps>(initUser);
+
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
       <ScrollView>
-        <View className='w-full flex justify-center h-full px-4 my-6'>
-          <Image
-            source={images.logoW}
-            resizeMode='contain'
-            className='w-[115px] h-[115px]'
-          />
+        <View className='w-full flex justify-center h-full px-4'>
+          <View className='items-center justify-center'>
+            <Image
+              source={images.logoW}
+              resizeMode='contain'
+              className='w-[115px] h-[115px]'
+            />
+          </View>
 
           <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
             Zdobywaj szczyty Korony Gór Świętokrzyskich
           </Text>
 
-          <TextInput
-            className='flex-1 text-white font-mtsemibold text-base'
-            placeholder='Email'
-            placeholderTextColor='#CDCDE0'
-            onChangeText={() => {}}
-          />
+          <View className='my-2'>
+            <InputCustom
+              placeholder='Email'
+              title='Email'
+              value={user.email ?? ''}
+              handleOnChange={(e: string) => setUser({ ...user, email: e })}
+            />
 
-          <TextInput
-            className='flex-1 text-white font-mtsemibold text-base'
-            placeholder='Hasło'
-            placeholderTextColor='#CDCDE0'
-            secureTextEntry
-            onChangeText={() => {}}
-          />
+            <InputCustom
+              placeholder='Hasło'
+              value=''
+              title='Hasło'
+              handleOnChange={(e: string) => setUser({ ...user, password: e })}
+            />
+          </View>
 
           <ButtonCustom
             title='Zaloguj się'
