@@ -5,19 +5,20 @@ import { useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
+import { IUserProps } from '@/app/(auth)/sign-in';
 
-export interface IUserProps {
-  email: string | null;
-  password: string | null;
+interface IRegisterProps extends IUserProps {
+  username: string | null;
 }
 
-const initUser: IUserProps = {
+const initNewUser: IRegisterProps = {
+  username: null,
   email: null,
   password: null,
 };
 
-const signIn = () => {
-  const [user, setUser] = useState<IUserProps>(initUser);
+const signUp = () => {
+  const [user, setUser] = useState<IRegisterProps>(initNewUser);
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
@@ -32,10 +33,18 @@ const signIn = () => {
           </View>
 
           <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
-            Zdobywaj szczyty Korony Gór Świętokrzyskich
+            Zarejestruj się i zacznij zdobywać szczyty Korony Gór
+            Świętokrzyskich już dziś!
           </Text>
 
           <View className='my-2'>
+            <InputCustom
+              placeholder='Nazwa użytkownika'
+              title='Nazwa użytkownika'
+              value={user.username ?? ''}
+              handleOnChange={(e: string) => setUser({ ...user, username: e })}
+            />
+
             <InputCustom
               placeholder='Email'
               title='Email'
@@ -52,7 +61,7 @@ const signIn = () => {
           </View>
 
           <ButtonCustom
-            title='Zaloguj się'
+            title='Utwórz konto'
             handlePress={() => {}}
             containerStyles='mt-7'
             isLoading={false}
@@ -60,13 +69,13 @@ const signIn = () => {
 
           <View className='flex justify-center pt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pregular'>
-              Nie masz konta?
+              Masz już konto?
             </Text>
             <Link
-              href='./sign-up'
+              href='./sign-in'
               className='text-lg font-psemibold text-secondary'
             >
-              Zarejestruj się
+              Zaloguj się
             </Link>
           </View>
         </View>
@@ -75,4 +84,4 @@ const signIn = () => {
   );
 };
 
-export default signIn;
+export default signUp;
