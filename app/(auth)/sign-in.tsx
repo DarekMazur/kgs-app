@@ -1,10 +1,10 @@
 import { Text, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link } from 'expo-router';
-import { useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 export interface IUserProps {
   email: string | null;
@@ -17,7 +17,7 @@ const initUser: IUserProps = {
 };
 
 const signIn = () => {
-  const [user, setUser] = useState<IUserProps>(initUser);
+  const { user, setGlobalUser } = useGlobalContext();
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
@@ -40,14 +40,18 @@ const signIn = () => {
               placeholder='Email'
               title='Email'
               value={user.email ?? ''}
-              handleOnChange={(e: string) => setUser({ ...user, email: e })}
+              handleOnChange={(e: string) =>
+                setGlobalUser({ ...user, email: e })
+              }
             />
 
             <InputCustom
               placeholder='Hasło'
               value=''
               title='Hasło'
-              handleOnChange={(e: string) => setUser({ ...user, password: e })}
+              handleOnChange={(e: string) =>
+                setGlobalUser({ ...user, password: e })
+              }
             />
           </View>
 

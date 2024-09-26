@@ -6,19 +6,20 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { IUserProps } from '@/app/(auth)/sign-in';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
-interface IRegisterProps extends IUserProps {
+export interface IRegisterProps extends IUserProps {
   username: string | null;
 }
 
-const initNewUser: IRegisterProps = {
+export const initNewUser: IRegisterProps = {
   username: null,
   email: null,
   password: null,
 };
 
 const signUp = () => {
-  const [user, setUser] = useState<IRegisterProps>(initNewUser);
+  const { user, setGlobalUser } = useGlobalContext();
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
@@ -42,21 +43,27 @@ const signUp = () => {
               placeholder='Nazwa użytkownika'
               title='Nazwa użytkownika'
               value={user.username ?? ''}
-              handleOnChange={(e: string) => setUser({ ...user, username: e })}
+              handleOnChange={(e: string) =>
+                setGlobalUser({ ...user, username: e })
+              }
             />
 
             <InputCustom
               placeholder='Email'
               title='Email'
               value={user.email ?? ''}
-              handleOnChange={(e: string) => setUser({ ...user, email: e })}
+              handleOnChange={(e: string) =>
+                setGlobalUser({ ...user, email: e })
+              }
             />
 
             <InputCustom
               placeholder='Hasło'
               value=''
               title='Hasło'
-              handleOnChange={(e: string) => setUser({ ...user, password: e })}
+              handleOnChange={(e: string) =>
+                setGlobalUser({ ...user, password: e })
+              }
             />
           </View>
 
