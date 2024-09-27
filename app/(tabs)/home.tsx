@@ -5,6 +5,7 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import posts from '@/lib/mockData/posts';
+import PostCard from '@/components/PostCard';
 
 export const home = () => {
   const { user } = useGlobalContext();
@@ -15,14 +16,12 @@ export const home = () => {
         data={posts.filter((post) => post.author.id === user.id)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View>
-            <Text>{item.peak.name}</Text>
-            <Image
-              source={{ uri: item.photo }}
-              className='w-[300px] h-[500px]'
-              resizeMode='cover'
-            />
-          </View>
+          <PostCard
+            author={item.author.username}
+            date={item.createdAt}
+            title={item.peak.name}
+            photoUrl={item.photo}
+          />
         )}
         ListHeaderComponent={() => (
           <View className='flex my-6 px-4 space-y-6'>

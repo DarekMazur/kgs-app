@@ -14,7 +14,7 @@ export interface IUserRequireProps extends IRegisterProps {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  joinAt: number | null;
+  joinAt: Date | null;
   description?: string;
 }
 

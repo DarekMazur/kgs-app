@@ -20,7 +20,7 @@ const signIn = () => {
   const [error, setError] = useState<string | null>(null);
 
   if (isLogged) {
-    router.navigate('/home');
+    router.push('/home');
   }
 
   const handleSubmit = async () => {
@@ -30,7 +30,7 @@ const signIn = () => {
         if (loggedUser) {
           setGlobalUser(loggedUser);
           setIsLoggedIn();
-          router.navigate('/home');
+          router.push('/home');
         }
       } catch (err) {
         setError((err as Error).message);
