@@ -10,20 +10,27 @@ export const initNewUser: IRegisterProps = {
 const initialContext = {
   user: initNewUser,
   setGlobalUser: (newUser: IRegisterProps) => {},
+  isLogged: false,
+  setIsLoggedIn: () => {},
 };
 
 const GlobalContext = createContext(initialContext);
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider: FC<{ children: ReactElement }> = ({ children }) => {
-  const [user, setUser] = useState(initNewUser);
+  const [user, setUser] = useState<IRegisterProps>(initNewUser);
+  const [isLogged, setIsLogged] = useState<boolean>(false);
 
   const setGlobalUser = (newUser: IRegisterProps) => {
     setUser({ ...newUser });
   };
 
+  const setIsLoggedIn = () => setIsLogged((prevState) => !prevState);
+
   return (
-    <GlobalContext.Provider value={{ user, setGlobalUser }}>
+    <GlobalContext.Provider
+      value={{ user, isLogged, setIsLoggedIn, setGlobalUser }}
+    >
       {children}
     </GlobalContext.Provider>
   );

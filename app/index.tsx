@@ -6,8 +6,8 @@ import ButtonCustom from '@/components/ButtonCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
 const Index = () => {
-  const { user } = useGlobalContext();
-  if (user.username) {
+  const { isLogged } = useGlobalContext();
+  if (isLogged) {
     router.replace('/home');
   }
 

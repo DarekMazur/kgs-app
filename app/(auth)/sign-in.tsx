@@ -15,9 +15,13 @@ const initUser: IUserProps = {
 };
 
 const signIn = () => {
-  const { setGlobalUser } = useGlobalContext();
+  const { setGlobalUser, isLogged, setIsLoggedIn } = useGlobalContext();
   const [user, setUser] = useState<IUserProps>(initUser);
   const [error, setError] = useState<string | null>(null);
+
+  if (isLogged) {
+    router.replace('/home');
+  }
 
   const handleSubmit = async () => {
     if (user.email && user.password) {
@@ -25,6 +29,7 @@ const signIn = () => {
         const loggedUser = getUser(user.email, user.password);
         if (loggedUser) {
           setGlobalUser(loggedUser);
+          setIsLoggedIn();
           router.navigate('/home');
         }
       } catch (err) {

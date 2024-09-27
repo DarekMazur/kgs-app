@@ -10,15 +10,20 @@ import { setUser } from '@/lib/connection';
 import { IRegisterProps } from '@/lib/types';
 
 const signUp = () => {
-  const { setGlobalUser } = useGlobalContext();
+  const { setGlobalUser, isLogged, setIsLoggedIn } = useGlobalContext();
   const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
   const [error, setError] = useState<string | null>(null);
+
+  if (isLogged) {
+    router.replace('/home');
+  }
 
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {
       try {
         const user = setUser(newUser.username, newUser.email, newUser.password);
         setGlobalUser(user);
+        setIsLoggedIn();
         router.navigate('/home');
       } catch (err) {
         setError((err as Error).message);
