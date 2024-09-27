@@ -5,18 +5,13 @@ import { useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
-import { useGlobalContext } from '@/context/GlobalProvider';
-import { getUser } from '@/lib/connection';
-import { IUserProps } from '@/lib/types';
+import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
+import { setUser } from '@/lib/connection';
+import { IRegisterProps } from '@/lib/types';
 
-const initUser: IUserProps = {
-  email: null,
-  password: null,
-};
-
-const signIn = () => {
+const signUp = () => {
   const { setGlobalUser, isLogged, setIsLoggedIn } = useGlobalContext();
-  const [user, setUser] = useState<IUserProps>(initUser);
+  const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
   const [error, setError] = useState<string | null>(null);
 
   if (isLogged) {
@@ -24,14 +19,12 @@ const signIn = () => {
   }
 
   const handleSubmit = async () => {
-    if (user.email && user.password) {
+    if (newUser.username && newUser.email && newUser.password) {
       try {
-        const loggedUser = getUser(user.email, user.password);
-        if (loggedUser) {
-          setGlobalUser(loggedUser);
-          setIsLoggedIn();
-          router.navigate('/home');
-        }
+        const user = setUser(newUser.username, newUser.email, newUser.password);
+        setGlobalUser(user);
+        setIsLoggedIn();
+        router.navigate('/home');
       } catch (err) {
         setError((err as Error).message);
       }
@@ -51,24 +44,38 @@ const signIn = () => {
           </View>
 
           <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
-            Zdobywaj szczyty Korony Gór Świętokrzyskich
+            Zarejestruj się i zacznij zdobywać szczyty Korony Gór
+            Świętokrzyskich już dziś!
           </Text>
 
           <View className='my-2 pb-4 relative'>
             <InputCustom
+              placeholder='Nazwa użytkownika'
+              title='Nazwa użytkownika'
+              value={newUser.username ?? ''}
+              handleOnChange={(e: string) =>
+                setNewUser({ ...newUser, username: e })
+              }
+            />
+
+            <InputCustom
               placeholder='Email'
               title='Email'
-              value={user.email ?? ''}
-              handleOnChange={(e: string) => setUser({ ...user, email: e })}
-              mode='email'
+              value={newUser.email ?? ''}
+              handleOnChange={(e: string) =>
+                setNewUser({ ...newUser, email: e })
+              }
             />
 
             <InputCustom
               placeholder='Hasło'
-              value={user.password ?? ''}
+              value={newUser.password ?? ''}
               title='Hasło'
-              handleOnChange={(e: string) => setUser({ ...user, password: e })}
+              handleOnChange={(e: string) =>
+                setNewUser({ ...newUser, password: e })
+              }
               isPassword
+              mode='email'
             />
 
             {error ? (
@@ -79,22 +86,24 @@ const signIn = () => {
           </View>
 
           <ButtonCustom
-            title='Zaloguj się'
+            title='Utwórz konto'
             handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
-            isDisabled={!user.email || !user.password}
+            isDisabled={
+              !newUser.username || !newUser.email || !newUser.password
+            }
           />
 
-          <View className='flex justify-center mt-5 flex-row gap-2'>
+          <View className='flex justify-center pt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pregular'>
-              Nie masz konta?
+              Masz już konto?
             </Text>
             <Link
-              href='./sign-up'
+              href='./sign-in'
               className='text-lg font-psemibold text-secondary'
             >
-              Zarejestruj się
+              Zaloguj się
             </Link>
           </View>
         </View>
@@ -103,4 +112,4 @@ const signIn = () => {
   );
 };
 
-export default signIn;
+export default signUp;

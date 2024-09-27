@@ -3,8 +3,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { images } from '../constants';
 import ButtonCustom from '@/components/ButtonCustom';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const Index = () => {
+  const { isLogged } = useGlobalContext();
+  if (isLogged) {
+    router.replace('/home');
+  }
+
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
       <ScrollView
@@ -32,7 +38,7 @@ const Index = () => {
 
           <ButtonCustom
             title='Zaloguj się'
-            handlePress={() => router.push('./sign-in')}
+            handlePress={() => router.push('/sign-in')}
             containerStyles='w-full mt-7'
             textStyles='text-2xl'
           />
