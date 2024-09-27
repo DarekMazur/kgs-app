@@ -19,7 +19,7 @@ const signUp = () => {
       try {
         const user = setUser(newUser.username, newUser.email, newUser.password);
         setGlobalUser(user);
-        router.replace('/home');
+        router.navigate('/home');
       } catch (err) {
         setError((err as Error).message);
       }
@@ -69,6 +69,8 @@ const signUp = () => {
               handleOnChange={(e: string) =>
                 setNewUser({ ...newUser, password: e })
               }
+              isPassword
+              mode='email'
             />
 
             {error ? (

@@ -25,7 +25,7 @@ const signIn = () => {
         const loggedUser = getUser(user.email, user.password);
         if (loggedUser) {
           setGlobalUser(loggedUser);
-          router.replace('/home');
+          router.navigate('/home');
         }
       } catch (err) {
         setError((err as Error).message);
@@ -55,6 +55,7 @@ const signIn = () => {
               title='Email'
               value={user.email ?? ''}
               handleOnChange={(e: string) => setUser({ ...user, email: e })}
+              mode='email'
             />
 
             <InputCustom
@@ -62,6 +63,7 @@ const signIn = () => {
               value={user.password ?? ''}
               title='Hasło'
               handleOnChange={(e: string) => setUser({ ...user, password: e })}
+              isPassword
             />
 
             {error ? (

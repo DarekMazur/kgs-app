@@ -5,6 +5,15 @@ interface IInputProps {
   placeholder: string;
   value: string;
   title: string;
+  mode?:
+    | 'decimal'
+    | 'email'
+    | 'none'
+    | 'numeric'
+    | 'search'
+    | 'tel'
+    | 'text'
+    | 'url';
   handleOnChange: (e: string) => void;
   isPassword?: boolean;
 }
@@ -15,6 +24,7 @@ const InputCustom: FC<IInputProps> = ({
   title,
   handleOnChange,
   isPassword,
+  mode,
 }) => {
   return (
     <View className='my-3'>
@@ -27,6 +37,8 @@ const InputCustom: FC<IInputProps> = ({
           placeholderTextColor='#CDCDE0'
           onChangeText={handleOnChange}
           secureTextEntry={isPassword}
+          inputMode={mode}
+          keyboardType={mode === 'email' ? 'email-address' : 'default'}
         />
       </View>
     </View>
