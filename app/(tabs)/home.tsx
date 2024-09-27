@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
+import posts from '@/lib/mockData/posts';
 
 export const home = () => {
   const { user } = useGlobalContext();
@@ -11,11 +12,16 @@ export const home = () => {
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <FlatList
-        data={[{ id: '1', tempData: 'Lorem ipsum' }]}
+        data={posts.filter((post) => post.author.id === user.id)}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View>
-            <Text>{item.tempData}</Text>
+            <Text>{item.peak.name}</Text>
+            <Image
+              source={{ uri: item.photo }}
+              className='w-[300px] h-[500px]'
+              resizeMode='cover'
+            />
           </View>
         )}
         ListHeaderComponent={() => (

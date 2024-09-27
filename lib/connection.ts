@@ -1,8 +1,10 @@
 // mock api call
-import { users } from '@/lib/mockData';
+import uuid from 'react-native-uuid';
+import { IUserRequireProps } from '@/lib/types';
+import users from '@/lib/mockData/users';
 
 export const getUser = (email: string, password: string) => {
-  const findUser = users.filter(
+  const findUser: IUserRequireProps[] = users.filter(
     (user) => user.email.toLowerCase() === email.toLowerCase(),
   );
 
@@ -17,6 +19,8 @@ export const getUser = (email: string, password: string) => {
 };
 
 export const setUser = (username: string, email: string, password: string) => {
+  const id = uuid.v4().toString();
+  const joinAt = Date.now();
   if (
     users.filter((user) => user.email.toLowerCase() === email.toLowerCase())
       .length !== 0
@@ -29,8 +33,10 @@ export const setUser = (username: string, email: string, password: string) => {
   }
 
   return {
+    id,
     username,
     email,
     password,
+    joinAt,
   };
 };
