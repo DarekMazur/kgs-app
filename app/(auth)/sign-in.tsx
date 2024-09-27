@@ -20,7 +20,7 @@ const signIn = () => {
   const [error, setError] = useState<string | null>(null);
 
   if (isLogged) {
-    router.replace('/home');
+    router.navigate('/home');
   }
 
   const handleSubmit = async () => {
