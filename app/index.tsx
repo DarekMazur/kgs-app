@@ -3,8 +3,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { images } from '../constants';
 import ButtonCustom from '@/components/ButtonCustom';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const Index = () => {
+  const { user } = useGlobalContext();
+  if (user.username) {
+    router.replace('/home');
+  }
+
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
       <ScrollView

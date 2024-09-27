@@ -1,25 +1,30 @@
 import { Text, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
-import { IUserProps } from '@/app/(auth)/sign-in';
-import { useGlobalContext } from '@/context/GlobalProvider';
-
-export interface IRegisterProps extends IUserProps {
-  username: string | null;
-}
-
-export const initNewUser: IRegisterProps = {
-  username: null,
-  email: null,
-  password: null,
-};
+import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
+import { setUser } from '@/lib/connection';
+import { IRegisterProps } from '@/lib/types';
 
 const signUp = () => {
-  const { user, setGlobalUser } = useGlobalContext();
+  const { setGlobalUser } = useGlobalContext();
+  const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    if (newUser.username && newUser.email && newUser.password) {
+      try {
+        const user = setUser(newUser.username, newUser.email, newUser.password);
+        setGlobalUser(user);
+        router.replace('/home');
+      } catch (err) {
+        setError((err as Error).message);
+      }
+    }
+  };
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
@@ -38,40 +43,49 @@ const signUp = () => {
             Świętokrzyskich już dziś!
           </Text>
 
-          <View className='my-2'>
+          <View className='my-2 pb-4 relative'>
             <InputCustom
               placeholder='Nazwa użytkownika'
               title='Nazwa użytkownika'
-              value={user.username ?? ''}
+              value={newUser.username ?? ''}
               handleOnChange={(e: string) =>
-                setGlobalUser({ ...user, username: e })
+                setNewUser({ ...newUser, username: e })
               }
             />
 
             <InputCustom
               placeholder='Email'
               title='Email'
-              value={user.email ?? ''}
+              value={newUser.email ?? ''}
               handleOnChange={(e: string) =>
-                setGlobalUser({ ...user, email: e })
+                setNewUser({ ...newUser, email: e })
               }
             />
 
             <InputCustom
               placeholder='Hasło'
-              value=''
+              value={newUser.password ?? ''}
               title='Hasło'
               handleOnChange={(e: string) =>
-                setGlobalUser({ ...user, password: e })
+                setNewUser({ ...newUser, password: e })
               }
             />
+
+            {error ? (
+              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-red'>
+                {error}
+              </Text>
+            ) : null}
           </View>
 
           <ButtonCustom
             title='Utwórz konto'
-            handlePress={() => {}}
+            handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
+            isDisabled={
+              !newUser.username || !newUser.email || !newUser.password
+            }
           />
 
           <View className='flex justify-center pt-5 flex-row gap-2'>

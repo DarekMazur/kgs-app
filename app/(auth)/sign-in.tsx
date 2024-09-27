@@ -1,15 +1,13 @@
 import { Text, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
+import { useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
-
-export interface IUserProps {
-  email: string | null;
-  password: string | null;
-}
+import { getUser } from '@/lib/connection';
+import { IUserProps } from '@/lib/types';
 
 const initUser: IUserProps = {
   email: null,
@@ -17,7 +15,23 @@ const initUser: IUserProps = {
 };
 
 const signIn = () => {
-  const { user, setGlobalUser } = useGlobalContext();
+  const { setGlobalUser } = useGlobalContext();
+  const [user, setUser] = useState<IUserProps>(initUser);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    if (user.email && user.password) {
+      try {
+        const loggedUser = getUser(user.email, user.password);
+        if (loggedUser) {
+          setGlobalUser(loggedUser);
+          router.replace('/home');
+        }
+      } catch (err) {
+        setError((err as Error).message);
+      }
+    }
+  };
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
@@ -35,34 +49,37 @@ const signIn = () => {
             Zdobywaj szczyty Korony Gór Świętokrzyskich
           </Text>
 
-          <View className='my-2'>
+          <View className='my-2 pb-4 relative'>
             <InputCustom
               placeholder='Email'
               title='Email'
               value={user.email ?? ''}
-              handleOnChange={(e: string) =>
-                setGlobalUser({ ...user, email: e })
-              }
+              handleOnChange={(e: string) => setUser({ ...user, email: e })}
             />
 
             <InputCustom
               placeholder='Hasło'
-              value=''
+              value={user.password ?? ''}
               title='Hasło'
-              handleOnChange={(e: string) =>
-                setGlobalUser({ ...user, password: e })
-              }
+              handleOnChange={(e: string) => setUser({ ...user, password: e })}
             />
+
+            {error ? (
+              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-red'>
+                {error}
+              </Text>
+            ) : null}
           </View>
 
           <ButtonCustom
             title='Zaloguj się'
-            handlePress={() => {}}
+            handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
+            isDisabled={!user.email || !user.password}
           />
 
-          <View className='flex justify-center pt-5 flex-row gap-2'>
+          <View className='flex justify-center mt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pregular'>
               Nie masz konta?
             </Text>
