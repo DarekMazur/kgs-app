@@ -24,3 +24,23 @@ export interface ITabIconProps {
   name: string;
   focused: boolean;
 }
+
+export interface IPeakProps {
+  id: string;
+  name: string;
+  height: string;
+  description: string;
+  trial: string;
+  localizationLat: number;
+  LocalizationLng: number;
+  image: string;
+}
+
+export interface IPostsProps {
+  id: string;
+  author: IUserRequireProps;
+  createdAt: Date;
+  notes: string;
+  photo: string;
+  peak: IPeakProps;
+}

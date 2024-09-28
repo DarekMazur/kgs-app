@@ -6,6 +6,7 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import posts from '@/lib/mockData/posts';
 import PostCard from '@/components/PostCard';
+import Recent from '@/components/Recent';
 
 export const home = () => {
   const { user } = useGlobalContext();
@@ -47,6 +48,7 @@ export const home = () => {
               <Text className='text-xl text-secondary text-center'>
                 Ostatnio zdobyte:
               </Text>
+              <Recent recentPosts={[posts[0], posts[1], posts[2]]} />
             </View>
           </View>
         )}
