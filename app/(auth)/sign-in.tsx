@@ -1,7 +1,7 @@
 import { Text, ScrollView, View, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
@@ -19,9 +19,11 @@ const signIn = () => {
   const [user, setUser] = useState<IUserProps>(initUser);
   const [error, setError] = useState<string | null>(null);
 
-  if (isLogged) {
-    router.push('/home');
-  }
+  useEffect(() => {
+    if (isLogged) {
+      router.replace('/home');
+    }
+  }, [isLogged]);
 
   const handleSubmit = async () => {
     if (user.email && user.password) {

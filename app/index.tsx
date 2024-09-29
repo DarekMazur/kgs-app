@@ -1,15 +1,19 @@
 import { Text, View, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { images } from '../constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
 const Index = () => {
   const { isLogged } = useGlobalContext();
-  if (isLogged) {
-    router.replace('/home');
-  }
+
+  useEffect(() => {
+    if (isLogged) {
+      router.replace('/home');
+    }
+  }, [isLogged]);
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
