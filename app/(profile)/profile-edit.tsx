@@ -14,17 +14,20 @@ const profileEdit = () => {
   const { user, setGlobalUser } = useGlobalContext();
   const [editedUser, setEditedUser] = useState<IUserRequireProps>(user);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (editedUser.username && editedUser.email && editedUser.password) {
       try {
         const editedUserData = editUser({
           ...user,
-          username: editedUser.username,
-          email: editedUser.email,
-          password: editedUser.password,
+          ...editedUser,
         });
+        setSuccess(true);
         setGlobalUser(editedUserData);
+        setTimeout(() => {
+          router.push('/profile');
+        }, 1000);
       } catch (err) {
         setError((err as Error).message);
       }
@@ -131,6 +134,11 @@ const profileEdit = () => {
             {error ? (
               <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-red'>
                 {error}
+              </Text>
+            ) : null}
+            {success ? (
+              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-green'>
+                Aktualizacja udana!
               </Text>
             ) : null}
           </View>

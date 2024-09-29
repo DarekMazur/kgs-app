@@ -15,6 +15,7 @@ export default {
   },
   gray: {
     v100: '#cdcde0',
+    v200: '#8a8a8a',
   },
   red: '#ea1b25',
   green: '#2a8c16',
