@@ -6,6 +6,7 @@ import bars from '../assets/icons/bars.png';
 import defaultAvatar from '../assets/icons/defaultAvt.png';
 import logout from '../assets/icons/logout.png';
 import edit from '../assets/icons/edit.png';
+import editLight from '../assets/icons/editLight.png';
 import trash from '../assets/icons/delete.png';
 
 export default {
@@ -17,5 +18,6 @@ export default {
   defaultAvatar,
   logout,
   edit,
+  editLight,
   trash,
 };

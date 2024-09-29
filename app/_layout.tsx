@@ -39,6 +39,14 @@ const RootLayout = () => {
         <Stack.Screen name='index' options={{ headerShown: false }} />
         <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen name='(auth)' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='menu'
+          options={{
+            presentation: 'modal',
+            animation: 'fade',
+            headerShown: false,
+          }}
+        />
       </Stack>
     </GlobalProvider>
   );

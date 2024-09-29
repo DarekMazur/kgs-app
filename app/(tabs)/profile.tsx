@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Image, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
+import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
 import peaks from '@/lib/mockData/peaks';
 import posts from '@/lib/mockData/posts';
@@ -10,13 +10,7 @@ import PostCard from '@/components/PostCard';
 import InfoBox from '@/components/InfoBox';
 
 const profileScreen = () => {
-  const { user, setGlobalUser, setIsLoggedIn } = useGlobalContext();
-
-  const handleLogout = () => {
-    setGlobalUser(initNewUser);
-    setIsLoggedIn();
-    router.replace('/sign-in');
-  };
+  const { user } = useGlobalContext();
 
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
@@ -36,11 +30,11 @@ const profileScreen = () => {
         ListHeaderComponent={() => (
           <View className='w-full flex justify-center items-center mt-6 mb-12 px-4'>
             <TouchableOpacity
-              onPress={handleLogout}
+              onPress={() => router.push('/menu')}
               className='flex w-full items-end mb-10'
             >
               <Image
-                source={icons.logout}
+                source={icons.bars}
                 resizeMode='contain'
                 className='w-6 h-6'
               />
