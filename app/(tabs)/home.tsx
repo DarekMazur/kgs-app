@@ -7,6 +7,15 @@ import ButtonCustom from '@/components/ButtonCustom';
 import posts from '@/lib/mockData/posts';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
+import { IUserRequireProps } from '@/lib/types';
+
+const greetings = (user: IUserRequireProps) => {
+  if (user.firstName || user.lastName) {
+    return `${user.firstName ? `${user.firstName} ` : null}${user.lastName}`;
+  }
+
+  return user.username;
+};
 
 export const home = () => {
   const { user } = useGlobalContext();
@@ -18,7 +27,7 @@ export const home = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostCard
-            author={item.author.username}
+            author={item.author.firstName ?? item.author.username}
             date={item.createdAt}
             title={item.peak.name}
             photoUrl={item.photo}
@@ -31,7 +40,7 @@ export const home = () => {
                 <Text className='text-xl text-primary'>
                   Cześć,{'\n'}
                   <Text className='text-3xl text-red font-mtsemibold'>
-                    {user.username}
+                    {greetings(user)}
                   </Text>{' '}
                 </Text>
                 <Text className='text-primary text-xl'>witaj ponownie</Text>
