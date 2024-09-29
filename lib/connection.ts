@@ -40,3 +40,10 @@ export const setUser = (username: string, email: string, password: string) => {
     joinAt,
   };
 };
+
+export const editUser = (user: IUserRequireProps) => {
+  return {
+    ...users.filter((singleUser) => singleUser.id === user.id),
+    ...user,
+  };
+};
