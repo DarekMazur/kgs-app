@@ -35,6 +35,7 @@ module.exports = {
         mtbold: ['Montserrat-Bold', 'sans-serif'],
         mtextrabold: ['Montserrat-ExtraBold', 'sans-serif'],
         mtblack: ['Montserrat-Black', 'sans-serif'],
+        obregular: ['Oooh Baby', 'system-ui'],
       },
     },
   },

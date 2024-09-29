@@ -1,15 +1,17 @@
 import { createContext, FC, ReactElement, useContext, useState } from 'react';
-import { IRegisterProps } from '@/lib/types';
+import { IUserRequireProps } from '@/lib/types';
 
-export const initNewUser: IRegisterProps = {
+export const initNewUser: IUserRequireProps = {
+  id: null,
   username: null,
   email: null,
   password: null,
+  joinAt: null,
 };
 
 const initialContext = {
   user: initNewUser,
-  setGlobalUser: (newUser: IRegisterProps) => {},
+  setGlobalUser: (newUser: IUserRequireProps) => {},
   isLogged: false,
   setIsLoggedIn: () => {},
 };
@@ -18,10 +20,10 @@ const GlobalContext = createContext(initialContext);
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider: FC<{ children: ReactElement }> = ({ children }) => {
-  const [user, setUser] = useState<IRegisterProps>(initNewUser);
+  const [user, setUser] = useState<IUserRequireProps>(initNewUser);
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  const setGlobalUser = (newUser: IRegisterProps) => {
+  const setGlobalUser = (newUser: IUserRequireProps) => {
     setUser({ ...newUser });
   };
 

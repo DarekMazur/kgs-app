@@ -14,6 +14,7 @@ const RootLayout = () => {
     'Montserrat-Regular': require('../assets/fonts/Montserrat-Regular.ttf'),
     'Montserrat-SemiBold': require('../assets/fonts/Montserrat-SemiBold.ttf'),
     'Montserrat-Thin': require('../assets/fonts/Montserrat-Thin.ttf'),
+    'Oooh Baby': require('../assets/fonts/OoohBaby-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const RootLayout = () => {
     <GlobalProvider>
       <Stack>
         <Stack.Screen name='index' options={{ headerShown: false }} />
-        <Stack.Screen name='home' options={{ headerShown: false }} />
+        <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
         <Stack.Screen name='(auth)' options={{ headerShown: false }} />
       </Stack>
     </GlobalProvider>
