@@ -6,7 +6,7 @@ export default [
     id: faker.string.uuid(),
     username: 'testUser',
     email: 'tu@e.mail',
-    password: '123456',
+    password: '123',
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),
     avatar: faker.image.avatar(),

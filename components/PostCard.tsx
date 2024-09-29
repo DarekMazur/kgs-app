@@ -1,5 +1,6 @@
 import { Image, Text, View } from 'react-native';
 import { FC } from 'react';
+import { formatDate } from '@/lib/helpers';
 
 interface IPostCardProps {
   author: string;
@@ -9,9 +10,8 @@ interface IPostCardProps {
 }
 
 const PostCard: FC<IPostCardProps> = ({ author, date, title, photoUrl }) => {
-  const formatedDate = date.toString();
   return (
-    <View className='w-full pt-3 pb-10 px-5 m-3 bg-gray-100'>
+    <View className='w-[90%] pt-3 pb-10 px-5 m-3 mb-8 bg-gray-100 self-center'>
       <Text className='text-center text-xl font-mtsemibold'>
         przez {author}
       </Text>
@@ -21,8 +21,8 @@ const PostCard: FC<IPostCardProps> = ({ author, date, title, photoUrl }) => {
         resizeMode='cover'
       />
       <View className='self-end items-end'>
-        <Text className='py-2 text-3xl'>{title}</Text>
-        <Text>{formatedDate}</Text>
+        <Text className='py-2 text-4xl text-red font-obregular'>{title}</Text>
+        <Text>{formatDate(date)}</Text>
       </View>
     </View>
   );
