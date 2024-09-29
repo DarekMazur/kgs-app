@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Image, Text, FlatList } from 'react-native';
+import { View, TouchableOpacity, Image, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
@@ -7,6 +7,7 @@ import peaks from '@/lib/mockData/peaks';
 import posts from '@/lib/mockData/posts';
 import { percentage } from '@/lib/helpers';
 import PostCard from '@/components/PostCard';
+import InfoBox from '@/components/InfoBox';
 
 const profileScreen = () => {
   const { user, setGlobalUser, setIsLoggedIn } = useGlobalContext();
@@ -53,32 +54,25 @@ const profileScreen = () => {
               />
             </View>
 
-            <View className='mt-5'>
-              <Text className='text-white text-center font-mtsemibold text-lg'>
-                {user.firstName} {user.lastName} ({user.username})
-              </Text>
-            </View>
+            <InfoBox
+              title={`${user.firstName} ${user.lastName} (${user.username})`}
+              containerStyles='mt-5'
+              titleStyles='text-lg'
+            />
 
-            <View className='mt-5 flex flex-row'>
-              <View className='mt-5'>
-                <Text className='text-white text-center font-mtsemibold text-lg'>
-                  Zdobytych szczytów:
-                </Text>
-                <Text className='text-sm text-gray-100 text-center font-mtregular'>
-                  {posts.filter(
-                    (post) => post.author.username === user.username,
-                  ).length || 0}{' '}
-                  (
-                  {percentage(
-                    posts.filter(
-                      (post) => post.author.username === user.username,
-                    ).length,
-                    peaks.length,
-                  )}
-                  %)
-                </Text>
-              </View>
-            </View>
+            <InfoBox
+              title='Zdobytych szczytów:'
+              subtitle={`${
+                posts.filter((post) => post.author.username === user.username)
+                  .length || 0
+              } (${percentage(
+                posts.filter((post) => post.author.username === user.username)
+                  .length,
+                peaks.length,
+              )}%)`}
+              containerStyles='mt-5'
+              titleStyles='text-lg'
+            />
           </View>
         )}
       />
