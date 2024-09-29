@@ -30,6 +30,7 @@ export const home = () => {
             author={item.author.firstName ?? item.author.username}
             date={item.createdAt}
             title={item.peak.name}
+            notes={item.notes}
             photoUrl={item.photo}
           />
         )}
