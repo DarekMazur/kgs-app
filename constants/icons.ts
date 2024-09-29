@@ -8,6 +8,7 @@ import logout from '../assets/icons/logout.png';
 import edit from '../assets/icons/edit.png';
 import editLight from '../assets/icons/editLight.png';
 import trash from '../assets/icons/delete.png';
+import close from '../assets/icons/close.png';
 
 export default {
   home,
@@ -20,4 +21,5 @@ export default {
   edit,
   editLight,
   trash,
+  close,
 };
