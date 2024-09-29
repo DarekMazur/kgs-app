@@ -54,6 +54,22 @@ const TabLayout = () => {
           ),
         }}
       />
+      <Tabs.Screen
+        name='profile'
+        options={{
+          tabBarLabel: 'Profile',
+          title: 'Profile',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.profile}
+              color={color}
+              name='Profile'
+              focused={focused}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 };
