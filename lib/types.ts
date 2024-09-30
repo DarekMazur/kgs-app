@@ -44,3 +44,9 @@ export interface IPostsProps {
   photo: string;
   peak: IPeakProps;
 }
+
+export interface IRoleTypes {
+  id: number;
+  name: string;
+  type: string;
+}
