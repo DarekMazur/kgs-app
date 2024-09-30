@@ -38,7 +38,7 @@ export const db = factory({
     lastName: () => faker.person.lastName(),
     avatar: () => faker.image.avatar(),
     description: () => faker.person.bio(),
-    registrationDate: () => faker.date.past(),
+    registrationDate: () => faker.date.past().getMilliseconds(),
     posts: manyOf('post'),
     peaks: manyOf('peak'),
     role: oneOf('role'),

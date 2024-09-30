@@ -1,5 +1,11 @@
 import { ImageProps } from 'react-native';
 
+export interface IRoleTypes {
+  id: number;
+  name: string;
+  type: string;
+}
+
 export interface IUserProps {
   email: string | null;
   password: string | null;
@@ -14,8 +20,9 @@ export interface IUserRequireProps extends IRegisterProps {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  joinAt: Date | null;
+  registrationDate: number;
   description?: string;
+  role: IRoleTypes;
 }
 
 export interface ITabIconProps {
@@ -43,10 +50,4 @@ export interface IPostsProps {
   notes: string;
   photo: string;
   peak: IPeakProps;
-}
-
-export interface IRoleTypes {
-  id: number;
-  name: string;
-  type: string;
 }

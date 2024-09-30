@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { faker } from '@faker-js/faker';
+import uuid from 'react-native-uuid';
 import { db } from '@/mocks/db';
 import { IPostsProps } from '@/lib/types';
 
@@ -22,7 +21,7 @@ export const handlers = [
     const createdTime = new Date(Date.now());
 
     db.post.create({
-      id: faker.string.uuid(),
+      id: uuid.v4() as string,
       createdAt: createdTime,
       author: db.user.findFirst({
         where: {
