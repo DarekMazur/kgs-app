@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
 import { db } from '@/mocks/db';
+import { IPostsProps } from '@/lib/types';
 
 export const handlers = [
   http.get('/api/posts', () => {
@@ -17,13 +18,28 @@ export const handlers = [
   }),
 
   http.post('/api/posts', async ({ request }) => {
-    const newPost = await request.json();
+    const newPost = (await request.json()) as IPostsProps;
     const createdTime = new Date(Date.now());
 
     db.post.create({
       id: faker.string.uuid(),
       createdAt: createdTime,
-      ...newPost,
+      author: db.user.findFirst({
+        where: {
+          id: {
+            equals: newPost.author.id as string,
+          },
+        },
+      })!,
+      notes: newPost.notes,
+      photo: newPost.photo,
+      peak: db.peak.findFirst({
+        where: {
+          id: {
+            equals: newPost.peak.id as string,
+          },
+        },
+      })!,
     });
 
     return HttpResponse.json(newPost, { status: 201 });
@@ -31,7 +47,7 @@ export const handlers = [
 
   // eslint-disable-next-line consistent-return
   http.put('/api/posts/:postId', async ({ request }) => {
-    const updatedPost = await request.json();
+    const updatedPost = (await request.json()) as IPostsProps;
 
     if (updatedPost) {
       db.post.update({
@@ -41,7 +57,8 @@ export const handlers = [
           },
         },
         data: {
-          ...updatedPost,
+          notes: updatedPost.notes,
+          photo: updatedPost.photo,
         },
       });
 
@@ -49,14 +66,14 @@ export const handlers = [
     }
   }),
 
-  http.delete('/api/posts/:postId', async ({ request }) => {
-    const postId = await request.json();
+  http.delete('/api/posts/:postId', async ({ params }) => {
+    const { postId } = params;
 
     if (postId) {
       db.post.delete({
         where: {
           id: {
-            equals: postId.id,
+            equals: postId as string,
           },
         },
       });
