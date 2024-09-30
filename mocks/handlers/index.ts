@@ -1,21 +1,11 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { http, HttpResponse } from 'msw';
-import { db } from '../db';
+import { handlers as postHandlers } from './posts';
+import { handlers as peakHandlers } from '@/mocks/handlers/peaks';
+import { handlers as userHandlers } from '@/mocks/handlers/users';
+import { handlers as roleHandlers } from '@/mocks/handlers/roles';
 
 export const handlers = [
-  http.get('/api/posts', () => {
-    return HttpResponse.json(db.post.getAll());
-  }),
-
-  http.get('/api/users', () => {
-    return HttpResponse.json(db.user.getAll());
-  }),
-
-  http.get('/api/peaks', () => {
-    return HttpResponse.json(db.peak.getAll());
-  }),
-
-  http.get('/api/roles', () => {
-    return HttpResponse.json(db.role.getAll());
-  }),
+  ...postHandlers,
+  ...peakHandlers,
+  ...userHandlers,
+  ...roleHandlers,
 ];
