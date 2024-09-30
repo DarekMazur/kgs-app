@@ -1,31 +1,18 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { factory, oneOf, manyOf, primaryKey } from '@mswjs/data';
-import { IRoleTypes } from '@/lib/types';
 
 faker.seed(12356);
 
-export const roles: Array<IRoleTypes> = [
-  {
-    id: 1,
-    name: 'Administrator',
-    type: 'admin',
-  },
-  {
-    id: 2,
-    name: 'Moderator',
-    type: 'moderator',
-  },
-  {
-    id: 3,
-    name: 'User',
-    type: 'user',
-  },
-];
-
 export const db = factory({
+  role: {
+    id: primaryKey(faker.number.int),
+    name: () => faker.lorem.word(),
+    type: () => faker.lorem.word(),
+  },
   peak: {
-    id: () => primaryKey(() => faker.string.uuid()),
+    id: primaryKey(faker.string.uuid),
     name: () => faker.lorem.words({ min: 1, max: 3 }),
     height: () => faker.number.int({ min: 400, max: 700 }),
     description: () => faker.lorem.words({ min: 10, max: 50 }),
@@ -35,7 +22,7 @@ export const db = factory({
     image: () => faker.image.urlLoremFlickr({ category: 'mountains' }),
   },
   post: {
-    id: () => primaryKey(() => faker.string.uuid()),
+    id: primaryKey(faker.string.uuid),
     author: oneOf('user'),
     createdAt: () => faker.date.past(),
     notes: () => faker.lorem.paragraph(),
@@ -43,7 +30,7 @@ export const db = factory({
     peak: oneOf('peak'),
   },
   user: {
-    id: () => primaryKey(() => faker.string.uuid()),
+    id: primaryKey(faker.string.uuid),
     username: () => faker.internet.userName(),
     email: () => faker.internet.email(),
     password: () => faker.internet.password(),
@@ -54,7 +41,6 @@ export const db = factory({
     registrationDate: () => faker.date.past(),
     posts: manyOf('post'),
     peaks: manyOf('peak'),
-    role: () =>
-      roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    role: oneOf('role'),
   },
 });
