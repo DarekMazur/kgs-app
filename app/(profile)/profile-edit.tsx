@@ -1,7 +1,15 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import {
+  Image,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
+import * as DocumentPicker from 'expo-document-picker';
 import InfoBox from '@/components/InfoBox';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
@@ -15,6 +23,23 @@ const profileEdit = () => {
   const [editedUser, setEditedUser] = useState<IUserRequireProps>(user);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const openPicker = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ['image/png', 'image/jpg'],
+    });
+
+    if (!result.canceled) {
+      setEditedUser({
+        ...editedUser,
+        avatar: result.assets[0].uri,
+      });
+    } else {
+      setTimeout(() => {
+        Alert.alert('Anulowano');
+      }, 100);
+    }
+  };
 
   const handleSave = () => {
     if (editedUser.username && editedUser.email && editedUser.password) {
@@ -100,6 +125,25 @@ const profileEdit = () => {
               isPassword
               mode='email'
             />
+
+            <View className='mt-7 space-y-2'>
+              <Text className='text-base text-gray-100 font-pmedium'>
+                Zdjęcie
+              </Text>
+
+              <TouchableOpacity onPress={openPicker}>
+                <View className='w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center'>
+                  <View className='w-14 h-14 border border-dashed border-secondary-100 flex justify-center items-center'>
+                    <Image
+                      source={icons.upload}
+                      resizeMode='contain'
+                      alt='upload'
+                      className='w-1/2 h-1/2'
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
 
             <InputCustom
               placeholder='Imię'
