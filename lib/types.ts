@@ -35,11 +35,11 @@ export interface ITabIconProps {
 export interface IPeakProps {
   id: string;
   name: string;
-  height: string;
+  height: number;
   description: string;
   trial: string;
   localizationLat: number;
-  LocalizationLng: number;
+  localizationLng: number;
   image: string;
 }
 

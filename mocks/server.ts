@@ -4,6 +4,7 @@ import { setupServer } from 'msw/native';
 import { faker } from '@faker-js/faker';
 import { handlers } from './handlers';
 import { db } from '@/mocks/db';
+import { IPeakProps, IUserRequireProps } from '@/lib/types';
 
 export const server = setupServer(...handlers);
 
@@ -82,8 +83,8 @@ const updatePosts = () => {
         },
       },
       data: {
-        author: author as any, // eslint-disable-line @typescript-eslint/no-explicit-any
-        peak: peak as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+        author: author as any | IUserRequireProps, // eslint-disable-line @typescript-eslint/no-explicit-any
+        peak: peak as any | IPeakProps, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     });
   });
@@ -101,7 +102,7 @@ const updateUsers = () => {
       },
     });
 
-    const peaksList = [];
+    const peaksList: Array<IPeakProps> = [];
 
     postsList.forEach((post) => {
       const peak = db.peak.findFirst({
@@ -111,7 +112,7 @@ const updateUsers = () => {
           },
         },
       });
-      peaksList.push(peak);
+      peaksList.push(peak as IPeakProps);
     });
 
     db.user.update({
