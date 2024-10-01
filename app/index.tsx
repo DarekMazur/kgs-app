@@ -5,6 +5,13 @@ import { useEffect } from 'react';
 import { images } from '../constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import '@/mocks/msw.polyfills';
+import { server } from '@/mocks/server';
+
+// eslint-disable-next-line no-undef
+if (__DEV__) {
+  server.listen();
+}
 
 const Index = () => {
   const { isLogged } = useGlobalContext();

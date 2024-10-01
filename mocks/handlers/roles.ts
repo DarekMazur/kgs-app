@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { db } from '@/mocks/db';
 
 export const handlers = [
-  http.get('/api/roles', () => {
+  http.get('http://localhost/api/roles', () => {
     return HttpResponse.json(db.role.getAll());
   }),
 ];

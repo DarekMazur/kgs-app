@@ -23,7 +23,7 @@ export const db = factory({
   },
   post: {
     id: primaryKey(faker.string.uuid),
-    author: oneOf('user'),
+    author: () => faker.string.uuid(),
     createdAt: () => faker.date.past(),
     notes: () => faker.lorem.paragraph(),
     photo: () => faker.image.urlLoremFlickr({ category: 'mountains' }),

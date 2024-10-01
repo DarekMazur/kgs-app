@@ -5,18 +5,18 @@ import { db } from '@/mocks/db';
 import { IRegisterProps, IUserRequireProps } from '@/lib/types';
 
 export const handlers = [
-  http.get('/api/users', () => {
+  http.get('http://localhost/api/users', () => {
     return HttpResponse.json(db.user.getAll());
   }),
 
-  http.get('/api/users/:userId', async ({ params }) => {
+  http.get('http://localhost/api/users/:userId', async ({ params }) => {
     const { userId } = params;
     return HttpResponse.json(
       db.user.getAll().filter((user) => user.id === userId),
     );
   }),
 
-  http.post('/api/users', async ({ request }) => {
+  http.post('http://localhost/api/users', async ({ request }) => {
     const newUser = (await request.json()) as IRegisterProps;
     const createdTime = Date.now();
 
@@ -39,7 +39,7 @@ export const handlers = [
   }),
 
   // eslint-disable-next-line consistent-return
-  http.put('/api/users/:postId', async ({ request }) => {
+  http.put('http://localhost/api/users/:postId', async ({ request }) => {
     const updatedUser = (await request.json()) as IUserRequireProps;
 
     if (updatedUser) {
@@ -70,7 +70,7 @@ export const handlers = [
     }
   }),
 
-  http.delete('/api/users/:userId', async ({ params }) => {
+  http.delete('http://localhost/api/users/:userId', async ({ params }) => {
     const { userId } = params;
 
     if (userId) {

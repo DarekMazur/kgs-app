@@ -5,18 +5,18 @@ import { db } from '@/mocks/db';
 import { IPostsProps } from '@/lib/types';
 
 export const handlers = [
-  http.get('/api/posts', () => {
+  http.get('http://localhost/api/posts', () => {
     return HttpResponse.json(db.post.getAll());
   }),
 
-  http.get('/api/posts/:postId', async ({ params }) => {
+  http.get('http://localhost/api/posts/:postId', async ({ params }) => {
     const { postId } = params;
     return HttpResponse.json(
       db.post.getAll().filter((post) => post.id === postId),
     );
   }),
 
-  http.post('/api/posts', async ({ request }) => {
+  http.post('http://localhost/api/posts', async ({ request }) => {
     const newPost = (await request.json()) as IPostsProps;
     const createdTime = new Date(Date.now());
 
@@ -45,7 +45,7 @@ export const handlers = [
   }),
 
   // eslint-disable-next-line consistent-return
-  http.put('/api/posts/:postId', async ({ request }) => {
+  http.put('http://localhost/api/posts/:postId', async ({ request }) => {
     const updatedPost = (await request.json()) as IPostsProps;
 
     if (updatedPost) {
@@ -65,7 +65,7 @@ export const handlers = [
     }
   }),
 
-  http.delete('/api/posts/:postId', async ({ params }) => {
+  http.delete('http://localhost/api/posts/:postId', async ({ params }) => {
     const { postId } = params;
 
     if (postId) {

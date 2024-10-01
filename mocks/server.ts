@@ -67,6 +67,7 @@ const updatePosts = () => {
         },
       },
     });
+    console.log(author);
 
     const peak = db.peak.findFirst({
       where: {
@@ -83,7 +84,7 @@ const updatePosts = () => {
         },
       },
       data: {
-        author: author as any | IUserRequireProps, // eslint-disable-line @typescript-eslint/no-explicit-any
+        author: author?.id, // eslint-disable-line @typescript-eslint/no-explicit-any
         peak: peak as any | IPeakProps, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     });
@@ -95,9 +96,7 @@ const updateUsers = () => {
     const postsList = db.post.findMany({
       where: {
         author: {
-          id: {
-            equals: author.id,
-          },
+          equals: author.id,
         },
       },
     });
