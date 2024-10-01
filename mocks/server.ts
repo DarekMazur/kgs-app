@@ -67,7 +67,6 @@ const updatePosts = () => {
         },
       },
     });
-    console.log(author);
 
     const peak = db.peak.findFirst({
       where: {
