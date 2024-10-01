@@ -100,19 +100,6 @@ const updateUsers = () => {
       },
     });
 
-    const peaksList: Array<IPeakProps> = [];
-
-    postsList.forEach((post) => {
-      const peak = db.peak.findFirst({
-        where: {
-          id: {
-            equals: post.peak?.id,
-          },
-        },
-      });
-      peaksList.push(peak as IPeakProps);
-    });
-
     db.user.update({
       where: {
         id: {
@@ -122,7 +109,6 @@ const updateUsers = () => {
       data: {
         role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         posts: postsList || [],
-        peaks: peaksList || [],
       },
     });
   });

@@ -40,7 +40,6 @@ export const db = factory({
     description: () => faker.person.bio(),
     registrationDate: () => faker.date.past().getMilliseconds(),
     posts: manyOf('post'),
-    peaks: manyOf('peak'),
     role: oneOf('role'),
   },
 });

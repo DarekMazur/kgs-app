@@ -6,7 +6,8 @@ export const initNewUser: IUserRequireProps = {
   username: null,
   email: null,
   password: null,
-  joinAt: null,
+  registrationDate: null,
+  role: null,
 };
 
 const initialContext = {

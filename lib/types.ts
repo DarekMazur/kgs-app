@@ -20,9 +20,9 @@ export interface IUserRequireProps extends IRegisterProps {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  registrationDate: number;
+  registrationDate: number | null;
   description?: string;
-  role: IRoleTypes;
+  role: IRoleTypes | null;
 }
 
 export interface ITabIconProps {
