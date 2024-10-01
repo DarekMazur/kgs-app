@@ -20,7 +20,7 @@ const Index = () => {
     if (isLogged) {
       router.replace('/home');
     }
-  }, [isLogged]);
+  }, []);
 
   return (
     <SafeAreaView className='bg-primaryBG h-full'>

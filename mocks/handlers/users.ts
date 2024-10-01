@@ -19,6 +19,18 @@ export const handlers = [
     },
   ),
 
+  http.get(
+    `${process.env.EXPO_PUBLIC_API_URL}/users/login/:userEmail`,
+    async ({ params }) => {
+      const { userEmail } = params;
+      return HttpResponse.json(
+        db.user
+          .getAll()
+          .filter((user) => user.email.toLowerCase() === userEmail),
+      );
+    },
+  ),
+
   http.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, async ({ request }) => {
     const newUser = (await request.json()) as IRegisterProps;
     const createdTime = Date.now();

@@ -1,11 +1,18 @@
 export const getAllUsers = async () => {
-  const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/`);
+  const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
   return users.json();
 };
 
 export const getSingleUser = async (userId: string) => {
   const user = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/users/${userId}`,
+  );
+  return user.json();
+};
+
+export const getUserByEmail = async (userEmail: string) => {
+  const user = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/users/login/${userEmail}`,
   );
   return user.json();
 };
@@ -32,4 +39,18 @@ export const getSinglePeak = async (peakId: string) => {
     `${process.env.EXPO_PUBLIC_API_URL}/peaks/${peakId}`,
   );
   return peak.json();
+};
+
+export const logIn = async (email: string, password: string) => {
+  const errorMessage = 'Login lub hasło niepoprawne';
+  try {
+    const user = await getUserByEmail(email);
+
+    if (user[0].password === password) {
+      return user[0];
+    }
+    throw new Error(errorMessage);
+  } catch (error) {
+    throw new Error(errorMessage);
+  }
 };

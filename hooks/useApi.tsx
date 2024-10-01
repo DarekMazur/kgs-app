@@ -3,18 +3,14 @@ import { Alert } from 'react-native';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useApi = (fn: () => Promise<any>) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
 
   const fetchData = async () => {
-    setLoading(true);
     try {
       const res = await fn();
       setData(res);
     } catch (err) {
       Alert.alert('Error', (err as Error).message);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -22,7 +18,7 @@ const useApi = (fn: () => Promise<any>) => {
     fetchData();
   }, []);
 
-  return { data, loading };
+  return { data };
 };
 
 export default useApi;
