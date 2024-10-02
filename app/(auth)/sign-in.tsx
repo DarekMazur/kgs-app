@@ -63,6 +63,7 @@ const signIn = () => {
               value={user.email ?? ''}
               handleOnChange={(e: string) => setUser({ ...user, email: e })}
               mode='email'
+              hint='next'
             />
 
             <InputCustom

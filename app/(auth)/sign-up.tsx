@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, Image } from 'react-native';
+import { Text, ScrollView, View, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -6,13 +6,12 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
-import { setUser } from '@/lib/connection';
 import { IRegisterProps } from '@/lib/types';
+import { createUser } from '@/lib/getDataFromApi';
 
 const signUp = () => {
-  const { setGlobalUser, isLogged, setIsLoggedIn } = useGlobalContext();
+  const { isLogged } = useGlobalContext();
   const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLogged) {
@@ -23,13 +22,22 @@ const signUp = () => {
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {
       try {
-        const user = setUser(newUser.username, newUser.email, newUser.password);
-        setGlobalUser(user);
-        setIsLoggedIn();
-        router.navigate('/home');
+        const registeredUser = await createUser(
+          newUser.username,
+          newUser.email.toLowerCase(),
+          newUser.password,
+        );
+
+        if (registeredUser) {
+          Alert.alert('Sukces!', 'Zaloguj się na swoje konto');
+
+          router.replace('/sign-in');
+        }
       } catch (err) {
-        setError((err as Error).message);
+        Alert.alert('Błąd...', (err as Error).message);
       }
+    } else {
+      Alert.alert('Uwaga!', 'Podaj wymagane dane!');
     }
   };
 
@@ -58,6 +66,7 @@ const signUp = () => {
               handleOnChange={(e: string) =>
                 setNewUser({ ...newUser, username: e })
               }
+              hint='next'
             />
 
             <InputCustom
@@ -67,6 +76,8 @@ const signUp = () => {
               handleOnChange={(e: string) =>
                 setNewUser({ ...newUser, email: e })
               }
+              mode='email'
+              hint='next'
             />
 
             <InputCustom
@@ -79,12 +90,6 @@ const signUp = () => {
               isPassword
               mode='email'
             />
-
-            {error ? (
-              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-red'>
-                {error}
-              </Text>
-            ) : null}
           </View>
 
           <ButtonCustom

@@ -33,14 +33,20 @@ export const handlers = [
 
   http.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, async ({ request }) => {
     const newUser = (await request.json()) as IRegisterProps;
+    console.log(newUser);
     const createdTime = Date.now();
 
-    db.user.create({
+    const newUserData = {
       id: uuid.v4() as string,
       username: newUser.username as string,
       email: newUser.email as string,
       password: newUser.password as string,
       registrationDate: createdTime,
+      firstName: undefined,
+      lastName: undefined,
+      avatar: undefined,
+      description: undefined,
+      posts: [],
       role: db.role.findFirst({
         where: {
           type: {
@@ -48,9 +54,12 @@ export const handlers = [
           },
         },
       })!,
-    });
+    };
 
-    return HttpResponse.json(newUser, { status: 201 });
+    db.user.create({ ...newUserData });
+    console.log(newUserData);
+
+    return HttpResponse.json(newUserData, { status: 201 });
   }),
 
   http.put(

@@ -74,7 +74,7 @@ export const home = () => {
               </Text>
               <Recent
                 recentPosts={posts
-                  .filter((post) => post.author.id === user.id)
+                  .filter((post) => post.author?.id === user.id)
                   .slice(0, 5)}
               />
             </View>
