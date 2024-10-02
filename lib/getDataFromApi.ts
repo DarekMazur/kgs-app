@@ -1,4 +1,5 @@
 import { Alert } from 'react-native';
+import * as Crypto from 'expo-crypto';
 
 export const getAllUsers = async () => {
   const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
@@ -45,10 +46,15 @@ export const getSinglePeak = async (peakId: string) => {
 
 export const logIn = async (email: string, password: string) => {
   const errorMessage = 'Login lub hasło niepoprawne';
+
   try {
     const user = await getUserByEmail(email);
+    const hashedPassword = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      password + user[0].registrationDate.toString(),
+    );
 
-    if (user[0].password === password) {
+    if (user[0].password === hashedPassword) {
       return user[0];
     }
     throw new Error(errorMessage);

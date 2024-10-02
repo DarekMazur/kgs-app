@@ -2,6 +2,7 @@
 import { setupServer } from 'msw/native';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
+import * as Crypto from 'expo-crypto';
 import { handlers } from './handlers';
 import { db } from '@/mocks/db';
 import { IPeakProps, IUserRequireProps } from '@/lib/types';
@@ -11,6 +12,9 @@ export const server = setupServer(...handlers);
 server.events.on('request:start', ({ request }) => {
   console.log('MSW intercepted:', request.method, request.url);
 });
+
+const demoUserRegistrationTime = faker.date.past().getMilliseconds();
+const demoUserId = faker.string.uuid();
 
 const createRoles = () => {
   db.role.create({ id: 1, name: 'Administrator', type: 'admin' });
@@ -26,9 +30,11 @@ const createPeaks = () => {
 
 const createUsers = () => {
   db.user.create({
+    id: demoUserId,
     email: 'tu@mail.com',
     password: '123',
     username: 'TestUser',
+    registrationDate: demoUserRegistrationTime,
   });
   for (let i = 0; i < faker.number.int({ min: 55, max: 70 }); i += 1) {
     db.user.create();
@@ -123,3 +129,23 @@ const updateUsers = () => {
 
 updatePosts();
 updateUsers();
+
+const updateDemoUser = async () => {
+  await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    `123${demoUserRegistrationTime.toString()}`,
+  ).then((hashedPassword) => {
+    db.user.update({
+      where: {
+        id: {
+          equals: demoUserId,
+        },
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+  });
+};
+
+updateDemoUser();

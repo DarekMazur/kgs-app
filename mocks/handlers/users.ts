@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
 import uuid from 'react-native-uuid';
+import * as Crypto from 'expo-crypto';
 import { db } from '@/mocks/db';
 import { IRegisterProps, IUserRequireProps } from '@/lib/types';
 
@@ -33,14 +34,18 @@ export const handlers = [
 
   http.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, async ({ request }) => {
     const newUser = (await request.json()) as IRegisterProps;
-    console.log(newUser);
     const createdTime = Date.now();
+
+    const hashedPassword = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      newUser.password + createdTime.toString(),
+    );
 
     const newUserData = {
       id: uuid.v4() as string,
       username: newUser.username as string,
       email: newUser.email as string,
-      password: newUser.password as string,
+      password: hashedPassword,
       registrationDate: createdTime,
       firstName: undefined,
       lastName: undefined,
@@ -57,7 +62,6 @@ export const handlers = [
     };
 
     db.user.create({ ...newUserData });
-    console.log(newUserData);
 
     return HttpResponse.json(newUserData, { status: 201 });
   }),
@@ -67,6 +71,18 @@ export const handlers = [
     // eslint-disable-next-line consistent-return
     async ({ request }) => {
       const updatedUser = (await request.json()) as IUserRequireProps;
+      const user = db.user.findFirst({
+        where: {
+          id: {
+            equals: updatedUser.id as string,
+          },
+        },
+      })!;
+
+      const hashedPassword = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        updatedUser.password + user.registrationDate.toString(),
+      );
 
       if (updatedUser) {
         db.user.update({
@@ -77,7 +93,7 @@ export const handlers = [
           },
           data: {
             username: updatedUser.username as string,
-            password: updatedUser.password as string,
+            password: hashedPassword,
             firstName: updatedUser.firstName,
             lastName: updatedUser.lastName,
             avatar: updatedUser.avatar,
