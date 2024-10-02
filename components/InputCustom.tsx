@@ -20,6 +20,7 @@ interface IInputProps {
   isMultiline?: boolean;
   isReadOnly?: boolean;
   hint?: 'enter' | 'done' | 'next' | 'search' | 'send';
+  defaultValue?: string;
 }
 
 const InputCustom: FC<IInputProps> = ({
@@ -32,6 +33,7 @@ const InputCustom: FC<IInputProps> = ({
   mode,
   isReadOnly,
   hint,
+  defaultValue,
 }) => {
   return (
     <View className='my-3'>
@@ -52,6 +54,7 @@ const InputCustom: FC<IInputProps> = ({
           multiline={isMultiline}
           numberOfLines={4}
           enterKeyHint={hint}
+          defaultValue={defaultValue}
         />
       </View>
     </View>

@@ -84,6 +84,14 @@ export const handlers = [
         updatedUser.password + user.registrationDate.toString(),
       );
 
+      const oldData = db.user.findFirst({
+        where: {
+          id: {
+            equals: updatedUser.id as string,
+          },
+        },
+      })!;
+
       if (updatedUser) {
         db.user.update({
           where: {
@@ -92,16 +100,16 @@ export const handlers = [
             },
           },
           data: {
-            username: updatedUser.username as string,
-            password: hashedPassword,
-            firstName: updatedUser.firstName,
-            lastName: updatedUser.lastName,
-            avatar: updatedUser.avatar,
-            description: updatedUser.description,
+            username: (updatedUser.username as string) ?? oldData.username,
+            password: updatedUser.password ? hashedPassword : oldData.password,
+            firstName: updatedUser.firstName ?? oldData.firstName,
+            lastName: updatedUser.lastName ?? oldData.lastName,
+            avatar: updatedUser.avatar ?? oldData.avatar,
+            description: updatedUser.description ?? oldData.description,
             role: db.role.findFirst({
               where: {
                 id: {
-                  equals: updatedUser.role?.id,
+                  equals: updatedUser.role?.id ?? oldData.role?.id,
                 },
               },
             })!,

@@ -1,5 +1,6 @@
 import { Alert } from 'react-native';
 import * as Crypto from 'expo-crypto';
+import { IUserRequireProps } from '@/lib/types';
 
 export const getAllUsers = async () => {
   const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
@@ -85,6 +86,26 @@ export const createUser = async (
     }
 
     throw new Error('Użytkownik o takim adresie email już istnieje');
+  } catch (err) {
+    Alert.alert('Błąd...', (err as Error).message);
+  }
+};
+
+export const editUser = async (updateData: IUserRequireProps) => {
+  const updateUser = async () => {
+    const update = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/users/${updateData.id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(updateData),
+      },
+    );
+
+    return update.json();
+  };
+
+  try {
+    return await updateUser();
   } catch (err) {
     Alert.alert('Błąd...', (err as Error).message);
   }

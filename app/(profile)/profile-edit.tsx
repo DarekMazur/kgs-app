@@ -7,22 +7,24 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
 import * as DocumentPicker from 'expo-document-picker';
 import InfoBox from '@/components/InfoBox';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
 import { IUserRequireProps } from '@/lib/types';
-import { editUser } from '@/lib/connection';
 import ButtonCustom from '@/components/ButtonCustom';
 import { icons } from '@/constants';
+import { editUser, getSingleUser } from '@/lib/getDataFromApi';
 
 const profileEdit = () => {
   const { user, setGlobalUser } = useGlobalContext();
   const [editedUser, setEditedUser] = useState<IUserRequireProps>(user);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEditedUser({ ...editedUser, password: null });
+  }, []);
 
   const openPicker = async () => {
     const result = await DocumentPicker.getDocumentAsync({
@@ -41,21 +43,21 @@ const profileEdit = () => {
     }
   };
 
-  const handleSave = () => {
-    if (editedUser.username && editedUser.email && editedUser.password) {
-      try {
-        const editedUserData = editUser({
-          ...user,
-          ...editedUser,
-        });
-        setSuccess(true);
-        setGlobalUser(editedUserData);
-        setTimeout(() => {
-          router.push('/profile');
-        }, 1000);
-      } catch (err) {
-        setError((err as Error).message);
-      }
+  const handleSave = async () => {
+    try {
+      await editUser({
+        ...user,
+        ...editedUser,
+      });
+      const updatedUser = await getSingleUser(user.id as string);
+      setGlobalUser(updatedUser[0]);
+      Alert.alert('Sukces!', 'Dane zaktualizowano poprawnie');
+      router.push('/profile');
+    } catch (err) {
+      Alert.alert(
+        'Błąd...',
+        `nie udało się zaktualizować: ${(err as Error).message}`,
+      );
     }
   };
 
@@ -123,7 +125,7 @@ const profileEdit = () => {
                 setEditedUser({ ...editedUser, password: e })
               }
               isPassword
-              mode='email'
+              defaultValue={undefined}
             />
 
             <View className='mt-7 space-y-2'>
@@ -174,17 +176,6 @@ const profileEdit = () => {
               }
               isMultiline
             />
-
-            {error ? (
-              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-red'>
-                {error}
-              </Text>
-            ) : null}
-            {success ? (
-              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-green'>
-                Aktualizacja udana!
-              </Text>
-            ) : null}
           </View>
 
           <ButtonCustom
@@ -192,9 +183,6 @@ const profileEdit = () => {
             handlePress={handleSave}
             containerStyles='mt-7'
             isLoading={false}
-            isDisabled={
-              !editedUser.username || !editedUser.email || !editedUser.password
-            }
           />
         </View>
       </ScrollView>

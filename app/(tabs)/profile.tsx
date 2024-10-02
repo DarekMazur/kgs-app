@@ -71,11 +71,9 @@ const profileScreen = () => {
             <InfoBox
               title='Zdobytych szczytów:'
               subtitle={`${
-                posts.filter((post) => post.author.username === user.username)
-                  .length || 0
+                posts.filter((post) => post.author.id === user.id).length || 0
               } (${percentage(
-                posts.filter((post) => post.author.username === user.username)
-                  .length,
+                posts.filter((post) => post.author.id === user.id).length,
                 peaks.length,
               )}%)`}
               containerStyles='mt-5'
