@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, Image } from 'react-native';
+import { Text, ScrollView, View, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -6,8 +6,8 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { getUser } from '@/lib/connection';
 import { IUserProps } from '@/lib/types';
+import { logIn } from '@/lib/getDataFromApi';
 
 const initUser: IUserProps = {
   email: null,
@@ -17,26 +17,26 @@ const initUser: IUserProps = {
 const signIn = () => {
   const { setGlobalUser, isLogged, setIsLoggedIn } = useGlobalContext();
   const [user, setUser] = useState<IUserProps>(initUser);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isLogged) {
       router.replace('/home');
     }
-  }, [isLogged]);
+  }, []);
 
   const handleSubmit = async () => {
     if (user.email && user.password) {
       try {
-        const loggedUser = getUser(user.email, user.password);
-        if (loggedUser) {
-          setGlobalUser(loggedUser);
-          setIsLoggedIn();
-          router.push('/home');
-        }
+        const loggedUser = await logIn(user.email.toLowerCase(), user.password);
+        setGlobalUser(loggedUser);
+        setIsLoggedIn();
+
+        router.replace('/home');
       } catch (err) {
-        setError((err as Error).message);
+        Alert.alert('Błąd...', (err as Error).message);
       }
+    } else {
+      Alert.alert('Uwaga!', 'Podaj dane logowania!');
     }
   };
 
@@ -63,6 +63,7 @@ const signIn = () => {
               value={user.email ?? ''}
               handleOnChange={(e: string) => setUser({ ...user, email: e })}
               mode='email'
+              hint='next'
             />
 
             <InputCustom
@@ -72,12 +73,6 @@ const signIn = () => {
               handleOnChange={(e: string) => setUser({ ...user, password: e })}
               isPassword
             />
-
-            {error ? (
-              <Text className='absolute bottom-0 w-full mt-2 font-mtbold text-red'>
-                {error}
-              </Text>
-            ) : null}
           </View>
 
           <ButtonCustom

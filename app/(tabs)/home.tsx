@@ -1,13 +1,15 @@
 import { Text, View, Image, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
-import posts from '@/lib/mockData/posts';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
 import { IUserRequireProps } from '@/lib/types';
+import useApi from '@/hooks/useApi';
+import { getAllPosts } from '@/lib/getDataFromApi';
 
 const greetings = (user: IUserRequireProps) => {
   if (user.firstName || user.lastName) {
@@ -18,17 +20,29 @@ const greetings = (user: IUserRequireProps) => {
 };
 
 export const home = () => {
+  const { data: posts } = useApi(getAllPosts);
   const { user } = useGlobalContext();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (posts) {
+      setIsLoading(false);
+    }
+  }, [posts]);
+
+  if (isLoading) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <FlatList
-        data={posts.filter((post) => post.author.id === user.id)}
+        data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostCard
             author={item.author.firstName ?? item.author.username}
-            date={item.createdAt}
+            date={new Date(item.createdAt)}
             title={item.peak.name}
             notes={item.notes}
             photoUrl={item.photo}
@@ -58,7 +72,11 @@ export const home = () => {
               <Text className='text-xl text-secondary text-center'>
                 Ostatnio zdobyte:
               </Text>
-              <Recent recentPosts={[posts[0], posts[1], posts[2]]} />
+              <Recent
+                recentPosts={posts
+                  .filter((post) => post.author?.id === user.id)
+                  .slice(0, 5)}
+              />
             </View>
           </View>
         )}

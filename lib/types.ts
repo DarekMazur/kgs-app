@@ -1,5 +1,11 @@
 import { ImageProps } from 'react-native';
 
+export interface IRoleTypes {
+  id: number;
+  name: string;
+  type: string;
+}
+
 export interface IUserProps {
   email: string | null;
   password: string | null;
@@ -14,8 +20,9 @@ export interface IUserRequireProps extends IRegisterProps {
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  joinAt: Date | null;
+  registrationDate: number | null;
   description?: string;
+  role: IRoleTypes | null;
 }
 
 export interface ITabIconProps {
@@ -28,11 +35,11 @@ export interface ITabIconProps {
 export interface IPeakProps {
   id: string;
   name: string;
-  height: string;
+  height: number;
   description: string;
   trial: string;
   localizationLat: number;
-  LocalizationLng: number;
+  localizationLng: number;
   image: string;
 }
 

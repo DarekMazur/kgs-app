@@ -63,7 +63,9 @@ const LatestPost: FC<ILatestProps> = ({ activeItem, item }) => {
 };
 
 const Recent: FC<IRecentProps> = ({ recentPosts }) => {
-  const [activeItem, setActiveItem] = useState<string>(recentPosts[0].id);
+  const [activeItem, setActiveItem] = useState<string>(
+    recentPosts[0]?.id ?? null,
+  );
 
   const viewableItemsChanged = ({
     viewableItems,
