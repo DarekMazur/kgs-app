@@ -83,7 +83,12 @@ const updatePosts = () => {
         },
       },
       data: {
-        author: author?.id, // eslint-disable-line @typescript-eslint/no-explicit-any
+        author: {
+          id: author?.id,
+          username: author?.username,
+          firstName: author?.firstName,
+          avatar: author?.avatar,
+        },
         peak: peak as any | IPeakProps, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     });
@@ -95,7 +100,9 @@ const updateUsers = () => {
     const postsList = db.post.findMany({
       where: {
         author: {
-          equals: author.id,
+          id: {
+            equals: author.id,
+          },
         },
       },
     });

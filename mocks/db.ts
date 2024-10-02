@@ -23,7 +23,12 @@ export const db = factory({
   },
   post: {
     id: primaryKey(faker.string.uuid),
-    author: () => faker.string.uuid(),
+    author: {
+      id: () => faker.string.uuid(),
+      username: () => faker.internet.userName(),
+      firstName: () => faker.person.firstName(),
+      avatar: () => faker.image.avatar(),
+    },
     createdAt: () => faker.date.past(),
     notes: () => faker.lorem.paragraph(),
     photo: () => faker.image.urlLoremFlickr({ category: 'mountains' }),

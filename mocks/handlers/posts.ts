@@ -23,16 +23,23 @@ export const handlers = [
     const newPost = (await request.json()) as IPostsProps;
     const createdTime = new Date(Date.now());
 
+    const user = db.user.findFirst({
+      where: {
+        id: {
+          equals: newPost.author.id as string,
+        },
+      },
+    })!;
+
     db.post.create({
       id: uuid.v4() as string,
       createdAt: createdTime,
-      author: db.user.findFirst({
-        where: {
-          id: {
-            equals: newPost.author.id as string,
-          },
-        },
-      })!.id,
+      author: {
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        avatar: user.avatar,
+      },
       notes: newPost.notes,
       photo: newPost.photo,
       peak: db.peak.findFirst({
