@@ -47,10 +47,10 @@ export const handlers = [
       email: newUser.email as string,
       password: hashedPassword,
       registrationDate: createdTime,
-      firstName: undefined,
-      lastName: undefined,
-      avatar: undefined,
-      description: undefined,
+      firstName: '',
+      lastName: '',
+      avatar: '',
+      description: '',
       posts: [],
       role: db.role.findFirst({
         where: {
