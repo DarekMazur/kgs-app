@@ -10,6 +10,7 @@ interface IPostCardProps {
   photoUrl: string;
   notes?: string;
   isAuthor?: boolean;
+  onPress?: () => void;
 }
 
 const PostCard: FC<IPostCardProps> = ({
@@ -19,6 +20,7 @@ const PostCard: FC<IPostCardProps> = ({
   notes,
   photoUrl,
   isAuthor,
+  onPress,
 }) => {
   return (
     <View className='w-[90%] pt-3 pb-10 m-3 mb-8 bg-gray-100 self-center rounded-2xl'>
@@ -44,7 +46,7 @@ const PostCard: FC<IPostCardProps> = ({
               resizeMode='contain'
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={onPress}>
             <Image
               source={icons.trash}
               className='w-[25px] h-[25px] self-center ml-3'

@@ -110,3 +110,12 @@ export const editUser = async (updateData: IUserRequireProps) => {
     Alert.alert('Błąd...', (err as Error).message);
   }
 };
+
+export const deletePost = async (id: string) => {
+  const postToDelete = await fetch(
+    `${process.env.EXPO_PUBLIC_API_URL}/posts/${id}`,
+    {
+      method: 'DELETE',
+    },
+  );
+};

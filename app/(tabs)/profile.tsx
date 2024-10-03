@@ -1,4 +1,11 @@
-import { View, TouchableOpacity, Image, FlatList, Text } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  Text,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -8,7 +15,7 @@ import { percentage } from '@/lib/helpers';
 import PostCard from '@/components/PostCard';
 import InfoBox from '@/components/InfoBox';
 import useApi from '@/hooks/useApi';
-import { getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
+import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 
 const profileScreen = () => {
   const { user } = useGlobalContext();
@@ -26,6 +33,16 @@ const profileScreen = () => {
     return <Text>Loading...</Text>;
   }
 
+  const handleDelete = async (id: string) => {
+    try {
+      await deletePost(id).then(() => {
+        Alert.alert('Sukces!', 'Wpis usunięto');
+      });
+    } catch (error) {
+      Alert.alert('Błąd...', error.message);
+    }
+  };
+
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <FlatList
@@ -39,6 +56,7 @@ const profileScreen = () => {
             notes={item.notes}
             photoUrl={item.photo}
             isAuthor
+            onPress={() => handleDelete(item.id)}
           />
         )}
         ListHeaderComponent={() => (
