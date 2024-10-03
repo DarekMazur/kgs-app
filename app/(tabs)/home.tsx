@@ -1,4 +1,4 @@
-import { Text, View, Image, FlatList } from 'react-native';
+import { Text, View, Image, FlatList, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
 import { IUserRequireProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
-import { getAllPosts } from '@/lib/getDataFromApi';
+import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 
 const greetings = (user: IUserRequireProps) => {
   if (user.firstName || user.lastName) {
@@ -34,6 +34,26 @@ export const home = () => {
     return <Text>Loading...</Text>;
   }
 
+  const handleDelete = (id: string) => {
+    Alert.alert('Czy chcesz usunąć wpis?', '', [
+      {
+        text: 'Anuluj',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: async () => {
+          try {
+            await deletePost(id).then(() => {});
+          } catch (error) {
+            Alert.alert('Błąd...', error.message);
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <FlatList
@@ -46,6 +66,7 @@ export const home = () => {
             title={item.peak.name}
             notes={item.notes}
             photoUrl={item.photo}
+            onPress={() => handleDelete(item.id)}
           />
         )}
         ListHeaderComponent={() => (

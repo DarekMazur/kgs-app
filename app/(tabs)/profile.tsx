@@ -33,14 +33,24 @@ const profileScreen = () => {
     return <Text>Loading...</Text>;
   }
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deletePost(id).then(() => {
-        Alert.alert('Sukces!', 'Wpis usunięto');
-      });
-    } catch (error) {
-      Alert.alert('Błąd...', error.message);
-    }
+  const handleDelete = (id: string) => {
+    Alert.alert('Czy chcesz usunąć wpis?', '', [
+      {
+        text: 'Anuluj',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: async () => {
+          try {
+            await deletePost(id).then(() => {});
+          } catch (error) {
+            Alert.alert('Błąd...', error.message);
+          }
+        },
+      },
+    ]);
   };
 
   return (
