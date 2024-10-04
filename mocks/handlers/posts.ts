@@ -1,12 +1,14 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
-import uuid from 'react-native-uuid';
+import { a } from '@mswjs/interceptors/lib/node/BatchInterceptor-13d40c95';
 import { db } from '@/mocks/db';
 import { IPostsProps } from '@/lib/types';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
-    return HttpResponse.json(db.post.getAll());
+    return HttpResponse.json(
+      db.post.getAll().sort((a, b) => b.createdAt - a.createdAt),
+    );
   }),
 
   http.get(
@@ -31,8 +33,8 @@ export const handlers = [
       },
     })!;
 
-    db.post.create({
-      id: uuid.v4() as string,
+    const newPostData = {
+      id: newPost.id,
       createdAt: createdTime,
       author: {
         id: user.id,
@@ -45,13 +47,15 @@ export const handlers = [
       peak: db.peak.findFirst({
         where: {
           id: {
-            equals: newPost.peak.id as string,
+            equals: newPost.peak?.id as string,
           },
         },
       })!,
-    });
+    };
 
-    return HttpResponse.json(newPost, { status: 201 });
+    db.post.create(newPostData);
+
+    return HttpResponse.json(newPostData, { status: 201 });
   }),
 
   http.put(

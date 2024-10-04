@@ -49,5 +49,5 @@ export interface IPostsProps {
   createdAt: Date;
   notes: string;
   photo: string;
-  peak: IPeakProps;
+  peak: IPeakProps | null;
 }
