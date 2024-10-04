@@ -69,7 +69,6 @@ export const handlers = [
           },
           data: {
             notes: updatedPost.notes,
-            photo: updatedPost.photo,
           },
         });
 
