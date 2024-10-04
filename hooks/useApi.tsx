@@ -18,7 +18,9 @@ const useApi = (fn: () => Promise<any>) => {
     fetchData();
   }, []);
 
-  return { data };
+  const refetch = () => fetchData();
+
+  return { data, refetch };
 };
 
 export default useApi;

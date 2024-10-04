@@ -1,4 +1,11 @@
-import { Text, View, Image, FlatList, Alert } from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  FlatList,
+  Alert,
+  RefreshControl,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -20,9 +27,16 @@ const greetings = (user: IUserRequireProps) => {
 };
 
 export const home = () => {
-  const { data: posts } = useApi(getAllPosts);
+  const { data: posts, refetch } = useApi(getAllPosts);
   const { user } = useGlobalContext();
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     if (posts) {
@@ -45,9 +59,9 @@ export const home = () => {
         text: 'OK',
         onPress: async () => {
           try {
-            await deletePost(id).then(() => {});
+            await deletePost(id).then(onRefresh);
           } catch (error) {
-            Alert.alert('Błąd...', error.message);
+            Alert.alert('Błąd...', (error as Error).message);
           }
         },
       },
@@ -117,6 +131,9 @@ export const home = () => {
             />
           </View>
         )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </SafeAreaView>
   );
