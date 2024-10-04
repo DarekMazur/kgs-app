@@ -48,6 +48,7 @@ const RootLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen name='post/[query]' options={{ headerShown: false }} />
       </Stack>
     </GlobalProvider>
   );

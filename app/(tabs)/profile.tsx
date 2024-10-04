@@ -1,4 +1,12 @@
-import { View, TouchableOpacity, Image, FlatList, Text } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  FlatList,
+  Text,
+  Alert,
+  RefreshControl,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -8,13 +16,20 @@ import { percentage } from '@/lib/helpers';
 import PostCard from '@/components/PostCard';
 import InfoBox from '@/components/InfoBox';
 import useApi from '@/hooks/useApi';
-import { getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
+import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 
 const profileScreen = () => {
   const { user } = useGlobalContext();
-  const { data: posts } = useApi(getAllPosts);
+  const { data: posts, refetch } = useApi(getAllPosts);
   const { data: peaks } = useApi(getAllPeaks);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     if (posts && peaks) {
@@ -26,6 +41,26 @@ const profileScreen = () => {
     return <Text>Loading...</Text>;
   }
 
+  const handleDelete = (id: string) => {
+    Alert.alert('Czy chcesz usunąć wpis?', '', [
+      {
+        text: 'Anuluj',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: async () => {
+          try {
+            await deletePost(id).then(onRefresh);
+          } catch (error) {
+            Alert.alert('Błąd...', (error as Error).message);
+          }
+        },
+      },
+    ]);
+  };
+
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <FlatList
@@ -33,12 +68,14 @@ const profileScreen = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostCard
+            id={item.id}
             author={item.author.firstName ?? item.author.username}
             date={new Date(item.createdAt)}
             title={item.peak.name}
             notes={item.notes}
             photoUrl={item.photo}
             isAuthor
+            onPress={() => handleDelete(item.id)}
           />
         )}
         ListHeaderComponent={() => (
@@ -81,6 +118,9 @@ const profileScreen = () => {
             />
           </View>
         )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </SafeAreaView>
   );
