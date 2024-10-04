@@ -82,6 +82,7 @@ export const home = () => {
             notes={item.notes}
             photoUrl={item.photo}
             onPress={() => handleDelete(item.id)}
+            isAuthor={user.id === item.author.id}
           />
         )}
         ListHeaderComponent={() => (
