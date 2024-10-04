@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import * as Crypto from 'expo-crypto';
-import { IUserRequireProps } from '@/lib/types';
+import { IPostsProps, IUserRequireProps } from '@/lib/types';
 
 export const getAllUsers = async () => {
   const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
@@ -91,6 +91,7 @@ export const createUser = async (
   }
 };
 
+// eslint-disable-next-line consistent-return
 export const editUser = async (updateData: IUserRequireProps) => {
   const updateUser = async () => {
     const update = await fetch(
@@ -112,10 +113,28 @@ export const editUser = async (updateData: IUserRequireProps) => {
 };
 
 export const deletePost = async (id: string) => {
-  const postToDelete = await fetch(
-    `${process.env.EXPO_PUBLIC_API_URL}/posts/${id}`,
-    {
-      method: 'DELETE',
-    },
-  );
+  await fetch(`${process.env.EXPO_PUBLIC_API_URL}/posts/${id}`, {
+    method: 'DELETE',
+  });
+};
+
+// eslint-disable-next-line consistent-return
+export const editPost = async (updatePost: IPostsProps) => {
+  const updateData = async () => {
+    const update = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/posts/${updatePost.id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(updatePost),
+      },
+    );
+
+    return update.json();
+  };
+
+  try {
+    return await updateData();
+  } catch (err) {
+    Alert.alert('Błąd...', (err as Error).message);
+  }
 };

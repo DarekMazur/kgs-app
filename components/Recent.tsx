@@ -5,7 +5,7 @@ import {
   ViewToken,
   Image,
 } from 'react-native';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import * as Animatable from 'react-native-animatable';
 import { IPostsProps } from '@/lib/types';
 import { icons } from '@/constants';

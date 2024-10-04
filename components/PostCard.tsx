@@ -1,9 +1,11 @@
 import { Image, Text, View, TouchableOpacity } from 'react-native';
 import { FC } from 'react';
+import { router } from 'expo-router';
 import { formatDate } from '@/lib/helpers';
 import { icons } from '@/constants';
 
 interface IPostCardProps {
+  id: string;
   author: string;
   date: Date;
   title: string;
@@ -14,6 +16,7 @@ interface IPostCardProps {
 }
 
 const PostCard: FC<IPostCardProps> = ({
+  id,
   author,
   date,
   title,
@@ -39,7 +42,7 @@ const PostCard: FC<IPostCardProps> = ({
       </View>
       {isAuthor ? (
         <View className='px-5 mt-5 flex-row justify-end'>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => router.push(`/post/${id}`)}>
             <Image
               source={icons.edit}
               className='w-[25px] h-[25px] self-center mx-3'

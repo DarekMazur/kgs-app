@@ -68,6 +68,7 @@ const profileScreen = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostCard
+            id={item.id}
             author={item.author.firstName ?? item.author.username}
             date={new Date(item.createdAt)}
             title={item.peak.name}
