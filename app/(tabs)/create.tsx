@@ -1,5 +1,5 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { useCameraPermissions } from 'expo-camera';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
 import ScrollView = Animated.ScrollView;
 import { getDistance } from '@/lib/helpers';
+import CameraCustom from '@/components/CameraCustom';
 
 const initialPostData = {
   id: '',
@@ -46,7 +47,6 @@ const createScreen = () => {
   const { data: peaks, refetch } = useApi(getAllPeaks);
   const { user } = useGlobalContext();
   const cameraRef = useRef(null);
-  const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
   const [postData, setPostData] = useState(initialPostData);
@@ -75,7 +75,9 @@ const createScreen = () => {
       onRefresh();
 
       return () => {
-        <View />;
+        setIsCameraActive(false);
+        setPostData(initialPostData);
+        return <View />;
       };
     }, []),
   );
@@ -161,14 +163,11 @@ const createScreen = () => {
   //   );
   // }
 
-  const toggleCameraFacing = () => {
-    setFacing((current) => (current === 'back' ? 'front' : 'back'));
-  };
-
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
       setPostData({ ...postData, photo: photo.uri });
+      setIsCameraActive(false);
     }
   };
 
@@ -183,15 +182,26 @@ const createScreen = () => {
     router.push('/home');
   };
 
+  if (isCameraActive) {
+    return (
+      <CameraCustom
+        cameraRef={cameraRef}
+        takePicture={takePicture}
+        isCameraActive={isCameraActive}
+        handleCameraStatus={handleCameraStatus}
+      />
+    );
+  }
+
   return (
-    <SafeAreaView className='bg-primaryBG text-primary w-full'>
-      <ScrollView className='min-h-full'>
+    <SafeAreaView className='bg-primaryBG text-primary w-full min-h-full'>
+      <ScrollView>
         <View>
-          <View className='items-center justify-center'>
-            <Text className='text-xl text-secondary text-center'>
+          <View className='items-center justify-center my-4'>
+            <Text className='text-3xl text-secondary text-center'>
               Create new post
             </Text>
-            <Text className='text-xl text-secondary text-center'>
+            <Text className='text-xl text-primary text-center mb-3'>
               {distances.length > 0
                 ? `Nearest peak: ${distances[0].name} (${distances[0].dist} km)`
                 : null}
@@ -207,32 +217,25 @@ const createScreen = () => {
             }}
             isMultiline
           />
-          <ButtonCustom
-            title={`Turn ${isCameraActive ? 'off' : 'on'} Camera`}
-            handlePress={handleCameraStatus}
-          />
-          {isCameraActive ? (
-            <CameraView
-              className='min-h-[50%] relative'
-              facing={facing}
-              ref={cameraRef}
+          <View className='min-h-[50%] self-center my-8'>
+            <Image
+              src={postData.photo ?? icons.imagePlaceholder}
+              alt=''
+              className='w-[80%] h-[50%] self-center'
+              resizeMode='cover'
+            />
+            <TouchableOpacity
+              onPress={handleCameraStatus}
+              className='bg-gray-50 rounded-xl h-[62px] w-[62px] flex flex-row self-center justify-center items-center mb-3'
             >
-              <TouchableOpacity
-                className='self-end items-center'
-                onPress={toggleCameraFacing}
-              >
-                <Image
-                  source={icons.switchIcon}
-                  resizeMode='contain'
-                  className='w-8 h-8 m-5'
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                className='absolute self-center bottom-5 h-16 w-16 rounded-[50%] bg-primary border-2 border-primaryBG'
-                onPress={takePicture}
+              <Image
+                src={icons.cameraDark}
+                alt=''
+                className='w-14 h-14'
+                resizeMode='contain'
               />
-            </CameraView>
-          ) : null}
+            </TouchableOpacity>
+          </View>
         </View>
         <ButtonCustom title='Zapisz' handlePress={handleSave} />
       </ScrollView>

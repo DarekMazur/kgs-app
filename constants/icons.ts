@@ -11,6 +11,9 @@ import trash from '../assets/icons/delete.png';
 import close from '../assets/icons/close.png';
 import upload from '../assets/icons/upload.png';
 import switchIcon from '../assets/icons/switch.png';
+import camera from '../assets/icons/camera.png';
+import cameraDark from '../assets/icons/cameraDark.png';
+import imagePlaceholder from '../assets/icons/imagePlaceholder.png';
 
 export default {
   home,
@@ -26,4 +29,7 @@ export default {
   close,
   upload,
   switchIcon,
+  camera,
+  cameraDark,
+  imagePlaceholder,
 };
