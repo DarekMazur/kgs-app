@@ -15,12 +15,12 @@ import { router, useFocusEffect } from 'expo-router';
 import * as Location from 'expo-location';
 import ButtonCustom from '@/components/ButtonCustom';
 import { icons } from '@/constants';
-import { createPost, getAllPeaks } from '@/lib/getDataFromApi';
+import { createPost, getAllPeaks, getSinglePeak } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
 import ScrollView = Animated.ScrollView;
-import getDistance from '@/lib/helpers/getDistance';
+import { getDistance } from '@/lib/helpers';
 
 const initialPostData = {
   id: '',
@@ -45,10 +45,10 @@ interface IDistancesArrayElem {
 const createScreen = () => {
   const { data: peaks, refetch } = useApi(getAllPeaks);
   const { user } = useGlobalContext();
+  const cameraRef = useRef(null);
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
-  const cameraRef = useRef(null);
   const [postData, setPostData] = useState(initialPostData);
   const [location, setLocation] = useState(null);
   const [distances, setDistances] = useState<IDistancesArrayElem[]>([]);
@@ -81,22 +81,30 @@ const createScreen = () => {
   );
 
   useEffect(() => {
-    if (peaks) {
-      const randomPeak = peaks[Math.floor(Math.random() * peaks.length)];
-      setPostData({
-        id: uuid.v4() as string,
-        author: {
-          id: user.id as string,
-          username: user.username,
-          firstName: user.firstName,
-          avatar: user.avatar as string,
-        },
-        peak: randomPeak,
-      });
+    if (peaks && distances.length > 0) {
+      const getPeak = async () => {
+        const peak = await getSinglePeak(distances[0].id);
+        setPostData({
+          id: uuid.v4() as string,
+          author: {
+            id: user.id as string,
+            username: user.username,
+            firstName: user.firstName,
+            avatar: user.avatar as string,
+          },
+          peak,
+        });
+      };
 
+      getPeak();
+    }
+  }, [distances, peaks]);
+
+  useEffect(() => {
+    if (peaks) {
       if (location) {
-        const allDistances = [];
-        peaks.forEach((peak, index) => {
+        const allDistances: IDistancesArrayElem[] = [];
+        peaks.forEach((peak) => {
           const dist = getDistance(
             location.coords.latitude,
             location.coords.altitude,
@@ -133,20 +141,25 @@ const createScreen = () => {
     );
   }
 
-  if (distances.length > 0 && distances[0].dist >= 0.5) {
-    return (
-      <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
-        <Text className='text-2xl text-red text-center p-4'>
-          No peaks close enough!
-        </Text>
-        <ButtonCustom
-          title='Go back'
-          handlePress={() => router.back()}
-          containerStyles='w-[50%]'
-        />
-      </SafeAreaView>
-    );
-  }
+  /*
+  ##################################
+   !!uncomment after testing!!
+  ##################################
+  */
+  // if (distances.length > 0 && distances[0].dist >= 0.5) {
+  //   return (
+  //     <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
+  //       <Text className='text-2xl text-red text-center p-4'>
+  //         No peaks close enough!
+  //       </Text>
+  //       <ButtonCustom
+  //         title='Go back'
+  //         handlePress={() => router.back()}
+  //         containerStyles='w-[50%]'
+  //       />
+  //     </SafeAreaView>
+  //   );
+  // }
 
   const toggleCameraFacing = () => {
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
