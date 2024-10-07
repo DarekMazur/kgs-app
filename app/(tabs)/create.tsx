@@ -22,6 +22,7 @@ import InputCustom from '@/components/InputCustom';
 import ScrollView = Animated.ScrollView;
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
+import InfoBox from '@/components/InfoBox';
 
 const initialPostData = {
   id: '',
@@ -194,9 +195,9 @@ const createScreen = () => {
   }
 
   return (
-    <SafeAreaView className='bg-primaryBG text-primary w-full min-h-full'>
-      <ScrollView>
-        <View>
+    <View className='bg-primaryBG py-5'>
+      <ScrollView className='m-4'>
+        <View className='min-h-screen'>
           <View className='items-center justify-center my-4'>
             <Text className='text-3xl text-secondary text-center'>
               Create new post
@@ -217,29 +218,31 @@ const createScreen = () => {
             }}
             isMultiline
           />
-          <View className='min-h-[50%] self-center my-8'>
+          <Image
+            src={postData.photo ?? icons.imagePlaceholder}
+            alt=''
+            className='w-[80%] h-[30%] self-center'
+            resizeMode='contain'
+          />
+          <TouchableOpacity
+            onPress={handleCameraStatus}
+            className='bg-gray-50 rounded-xl h-[62px] w-[62px] flex flex-row self-center justify-center items-center m-5 p-3'
+          >
             <Image
-              src={postData.photo ?? icons.imagePlaceholder}
+              src={icons.cameraDark}
               alt=''
-              className='w-[80%] h-[50%] self-center'
-              resizeMode='cover'
+              className='w-14 h-14'
+              resizeMode='contain'
             />
-            <TouchableOpacity
-              onPress={handleCameraStatus}
-              className='bg-gray-50 rounded-xl h-[62px] w-[62px] flex flex-row self-center justify-center items-center mb-3'
-            >
-              <Image
-                src={icons.cameraDark}
-                alt=''
-                className='w-14 h-14'
-                resizeMode='contain'
-              />
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+          <ButtonCustom
+            title='Zapisz'
+            handlePress={handleSave}
+            isDisabled={!postData.photo || !postData.notes}
+          />
         </View>
-        <ButtonCustom title='Zapisz' handlePress={handleSave} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
