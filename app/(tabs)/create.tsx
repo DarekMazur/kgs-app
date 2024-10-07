@@ -22,7 +22,6 @@ import InputCustom from '@/components/InputCustom';
 import ScrollView = Animated.ScrollView;
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
-import InfoBox from '@/components/InfoBox';
 
 const initialPostData = {
   id: '',
@@ -53,6 +52,7 @@ const createScreen = () => {
   const [postData, setPostData] = useState(initialPostData);
   const [location, setLocation] = useState(null);
   const [distances, setDistances] = useState<IDistancesArrayElem[]>([]);
+  const [isDouble, setIsDouble] = useState<boolean>(false);
 
   const onRefresh = async () => {
     await refetch();
@@ -84,6 +84,11 @@ const createScreen = () => {
   );
 
   useEffect(() => {
+    if (user && distances.length > 0) {
+      if (user.posts.some((post) => post.peak.id === distances[0].id)) {
+        setIsDouble(true);
+      }
+    }
     if (peaks && distances.length > 0) {
       const getPeak = async () => {
         const peak = await getSinglePeak(distances[0].id);
@@ -163,6 +168,21 @@ const createScreen = () => {
   //     </SafeAreaView>
   //   );
   // }
+
+  if (isDouble) {
+    return (
+      <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
+        <Text className='text-2xl text-red text-center p-4'>
+          You was here already...
+        </Text>
+        <ButtonCustom
+          title='Go back'
+          handlePress={() => router.back()}
+          containerStyles='w-[50%]'
+        />
+      </SafeAreaView>
+    );
+  }
 
   const takePicture = async () => {
     if (cameraRef.current) {
