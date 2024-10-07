@@ -22,6 +22,7 @@ import InputCustom from '@/components/InputCustom';
 import ScrollView = Animated.ScrollView;
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
+import ErrorCustom from '@/components/ErrorCustom';
 
 const initialPostData = {
   id: '',
@@ -140,12 +141,11 @@ const createScreen = () => {
 
   if (!permission.granted) {
     return (
-      <SafeAreaView className='bg-primaryBG text-primary w-full'>
-        <Text className='text-xl text-secondary text-center'>
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title='grant permission' />
-      </SafeAreaView>
+      <ErrorCustom
+        message='We need your permission to show the camera'
+        buttonTitle='Grant permission'
+        handlePress={requestPermission}
+      />
     );
   }
 
@@ -169,21 +169,6 @@ const createScreen = () => {
   //   );
   // }
 
-  if (isDouble) {
-    return (
-      <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
-        <Text className='text-2xl text-red text-center p-4'>
-          You was here already...
-        </Text>
-        <ButtonCustom
-          title='Go back'
-          handlePress={() => router.back()}
-          containerStyles='w-[50%]'
-        />
-      </SafeAreaView>
-    );
-  }
-
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
@@ -202,6 +187,16 @@ const createScreen = () => {
 
     router.push('/home');
   };
+
+  if (isDouble) {
+    return (
+      <ErrorCustom
+        message='You was here already...'
+        buttonTitle='Go back'
+        handlePress={() => router.back()}
+      />
+    );
+  }
 
   if (isCameraActive) {
     return (
