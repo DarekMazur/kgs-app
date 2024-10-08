@@ -1,7 +1,6 @@
 import { Image, TouchableOpacity, View } from 'react-native';
 import { CameraType, CameraView } from 'expo-camera';
 import { FC, useState } from 'react';
-import { router } from 'expo-router';
 import { icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 
@@ -9,7 +8,6 @@ interface ICameraProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cameraRef: any;
   takePicture: () => void;
-  isCameraActive: boolean;
   handleCameraStatus: () => void;
   isFlashActive: boolean;
   handleSwitchFlashMode: () => void;
@@ -18,7 +16,6 @@ interface ICameraProps {
 const CameraCustom: FC<ICameraProps> = ({
   cameraRef,
   takePicture,
-  isCameraActive,
   handleCameraStatus,
   isFlashActive,
   handleSwitchFlashMode,

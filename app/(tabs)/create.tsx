@@ -227,7 +227,6 @@ const createScreen = () => {
       <CameraCustom
         cameraRef={cameraRef}
         takePicture={takePicture}
-        isCameraActive={isCameraActive}
         handleCameraStatus={handleCameraStatus}
         isFlashActive={isFlashActive}
         handleSwitchFlashMode={handleSwitchFlashMode}
@@ -242,11 +241,11 @@ const createScreen = () => {
         <View className='min-h-screen mx-6'>
           <View className='items-center justify-center mt-8'>
             <Text className='text-3xl text-secondary text-center'>
-              Create new post
+              Dodaj wpis
             </Text>
             <Text className='text-xl text-primary text-center mb-3'>
               {!loading && !isLoading
-                ? `Nearest peak: ${distances[0].name} (${distances[0].dist} km)`
+                ? `Najbliższy szczyt: ${distances[0].name} (${distances[0].dist} km)`
                 : null}
             </Text>
           </View>
