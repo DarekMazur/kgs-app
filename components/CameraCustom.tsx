@@ -1,6 +1,7 @@
 import { Image, TouchableOpacity, View } from 'react-native';
 import { CameraType, CameraView } from 'expo-camera';
 import { FC, useState } from 'react';
+import { router } from 'expo-router';
 import { icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 
@@ -35,6 +36,7 @@ const CameraCustom: FC<ICameraProps> = ({
         facing={facing}
         ref={cameraRef}
         flash={isFlashActive ? 'on' : 'off'}
+        enableTorch={isFlashActive}
       >
         <View className='mt-7'>
           <TouchableOpacity

@@ -126,7 +126,7 @@ const createScreen = () => {
           const dist = parseInt(
             getDistance(
               location.coords.latitude as number,
-              location.coords.altitude as number,
+              location.coords.longitude as number,
               peak.localizationLat,
               peak.localizationLng,
             ).toFixed(2),
@@ -275,11 +275,19 @@ const createScreen = () => {
               resizeMode='contain'
             />
           </TouchableOpacity>
-          <ButtonCustom
-            title='Zapisz'
-            handlePress={handleSave}
-            isDisabled={!postData.photo || !postData.notes}
-          />
+          <View className='flex-row w-full justify-between'>
+            <ButtonCustom
+              title='Anuluj'
+              handlePress={() => router.back()}
+              containerStyles='bg-red w-[40%]'
+            />
+            <ButtonCustom
+              title='Zapisz'
+              handlePress={handleSave}
+              isDisabled={!postData.photo || !postData.notes}
+              containerStyles='w-[40%]'
+            />
+          </View>
         </View>
       </ScrollView>
     </View>
