@@ -25,7 +25,6 @@ const GlobalProvider: FC<{ children: ReactElement }> = ({ children }) => {
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
   const setGlobalUser = (newUser: IUserRequireProps) => {
-    console.log(newUser);
     setUser({ ...newUser });
   };
 
