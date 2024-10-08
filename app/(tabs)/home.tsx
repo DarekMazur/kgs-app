@@ -17,6 +17,7 @@ import Recent from '@/components/Recent';
 import { IUserRequireProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
+import Loader from '@/components/Loader';
 
 const greetings = (user: IUserRequireProps) => {
   if (user.firstName || user.lastName) {
@@ -27,9 +28,8 @@ const greetings = (user: IUserRequireProps) => {
 };
 
 export const home = () => {
-  const { data: posts, refetch } = useApi(getAllPosts);
+  const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { user } = useGlobalContext();
-  const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -37,16 +37,6 @@ export const home = () => {
     await refetch();
     setRefreshing(false);
   };
-
-  useEffect(() => {
-    if (posts) {
-      setIsLoading(false);
-    }
-  }, [posts]);
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
 
   const handleDelete = (id: string) => {
     Alert.alert('Czy chcesz usunąć wpis?', '', [
@@ -70,6 +60,7 @@ export const home = () => {
 
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
+      <Loader isLoading={loading} />
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id}

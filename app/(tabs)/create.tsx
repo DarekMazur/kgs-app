@@ -23,6 +23,7 @@ import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
 import ErrorCustom from '@/components/ErrorCustom';
 import { IPeakProps } from '@/lib/types';
+import Loader from '@/components/Loader';
 
 const initialPostData = {
   id: '',
@@ -45,7 +46,7 @@ interface IDistancesArrayElem {
 }
 
 const createScreen = () => {
-  const { data: peaks, refetch } = useApi(getAllPeaks);
+  const { data: peaks, loading, refetch } = useApi(getAllPeaks);
   const { user } = useGlobalContext();
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
@@ -55,6 +56,7 @@ const createScreen = () => {
   const [distances, setDistances] = useState<IDistancesArrayElem[]>([]);
   const [isDouble, setIsDouble] = useState<boolean>(false);
   const [isFlashActive, setIsFlashActive] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const onRefresh = async () => {
     await refetch();
@@ -139,6 +141,7 @@ const createScreen = () => {
         });
         const sorted = allDistances.sort((a, b) => a.dist - b.dist);
         setDistances(sorted);
+        setIsLoading(false);
       }
     }
   }, [location]);
@@ -226,18 +229,9 @@ const createScreen = () => {
     );
   }
 
-  if (distances.length <= 0) {
-    return (
-      <SafeAreaView className='bg-primaryBG pt-5 items-center justify-center h-full'>
-        <Text className='text-xl text-primary text-center mb-3'>
-          Loading...
-        </Text>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <View className='bg-primaryBG pt-5'>
+      <Loader isLoading={loading || isLoading} />
       <ScrollView className='w-full'>
         <View className='min-h-screen mx-6'>
           <View className='items-center justify-center mt-8'>
@@ -247,7 +241,7 @@ const createScreen = () => {
             <Text className='text-xl text-primary text-center mb-3'>
               {distances.length > 0
                 ? `Nearest peak: ${distances[0].name} (${distances[0].dist} km)`
-                : 'Loading...'}
+                : null}
             </Text>
           </View>
           <InputCustom
@@ -278,9 +272,7 @@ const createScreen = () => {
           <ButtonCustom
             title='Zapisz'
             handlePress={handleSave}
-            isDisabled={
-              !postData.photo || !postData.notes || distances.length <= 0
-            }
+            isDisabled={!postData.photo || !postData.notes}
           />
         </View>
       </ScrollView>

@@ -17,12 +17,12 @@ import PostCard from '@/components/PostCard';
 import InfoBox from '@/components/InfoBox';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
+import Loader from '@/components/Loader';
 
 const profileScreen = () => {
   const { user } = useGlobalContext();
-  const { data: posts, refetch } = useApi(getAllPosts);
+  const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { data: peaks } = useApi(getAllPeaks);
-  const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -30,16 +30,6 @@ const profileScreen = () => {
     await refetch();
     setRefreshing(false);
   };
-
-  useEffect(() => {
-    if (posts && peaks) {
-      setIsLoading(false);
-    }
-  }, [posts, peaks]);
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
 
   const handleDelete = (id: string) => {
     Alert.alert('Czy chcesz usunąć wpis?', '', [
@@ -63,6 +53,7 @@ const profileScreen = () => {
 
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
+      <Loader isLoading={loading} />
       <FlatList
         data={posts.filter((post) => post.author.id === user.id)}
         keyExtractor={(item) => item.id}

@@ -7,17 +7,16 @@ import { editPost, getSinglePost } from '@/lib/getDataFromApi';
 import InputCustom from '@/components/InputCustom';
 import ButtonCustom from '@/components/ButtonCustom';
 import View = Animated.View;
+import Loader from '@/components/Loader';
 
 const postEdit = () => {
   const { query } = useLocalSearchParams();
-  const { data: post } = useApi(() => getSinglePost(query as string));
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: post, loading } = useApi(() => getSinglePost(query as string));
   const [notes, setNotes] = useState('');
 
   useEffect(() => {
     if (post) {
       setNotes(post[0].notes);
-      setIsLoading(false);
     }
   }, [post]);
 
@@ -35,12 +34,9 @@ const postEdit = () => {
     }
   };
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
+      <Loader isLoading={loading} />
       <ScrollView className='m-4'>
         <View className='p-3'>
           <Text className='text-white text-center font-mtsemibold text-xl'>
