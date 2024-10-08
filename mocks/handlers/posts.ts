@@ -1,13 +1,17 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
-import { a } from '@mswjs/interceptors/lib/node/BatchInterceptor-13d40c95';
 import { db } from '@/mocks/db';
 import { IPostsProps } from '@/lib/types';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
     return HttpResponse.json(
-      db.post.getAll().sort((a, b) => b.createdAt - a.createdAt),
+      db.post
+        .getAll()
+        .sort(
+          (a, b) =>
+            b.createdAt.getMilliseconds() - a.createdAt.getMilliseconds(),
+        ),
     );
   }),
 
