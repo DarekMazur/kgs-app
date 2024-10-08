@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Animated,
+  ScrollView,
   Alert,
 } from 'react-native';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -14,12 +14,11 @@ import { router, useFocusEffect } from 'expo-router';
 import * as Location from 'expo-location';
 import { LocationObject } from 'expo-location';
 import ButtonCustom from '@/components/ButtonCustom';
-import { icons } from '@/constants';
+import { icons, images } from '@/constants';
 import { createPost, getAllPeaks, getSinglePeak } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
-import ScrollView = Animated.ScrollView;
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
 import ErrorCustom from '@/components/ErrorCustom';
@@ -55,6 +54,7 @@ const createScreen = () => {
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [distances, setDistances] = useState<IDistancesArrayElem[]>([]);
   const [isDouble, setIsDouble] = useState<boolean>(false);
+  const [isFlashActive, setIsFlashActive] = useState<boolean>(false);
 
   const onRefresh = async () => {
     await refetch();
@@ -91,6 +91,7 @@ const createScreen = () => {
         setIsDouble(true);
       }
     }
+
     if (peaks && distances.length > 0) {
       const getPeak = async () => {
         const peak = await getSinglePeak(distances[0].id);
@@ -140,7 +141,7 @@ const createScreen = () => {
         setDistances(sorted);
       }
     }
-  }, [peaks, location]);
+  }, [location]);
 
   if (!permission) {
     return <SafeAreaView />;
@@ -179,7 +180,10 @@ const createScreen = () => {
   const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await (cameraRef.current as CameraView).takePictureAsync();
-      setPostData({ ...postData, photo: photo?.uri ?? icons.imagePlaceholder });
+      setPostData({
+        ...postData,
+        photo: photo?.uri ?? images.imagePlaceholder,
+      });
       setIsCameraActive(false);
     }
   };
@@ -193,6 +197,10 @@ const createScreen = () => {
     setPostData(initialPostData);
 
     router.push('/home');
+  };
+
+  const handleSwitchFlashMode = () => {
+    setIsFlashActive((prevState) => !prevState);
   };
 
   if (isDouble) {
@@ -212,22 +220,34 @@ const createScreen = () => {
         takePicture={takePicture}
         isCameraActive={isCameraActive}
         handleCameraStatus={handleCameraStatus}
+        isFlashActive={isFlashActive}
+        handleSwitchFlashMode={handleSwitchFlashMode}
       />
     );
   }
 
+  if (distances.length <= 0) {
+    return (
+      <SafeAreaView className='bg-primaryBG pt-5 items-center justify-center h-full'>
+        <Text className='text-xl text-primary text-center mb-3'>
+          Loading...
+        </Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <View className='bg-primaryBG py-5'>
-      <ScrollView className='m-4'>
-        <View className='min-h-screen'>
-          <View className='items-center justify-center my-4'>
+    <View className='bg-primaryBG pt-5'>
+      <ScrollView className='w-full'>
+        <View className='min-h-screen mx-6'>
+          <View className='items-center justify-center mt-8'>
             <Text className='text-3xl text-secondary text-center'>
               Create new post
             </Text>
             <Text className='text-xl text-primary text-center mb-3'>
               {distances.length > 0
                 ? `Nearest peak: ${distances[0].name} (${distances[0].dist} km)`
-                : null}
+                : 'Loading...'}
             </Text>
           </View>
           <InputCustom
@@ -241,26 +261,26 @@ const createScreen = () => {
             isMultiline
           />
           <Image
-            src={postData.photo ?? icons.imagePlaceholder}
-            alt=''
+            src={postData.photo ?? images.imagePlaceholder}
             className='w-[80%] h-[30%] self-center'
             resizeMode='contain'
           />
           <TouchableOpacity
             onPress={handleCameraStatus}
-            className='bg-gray-50 rounded-xl h-[62px] w-[62px] flex flex-row self-center justify-center items-center m-5 p-3'
+            className='bg-gray-50 rounded-xl flex flex-row self-center justify-center items-center m-5'
           >
             <Image
               src={icons.cameraDark}
-              alt=''
-              className='w-14 h-14'
+              className='w-12 h-12 m-3'
               resizeMode='contain'
             />
           </TouchableOpacity>
           <ButtonCustom
             title='Zapisz'
             handlePress={handleSave}
-            isDisabled={!postData.photo || !postData.notes}
+            isDisabled={
+              !postData.photo || !postData.notes || distances.length <= 0
+            }
           />
         </View>
       </ScrollView>

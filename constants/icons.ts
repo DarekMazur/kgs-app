@@ -13,7 +13,8 @@ import upload from '../assets/icons/upload.png';
 import switchIcon from '../assets/icons/switch.png';
 import camera from '../assets/icons/camera.png';
 import cameraDark from '../assets/icons/cameraDark.png';
-import imagePlaceholder from '../assets/icons/imagePlaceholder.png';
+import flashActive from '../assets/icons/flashActive.png';
+import flashInactive from '../assets/icons/flashInactive.png';
 
 export default {
   home,
@@ -31,5 +32,6 @@ export default {
   switchIcon,
   camera,
   cameraDark,
-  imagePlaceholder,
+  flashActive,
+  flashInactive,
 };
