@@ -6,12 +6,17 @@ import { IPostsProps } from '@/lib/types';
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
     return HttpResponse.json(
-      db.post
-        .getAll()
-        .sort(
-          (a, b) =>
-            b.createdAt.getMilliseconds() - a.createdAt.getMilliseconds(),
-        ),
+      db.post.getAll().sort((a, b) => {
+        if (b.createdAt > a.createdAt) {
+          return 1;
+        }
+
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        }
+
+        return 0;
+      }),
     );
   }),
 
