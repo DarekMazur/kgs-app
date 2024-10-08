@@ -7,17 +7,19 @@ import { editPost, getSinglePost } from '@/lib/getDataFromApi';
 import InputCustom from '@/components/InputCustom';
 import ButtonCustom from '@/components/ButtonCustom';
 import View = Animated.View;
+import Loader from '@/components/Loader';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { IPostsProps } from '@/lib/types';
 
 const postEdit = () => {
   const { query } = useLocalSearchParams();
-  const { data: post } = useApi(() => getSinglePost(query as string));
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: post, loading } = useApi(() => getSinglePost(query as string));
   const [notes, setNotes] = useState('');
+  const { user, setGlobalUser } = useGlobalContext();
 
   useEffect(() => {
     if (post) {
-      setNotes(post[0].notes);
-      setIsLoading(false);
+      setNotes((post[0] as IPostsProps).notes);
     }
   }, [post]);
 
@@ -28,6 +30,14 @@ const postEdit = () => {
         notes,
       });
 
+      setGlobalUser({
+        ...user,
+        posts: [
+          ...user.posts.filter((userPost) => userPost.id !== post[0].id),
+          post[0],
+        ],
+      });
+
       Alert.alert('Nowy opis został zapisany', 'Odśwież, aby zobaczyć zmiany');
       router.back();
     } catch (err) {
@@ -35,35 +45,34 @@ const postEdit = () => {
     }
   };
 
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
-
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
-      <ScrollView className='m-4'>
-        <View className='p-3'>
-          <Text className='text-white text-center font-mtsemibold text-xl'>
-            Edytuj wpis: {post[0].peak?.name}
-          </Text>
-          <InputCustom
-            placeholder='Opis'
-            title='Opis'
-            value={notes ?? ''}
-            hint='next'
-            handleOnChange={(e: string) => {
-              setNotes(e);
-            }}
-            isMultiline
+      <Loader isLoading={loading} />
+      {!loading && post ? (
+        <ScrollView className='m-4'>
+          <View className='p-3'>
+            <Text className='text-white text-center font-mtsemibold text-xl'>
+              Edytuj wpis: {(post[0] as IPostsProps).peak?.name}
+            </Text>
+            <InputCustom
+              placeholder='Opis'
+              title='Opis'
+              value={notes ?? ''}
+              hint='next'
+              handleOnChange={(e: string) => {
+                setNotes(e);
+              }}
+              isMultiline
+            />
+          </View>
+          <ButtonCustom
+            title='Zapisz'
+            handlePress={handleSave}
+            containerStyles='mt-7'
+            isLoading={false}
           />
-        </View>
-        <ButtonCustom
-          title='Zapisz'
-          handlePress={handleSave}
-          containerStyles='mt-7'
-          isLoading={false}
-        />
-      </ScrollView>
+        </ScrollView>
+      ) : null}
     </SafeAreaView>
   );
 };

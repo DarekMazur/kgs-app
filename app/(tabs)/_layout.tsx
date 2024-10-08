@@ -70,6 +70,22 @@ const TabLayout = () => {
           ),
         }}
       />
+      <Tabs.Screen
+        name='create'
+        options={{
+          tabBarLabel: 'Nowy',
+          title: 'Nowy',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.add}
+              color={color}
+              name='Create'
+              focused={focused}
+            />
+          ),
+        }}
+      />
     </Tabs>
   );
 };

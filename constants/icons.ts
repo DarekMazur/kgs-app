@@ -10,6 +10,11 @@ import editLight from '../assets/icons/editLight.png';
 import trash from '../assets/icons/delete.png';
 import close from '../assets/icons/close.png';
 import upload from '../assets/icons/upload.png';
+import switchIcon from '../assets/icons/switch.png';
+import camera from '../assets/icons/camera.png';
+import cameraDark from '../assets/icons/cameraDark.png';
+import flashActive from '../assets/icons/flashActive.png';
+import flashInactive from '../assets/icons/flashInactive.png';
 
 export default {
   home,
@@ -24,4 +29,9 @@ export default {
   trash,
   close,
   upload,
+  switchIcon,
+  camera,
+  cameraDark,
+  flashActive,
+  flashInactive,
 };

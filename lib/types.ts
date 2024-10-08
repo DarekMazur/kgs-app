@@ -15,23 +15,6 @@ export interface IRegisterProps extends IUserProps {
   username: string | null;
 }
 
-export interface IUserRequireProps extends IRegisterProps {
-  id: string | null;
-  firstName?: string;
-  lastName?: string;
-  avatar?: string;
-  registrationDate: number | null;
-  description?: string;
-  role: IRoleTypes | null;
-}
-
-export interface ITabIconProps {
-  icon: ImageProps;
-  color: string;
-  name: string;
-  focused: boolean;
-}
-
 export interface IPeakProps {
   id: string;
   name: string;
@@ -45,9 +28,32 @@ export interface IPeakProps {
 
 export interface IPostsProps {
   id: string;
-  author: IUserRequireProps;
+  author: {
+    id: string;
+    username: string;
+    firstName: string;
+    avatar: string;
+  };
   createdAt: Date;
   notes: string;
   photo: string;
-  peak: IPeakProps;
+  peak: IPeakProps | null;
+}
+
+export interface IUserRequireProps extends IRegisterProps {
+  id: string | null;
+  firstName?: string;
+  lastName?: string;
+  avatar?: string;
+  registrationDate: number | null;
+  description?: string;
+  role: IRoleTypes | null;
+  posts?: IPostsProps[];
+}
+
+export interface ITabIconProps {
+  icon: ImageProps;
+  color: string;
+  name: string;
+  focused: boolean;
 }

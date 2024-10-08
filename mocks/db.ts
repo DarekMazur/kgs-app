@@ -17,8 +17,10 @@ export const db = factory({
     height: () => faker.number.int({ min: 400, max: 700 }),
     description: () => faker.lorem.words({ min: 10, max: 50 }),
     trial: () => faker.lorem.words({ min: 2, max: 5 }),
-    localizationLat: () => faker.location.latitude(),
-    localizationLng: () => faker.location.longitude(),
+    localizationLat: () =>
+      faker.location.latitude({ max: 51.9194, min: 19.1451 }),
+    localizationLng: () =>
+      faker.location.longitude({ min: 14.24712, max: 23.89251 }),
     image: () => faker.image.urlLoremFlickr({ category: 'mountains' }),
   },
   post: {

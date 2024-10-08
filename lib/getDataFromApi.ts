@@ -23,6 +23,7 @@ export const getUserByEmail = async (userEmail: string) => {
 
 export const getAllPosts = async () => {
   const posts = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/posts`);
+
   return posts.json();
 };
 
@@ -134,6 +135,20 @@ export const editPost = async (updatePost: IPostsProps) => {
 
   try {
     return await updateData();
+  } catch (err) {
+    Alert.alert('Błąd...', (err as Error).message);
+  }
+};
+
+// eslint-disable-next-line consistent-return
+export const createPost = async (postData: IPostsProps) => {
+  try {
+    const newPost = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/posts`, {
+      method: 'POST',
+      body: JSON.stringify(postData),
+    });
+
+    return await newPost.json();
   } catch (err) {
     Alert.alert('Błąd...', (err as Error).message);
   }

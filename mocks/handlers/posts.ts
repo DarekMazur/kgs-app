@@ -1,12 +1,23 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
-import uuid from 'react-native-uuid';
 import { db } from '@/mocks/db';
 import { IPostsProps } from '@/lib/types';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
-    return HttpResponse.json(db.post.getAll());
+    return HttpResponse.json(
+      db.post.getAll().sort((a, b) => {
+        if (b.createdAt > a.createdAt) {
+          return 1;
+        }
+
+        if (a.createdAt > b.createdAt) {
+          return -1;
+        }
+
+        return 0;
+      }),
+    );
   }),
 
   http.get(
@@ -31,8 +42,8 @@ export const handlers = [
       },
     })!;
 
-    db.post.create({
-      id: uuid.v4() as string,
+    const newPostData = {
+      id: newPost.id,
       createdAt: createdTime,
       author: {
         id: user.id,
@@ -45,13 +56,25 @@ export const handlers = [
       peak: db.peak.findFirst({
         where: {
           id: {
-            equals: newPost.peak.id as string,
+            equals: newPost.peak?.id as string,
           },
         },
       })!,
+    };
+
+    db.post.create(newPostData);
+    db.user.update({
+      where: {
+        id: {
+          equals: user.id,
+        },
+      },
+      data: {
+        posts: [...user.posts, newPostData],
+      },
     });
 
-    return HttpResponse.json(newPost, { status: 201 });
+    return HttpResponse.json(newPostData, { status: 201 });
   }),
 
   http.put(
@@ -83,11 +106,38 @@ export const handlers = [
       const { postId } = params;
 
       if (postId) {
+        const post = db.post.findFirst({
+          where: {
+            id: {
+              equals: postId as string,
+            },
+          },
+        })!;
+
+        const user = db.user.findFirst({
+          where: {
+            id: {
+              equals: post.author.id as string,
+            },
+          },
+        })!;
+
         db.post.delete({
           where: {
             id: {
               equals: postId as string,
             },
+          },
+        });
+
+        db.user.update({
+          where: {
+            id: {
+              equals: user.id as string,
+            },
+          },
+          data: {
+            posts: user.posts.filter((userPost) => userPost.id !== postId),
           },
         });
         return HttpResponse.json();
