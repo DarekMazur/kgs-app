@@ -44,7 +44,10 @@ const Menu: FC<IMenuProps> = () => {
         </TouchableOpacity>
         <TouchableOpacity
           className='m-4 p-2 flex-row items-center w-[60%] justify-start'
-          onPress={() => {}}
+          onPress={() => {
+            setRoute('/create');
+            router.replace('/create');
+          }}
         >
           <Image
             source={icons.add}
