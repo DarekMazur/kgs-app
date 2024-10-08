@@ -24,6 +24,7 @@ const CameraCustom: FC<ICameraProps> = ({
   handleSwitchFlashMode,
 }) => {
   const [facing, setFacing] = useState<CameraType>('back');
+  const [isReady, setIsReady] = useState<boolean>(false);
 
   const toggleCameraFacing = () => {
     setFacing((current) => (current === 'back' ? 'front' : 'back'));
@@ -37,8 +38,10 @@ const CameraCustom: FC<ICameraProps> = ({
         ref={cameraRef}
         flash={isFlashActive ? 'on' : 'off'}
         enableTorch={isFlashActive}
+        onCameraReady={() => setIsReady(true)}
+        mirror
       >
-        <View className='mt-7'>
+        <View className='mt-14 mr-3'>
           <TouchableOpacity
             className='self-end items-center'
             onPress={toggleCameraFacing}
@@ -61,8 +64,9 @@ const CameraCustom: FC<ICameraProps> = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          className='absolute self-center items-center justify-center bottom-5 h-16 w-16 rounded-[50%] bg-primary border-2 border-primaryBG'
+          className='absolute self-center items-center justify-center bottom-7 h-16 w-16 rounded-[50%] bg-primary border-2 border-primaryBG'
           onPress={takePicture}
+          disabled={!isReady}
         >
           <Image
             source={icons.cameraDark}
@@ -71,8 +75,9 @@ const CameraCustom: FC<ICameraProps> = ({
           />
         </TouchableOpacity>
         <ButtonCustom
-          title={`Turn ${isCameraActive ? 'off' : 'on'} Camera`}
+          title='Cofnij'
           handlePress={handleCameraStatus}
+          containerStyles='absolute bg-red bottom-2 min-h-[50px] w-[70px]'
         />
       </CameraView>
     </View>
