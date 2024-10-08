@@ -165,7 +165,7 @@ const createScreen = () => {
    !!uncomment after testing!!
   ##################################
   */
-  // if (distances.length > 0 && distances[0].dist >= 0.5) {
+  // if (!isLoading && distances[0].dist >= 0.5) {
   //   return (
   //     <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
   //       <Text className='text-2xl text-red text-center p-4'>
@@ -239,7 +239,7 @@ const createScreen = () => {
               Create new post
             </Text>
             <Text className='text-xl text-primary text-center mb-3'>
-              {distances.length > 0
+              {!loading && !isLoading
                 ? `Nearest peak: ${distances[0].name} (${distances[0].dist} km)`
                 : null}
             </Text>

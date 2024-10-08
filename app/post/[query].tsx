@@ -37,29 +37,31 @@ const postEdit = () => {
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
       <Loader isLoading={loading} />
-      <ScrollView className='m-4'>
-        <View className='p-3'>
-          <Text className='text-white text-center font-mtsemibold text-xl'>
-            Edytuj wpis: {post[0].peak?.name}
-          </Text>
-          <InputCustom
-            placeholder='Opis'
-            title='Opis'
-            value={notes ?? ''}
-            hint='next'
-            handleOnChange={(e: string) => {
-              setNotes(e);
-            }}
-            isMultiline
+      {loading ? (
+        <ScrollView className='m-4'>
+          <View className='p-3'>
+            <Text className='text-white text-center font-mtsemibold text-xl'>
+              Edytuj wpis: {post[0].peak?.name}
+            </Text>
+            <InputCustom
+              placeholder='Opis'
+              title='Opis'
+              value={notes ?? ''}
+              hint='next'
+              handleOnChange={(e: string) => {
+                setNotes(e);
+              }}
+              isMultiline
+            />
+          </View>
+          <ButtonCustom
+            title='Zapisz'
+            handlePress={handleSave}
+            containerStyles='mt-7'
+            isLoading={false}
           />
-        </View>
-        <ButtonCustom
-          title='Zapisz'
-          handlePress={handleSave}
-          containerStyles='mt-7'
-          isLoading={false}
-        />
-      </ScrollView>
+        </ScrollView>
+      ) : null}
     </SafeAreaView>
   );
 };
