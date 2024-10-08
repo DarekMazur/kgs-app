@@ -1,9 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useCameraPermissions } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import {
   View,
   Text,
-  Button,
   TouchableOpacity,
   Image,
   Animated,
@@ -13,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import uuid from 'react-native-uuid';
 import { router, useFocusEffect } from 'expo-router';
 import * as Location from 'expo-location';
+import { LocationObject } from 'expo-location';
 import ButtonCustom from '@/components/ButtonCustom';
 import { icons } from '@/constants';
 import { createPost, getAllPeaks, getSinglePeak } from '@/lib/getDataFromApi';
@@ -23,6 +23,7 @@ import ScrollView = Animated.ScrollView;
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
 import ErrorCustom from '@/components/ErrorCustom';
+import { IPeakProps } from '@/lib/types';
 
 const initialPostData = {
   id: '',
@@ -32,7 +33,7 @@ const initialPostData = {
     firstName: '',
     avatar: '',
   },
-  createdAt: null,
+  createdAt: new Date(Date.now()),
   notes: '',
   photo: '',
   peak: null,
@@ -51,7 +52,7 @@ const createScreen = () => {
   const [permission, requestPermission] = useCameraPermissions();
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
   const [postData, setPostData] = useState(initialPostData);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<LocationObject | null>(null);
   const [distances, setDistances] = useState<IDistancesArrayElem[]>([]);
   const [isDouble, setIsDouble] = useState<boolean>(false);
 
@@ -67,8 +68,8 @@ const createScreen = () => {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      const userLocation = await Location.getCurrentPositionAsync({});
+      setLocation(userLocation);
     })();
   }, []);
 
@@ -86,7 +87,7 @@ const createScreen = () => {
 
   useEffect(() => {
     if (user && distances.length > 0) {
-      if (user.posts.some((post) => post.peak.id === distances[0].id)) {
+      if (user.posts?.some((post) => post.peak?.id === distances[0].id)) {
         setIsDouble(true);
       }
     }
@@ -97,10 +98,13 @@ const createScreen = () => {
           id: uuid.v4() as string,
           author: {
             id: user.id as string,
-            username: user.username,
-            firstName: user.firstName,
+            username: user.username as string,
+            firstName: user.firstName as string,
             avatar: user.avatar as string,
           },
+          createdAt: postData.createdAt,
+          notes: postData.notes,
+          photo: postData.photo,
           peak,
         });
       };
@@ -113,13 +117,16 @@ const createScreen = () => {
     if (peaks) {
       if (location) {
         const allDistances: IDistancesArrayElem[] = [];
-        peaks.forEach((peak) => {
-          const dist = getDistance(
-            location.coords.latitude,
-            location.coords.altitude,
-            peak.localizationLat,
-            peak.localizationLng,
-          ).toFixed(2);
+        (peaks as IPeakProps[]).forEach((peak) => {
+          const dist = parseInt(
+            getDistance(
+              location.coords.latitude as number,
+              location.coords.altitude as number,
+              peak.localizationLat,
+              peak.localizationLng,
+            ).toFixed(2),
+            10,
+          );
 
           const peakDistance = {
             id: peak.id,
@@ -171,8 +178,8 @@ const createScreen = () => {
 
   const takePicture = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
-      setPostData({ ...postData, photo: photo.uri });
+      const photo = await (cameraRef.current as CameraView).takePictureAsync();
+      setPostData({ ...postData, photo: photo?.uri ?? icons.imagePlaceholder });
       setIsCameraActive(false);
     }
   };

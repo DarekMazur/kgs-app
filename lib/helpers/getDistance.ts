@@ -7,7 +7,7 @@ export default (baseLat: number, baseLng: number, lat: number, lng: number) => {
   const radLat2 = (Math.PI * lat) / 180;
   const theta = baseLng - lng;
   const radTheta = (Math.PI * theta) / 180;
-  let dist =
+  let dist: number =
     Math.sin(radLat1) * Math.sin(radLat2) +
     Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
 
