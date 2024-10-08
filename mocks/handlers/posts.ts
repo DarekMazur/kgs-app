@@ -58,6 +58,16 @@ export const handlers = [
     };
 
     db.post.create(newPostData);
+    db.user.update({
+      where: {
+        id: {
+          equals: user.id,
+        },
+      },
+      data: {
+        posts: [...user.posts, newPostData],
+      },
+    });
 
     return HttpResponse.json(newPostData, { status: 201 });
   }),
@@ -91,11 +101,38 @@ export const handlers = [
       const { postId } = params;
 
       if (postId) {
+        const post = db.post.findFirst({
+          where: {
+            id: {
+              equals: postId as string,
+            },
+          },
+        })!;
+
+        const user = db.user.findFirst({
+          where: {
+            id: {
+              equals: post.author.id as string,
+            },
+          },
+        })!;
+
         db.post.delete({
           where: {
             id: {
               equals: postId as string,
             },
+          },
+        });
+
+        db.user.update({
+          where: {
+            id: {
+              equals: user.id as string,
+            },
+          },
+          data: {
+            posts: user.posts.filter((userPost) => userPost.id !== postId),
           },
         });
         return HttpResponse.json();

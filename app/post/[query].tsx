@@ -8,15 +8,18 @@ import InputCustom from '@/components/InputCustom';
 import ButtonCustom from '@/components/ButtonCustom';
 import View = Animated.View;
 import Loader from '@/components/Loader';
+import { useGlobalContext } from '@/context/GlobalProvider';
+import { IPostsProps } from '@/lib/types';
 
 const postEdit = () => {
   const { query } = useLocalSearchParams();
   const { data: post, loading } = useApi(() => getSinglePost(query as string));
   const [notes, setNotes] = useState('');
+  const { user, setGlobalUser } = useGlobalContext();
 
   useEffect(() => {
     if (post) {
-      setNotes(post[0].notes);
+      setNotes((post[0] as IPostsProps).notes);
     }
   }, [post]);
 
@@ -25,6 +28,14 @@ const postEdit = () => {
       await editPost({
         ...post[0],
         notes,
+      });
+
+      setGlobalUser({
+        ...user,
+        posts: [
+          ...user.posts.filter((userPost) => userPost.id !== post[0].id),
+          post[0],
+        ],
       });
 
       Alert.alert('Nowy opis został zapisany', 'Odśwież, aby zobaczyć zmiany');
@@ -37,11 +48,11 @@ const postEdit = () => {
   return (
     <SafeAreaView className='bg-primaryBG h-full'>
       <Loader isLoading={loading} />
-      {loading ? (
+      {!loading && post ? (
         <ScrollView className='m-4'>
           <View className='p-3'>
             <Text className='text-white text-center font-mtsemibold text-xl'>
-              Edytuj wpis: {post[0].peak?.name}
+              Edytuj wpis: {(post[0] as IPostsProps).peak?.name}
             </Text>
             <InputCustom
               placeholder='Opis'

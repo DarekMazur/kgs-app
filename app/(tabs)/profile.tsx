@@ -19,7 +19,7 @@ import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 
 const profileScreen = () => {
-  const { user } = useGlobalContext();
+  const { user, setGlobalUser } = useGlobalContext();
   const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
@@ -42,6 +42,10 @@ const profileScreen = () => {
         onPress: async () => {
           try {
             await deletePost(id).then(onRefresh);
+            setGlobalUser({
+              ...user,
+              posts: user.posts?.filter((post) => post.id !== id),
+            });
           } catch (error) {
             Alert.alert('Błąd...', (error as Error).message);
           }

@@ -22,7 +22,7 @@ import InputCustom from '@/components/InputCustom';
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
 import ErrorCustom from '@/components/ErrorCustom';
-import { IPeakProps } from '@/lib/types';
+import { IPeakProps, IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 
 const initialPostData = {
@@ -47,7 +47,7 @@ interface IDistancesArrayElem {
 
 const createScreen = () => {
   const { data: peaks, loading, refetch } = useApi(getAllPeaks);
-  const { user } = useGlobalContext();
+  const { user, setGlobalUser } = useGlobalContext();
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
@@ -81,11 +81,14 @@ const createScreen = () => {
 
       return () => {
         setIsCameraActive(false);
+        setIsDouble(false);
         setPostData(initialPostData);
         return <View />;
       };
     }, []),
   );
+
+  useEffect(() => {}, [user, distances]);
 
   useEffect(() => {
     if (user && distances.length > 0) {
@@ -93,7 +96,6 @@ const createScreen = () => {
         setIsDouble(true);
       }
     }
-
     if (peaks && distances.length > 0) {
       const getPeak = async () => {
         const peak = await getSinglePeak(distances[0].id);
@@ -108,7 +110,7 @@ const createScreen = () => {
           createdAt: postData.createdAt,
           notes: postData.notes,
           photo: postData.photo,
-          peak,
+          peak: peak[0],
         });
       };
 
@@ -145,20 +147,6 @@ const createScreen = () => {
       }
     }
   }, [location]);
-
-  if (!permission) {
-    return <SafeAreaView />;
-  }
-
-  if (!permission.granted) {
-    return (
-      <ErrorCustom
-        message='We need your permission to show the camera'
-        buttonTitle='Grant permission'
-        handlePress={requestPermission}
-      />
-    );
-  }
 
   /*
   ##################################
@@ -197,7 +185,11 @@ const createScreen = () => {
 
   const handleSave = async () => {
     await createPost(postData);
-    setPostData(initialPostData);
+
+    setGlobalUser({
+      ...user,
+      posts: [...(user.posts as IPostsProps[]), postData],
+    });
 
     router.push('/home');
   };
@@ -205,6 +197,20 @@ const createScreen = () => {
   const handleSwitchFlashMode = () => {
     setIsFlashActive((prevState) => !prevState);
   };
+
+  if (!permission) {
+    return <SafeAreaView />;
+  }
+
+  if (!permission.granted) {
+    return (
+      <ErrorCustom
+        message='We need your permission to show the camera'
+        buttonTitle='Grant permission'
+        handlePress={requestPermission}
+      />
+    );
+  }
 
   if (isDouble) {
     return (
