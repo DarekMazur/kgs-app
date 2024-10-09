@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import useApi from '@/hooks/useApi';
 import { getAllPosts, getSinglePeak } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
+import { formatDate } from '@/lib/helpers';
 
 const peak = () => {
   const { query } = useLocalSearchParams();
@@ -22,7 +23,9 @@ const peak = () => {
       );
       const peakConquerors = [];
 
-      peakPosts.forEach((post) => peakConquerors.push(post.author.username));
+      peakPosts.forEach((post) =>
+        peakConquerors.push({ ...post.author, time: post.createdAt }),
+      );
 
       setHikers(peakConquerors);
     }
@@ -54,8 +57,12 @@ const peak = () => {
               <>
                 <Text className='text-secondary mb-2'>Szyt zdobyli</Text>
                 {hikers.map((hiker, index) => (
-                  <Text key={hiker} className='py-1 text-primary'>
-                    {index + 1}. {hiker}
+                  <Text key={hiker.id} className='py-1 text-primary'>
+                    {index + 1}.{' '}
+                    {hiker.firstName
+                      ? `${hiker.firstName} (${hiker.username})`
+                      : hiker.username}{' '}
+                    ({formatDate(new Date(hiker.time))})
                   </Text>
                 ))}
               </>
