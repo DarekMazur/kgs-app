@@ -4,7 +4,9 @@ import { db } from '@/mocks/db';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/peaks`, () => {
-    return HttpResponse.json(db.peak.getAll());
+    return HttpResponse.json(
+      db.peak.getAll().sort((a, b) => b.height - a.height),
+    );
   }),
 
   http.get(
