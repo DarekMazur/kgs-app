@@ -1,11 +1,13 @@
-import { Image, Text, View, TouchableOpacity } from 'react-native';
+import { Image, Text, View, TouchableOpacity, Touchable } from 'react-native';
 import { FC } from 'react';
 import { router } from 'expo-router';
+import { contain } from '@hapi/hoek';
 import { formatDate } from '@/lib/helpers';
 import { icons } from '@/constants';
 
 interface IPostCardProps {
   id: string;
+  peakId: string;
   author: string;
   date: Date;
   title: string;
@@ -17,6 +19,7 @@ interface IPostCardProps {
 
 const PostCard: FC<IPostCardProps> = ({
   id,
+  peakId,
   author,
   date,
   title,
@@ -32,9 +35,19 @@ const PostCard: FC<IPostCardProps> = ({
       </Text>
       <Image
         source={{ uri: photoUrl }}
-        className='w-full h-[250px] self-center m-3'
+        className='w-full h-[250px] self-center m-3 relative'
         resizeMode='cover'
       />
+      <TouchableOpacity
+        className='absolute right-2 top-[240px]'
+        onPress={() => router.push(`/peak/${peakId}`)}
+      >
+        <Image
+          source={icons.moreInfo}
+          className='w-9 h-9 m-3'
+          resizeMode='contain'
+        />
+      </TouchableOpacity>
       <View className='self-end items-end px-5'>
         <Text className='py-2 text-4xl text-red font-obregular'>{title}</Text>
         <Text className='pb-3 leading-5'>{notes}</Text>

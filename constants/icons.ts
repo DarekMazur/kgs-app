@@ -15,6 +15,7 @@ import camera from '../assets/icons/camera.png';
 import cameraDark from '../assets/icons/cameraDark.png';
 import flashActive from '../assets/icons/flashActive.png';
 import flashInactive from '../assets/icons/flashInactive.png';
+import moreInfo from '../assets/icons/moreInfo.png';
 
 export default {
   home,
@@ -34,4 +35,5 @@ export default {
   cameraDark,
   flashActive,
   flashInactive,
+  moreInfo,
 };
