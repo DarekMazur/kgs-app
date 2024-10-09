@@ -16,6 +16,7 @@ import cameraDark from '../assets/icons/cameraDark.png';
 import flashActive from '../assets/icons/flashActive.png';
 import flashInactive from '../assets/icons/flashInactive.png';
 import moreInfo from '../assets/icons/moreInfo.png';
+import mountain from '../assets/icons/mountain.png';
 
 export default {
   home,
@@ -36,4 +37,5 @@ export default {
   flashActive,
   flashInactive,
   moreInfo,
+  mountain,
 };

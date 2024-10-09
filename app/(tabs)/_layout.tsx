@@ -71,6 +71,22 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
+        name='peaks'
+        options={{
+          tabBarLabel: 'Szczyty',
+          title: 'Szczyty',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.mountain}
+              color={color}
+              name='Szczyty'
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name='create'
         options={{
           tabBarLabel: 'Nowy',
