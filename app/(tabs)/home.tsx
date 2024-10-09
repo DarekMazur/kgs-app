@@ -68,6 +68,7 @@ export const home = () => {
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
+              peakId={item.peak.id}
               author={item.author.firstName ?? item.author.username}
               date={new Date(item.createdAt)}
               title={item.peak.name}

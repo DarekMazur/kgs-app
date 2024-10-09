@@ -1,4 +1,4 @@
-import { Image, Text, View, TouchableOpacity } from 'react-native';
+import { Image, Text, View, TouchableOpacity, Touchable } from 'react-native';
 import { FC } from 'react';
 import { router } from 'expo-router';
 import { formatDate } from '@/lib/helpers';
@@ -6,6 +6,7 @@ import { icons } from '@/constants';
 
 interface IPostCardProps {
   id: string;
+  peakId: string;
   author: string;
   date: Date;
   title: string;
@@ -17,6 +18,7 @@ interface IPostCardProps {
 
 const PostCard: FC<IPostCardProps> = ({
   id,
+  peakId,
   author,
   date,
   title,
@@ -36,7 +38,9 @@ const PostCard: FC<IPostCardProps> = ({
         resizeMode='cover'
       />
       <View className='self-end items-end px-5'>
-        <Text className='py-2 text-4xl text-red font-obregular'>{title}</Text>
+        <TouchableOpacity onPress={() => router.push(`/peak/${peakId}`)}>
+          <Text className='py-2 text-4xl text-red font-obregular'>{title}</Text>
+        </TouchableOpacity>
         <Text className='pb-3 leading-5'>{notes}</Text>
         <Text className='italic'>{formatDate(date)}</Text>
       </View>
