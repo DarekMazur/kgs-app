@@ -28,7 +28,7 @@ const ButtonCustom: FC<IButtonProps> = ({
       }`}
       disabled={isLoading || isDisabled}
     >
-      <Text className={`text-primary font-mtemibold text-lg ${textStyles}`}>
+      <Text className={`text-primary font-mtsemibold text-lg ${textStyles}`}>
         {title}
       </Text>
     </TouchableOpacity>

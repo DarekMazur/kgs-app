@@ -49,12 +49,12 @@ const LatestPost: FC<ILatestProps> = ({ activeItem, item }) => {
           source={{
             uri: item.photo,
           }}
-          className='w-52 h-72 rounded-[33px] my-2 overflow-hidden shadow-lg shadow-black/40'
+          className='w-52 h-72 rounded-3xl my-2 overflow-hidden shadow-lg shadow-black/40'
           resizeMode='cover'
         />
         <Image
           source={item.author.avatar ?? icons.defaultAvatar}
-          className='w-12 h-12 absolute top-4 left-4 rounded-[50%] border-2 border-primaryBG'
+          className='w-12 h-12 absolute top-4 left-4 rounded-full border-2 border-primaryBG'
           resizeMode='contain'
         />
       </View>
