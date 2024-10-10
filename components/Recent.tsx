@@ -1,6 +1,7 @@
 import { FlatList, View, ImageBackground, ViewToken } from 'react-native';
 import { FC, useState } from 'react';
 import * as Animatable from 'react-native-animatable';
+import { CustomAnimation } from 'react-native-animatable';
 import { IPostsProps } from '@/lib/types';
 
 interface IRecentProps {
@@ -12,21 +13,25 @@ interface ILatestProps {
   item: IPostsProps;
 }
 
-const zoomIn = {
+const zoomIn: CustomAnimation = {
   0: {
-    scale: 0.8,
+    scaleX: 0.8,
+    scaleY: 0.8,
   },
   1: {
-    scale: 1,
+    scaleX: 1,
+    scaleY: 1,
   },
 };
 
-const zoomOut = {
+const zoomOut: CustomAnimation = {
   0: {
-    scale: 1,
+    scaleX: 1,
+    scaleY: 1,
   },
   1: {
-    scale: 0.8,
+    scaleX: 0.8,
+    scaleY: 0.8,
   },
 };
 
