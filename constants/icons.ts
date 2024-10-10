@@ -19,6 +19,7 @@ import moreInfo from '../assets/icons/moreInfo.png';
 import mountain from '../assets/icons/mountain.png';
 import eye from '../assets/icons/eye.png';
 import noVision from '../assets/icons/noVision.png';
+import ranking from '../assets/icons/ranking.png';
 
 export default {
   home,
@@ -42,4 +43,5 @@ export default {
   mountain,
   eye,
   noVision,
+  ranking,
 };

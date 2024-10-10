@@ -87,6 +87,22 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
+        name='ranking'
+        options={{
+          tabBarLabel: 'Zdobywcy',
+          title: 'Zdobywcy',
+          headerShown: false,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.ranking}
+              color={color}
+              name='Zdobywcy'
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name='create'
         options={{
           tabBarLabel: 'Nowy',
