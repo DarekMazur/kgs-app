@@ -17,6 +17,8 @@ import flashActive from '../assets/icons/flashActive.png';
 import flashInactive from '../assets/icons/flashInactive.png';
 import moreInfo from '../assets/icons/moreInfo.png';
 import mountain from '../assets/icons/mountain.png';
+import eye from '../assets/icons/eye.png';
+import noVision from '../assets/icons/noVision.png';
 
 export default {
   home,
@@ -38,4 +40,6 @@ export default {
   flashInactive,
   moreInfo,
   mountain,
+  eye,
+  noVision,
 };

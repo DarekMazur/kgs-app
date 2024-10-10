@@ -1,6 +1,6 @@
-import { TextInput, View, Text } from 'react-native';
-import { FC } from 'react';
-import { colors } from '@/constants';
+import { TextInput, View, Text, TouchableOpacity, Image } from 'react-native';
+import { FC, useState } from 'react';
+import { colors, icons } from '@/constants';
 
 interface IInputProps {
   placeholder: string;
@@ -35,11 +35,13 @@ const InputCustom: FC<IInputProps> = ({
   hint,
   defaultValue,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <View className='my-3'>
       <Text className='text-base text-gray-100 font-pmedium'>{title}</Text>
       <View
-        className={`p-3 my-1 border border-gray-100 rounded-md ${isReadOnly ? 'bg-black-200' : ''}`}
+        className={`"w-full p-3 my-1 border border-gray-100 rounded-md focus:border-secondary flex flex-row items-center ${isReadOnly ? 'bg-black-200' : ''}`}
       >
         <TextInput
           className={`flex-1 font-mtsemibold text-base ${isReadOnly ? 'text-gray-200' : 'text-primary'}`}
@@ -48,7 +50,7 @@ const InputCustom: FC<IInputProps> = ({
           placeholder={placeholder}
           placeholderTextColor={colors.gray.v100}
           onChangeText={handleOnChange}
-          secureTextEntry={isPassword}
+          secureTextEntry={isPassword && !showPassword}
           inputMode={mode}
           keyboardType={mode === 'email' ? 'email-address' : 'default'}
           multiline={isMultiline}
@@ -56,6 +58,16 @@ const InputCustom: FC<IInputProps> = ({
           enterKeyHint={hint}
           defaultValue={defaultValue}
         />
+
+        {isPassword && (
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            <Image
+              source={!showPassword ? icons.eye : icons.noVision}
+              className='w-6 h-6'
+              resizeMode='contain'
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

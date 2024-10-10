@@ -61,7 +61,7 @@ const CameraCustom: FC<ICameraProps> = ({
           </TouchableOpacity>
         </View>
         <TouchableOpacity
-          className='absolute self-center items-center justify-center bottom-7 h-16 w-16 rounded-[50%] bg-primary border-2 border-primaryBG'
+          className='absolute self-center items-center justify-center bottom-7 h-16 w-16 rounded-full bg-primary border-2 border-primaryBG'
           onPress={takePicture}
           disabled={!isReady}
         >

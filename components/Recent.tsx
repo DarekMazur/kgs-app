@@ -1,14 +1,8 @@
-import {
-  FlatList,
-  View,
-  ImageBackground,
-  ViewToken,
-  Image,
-} from 'react-native';
+import { FlatList, View, ImageBackground, ViewToken } from 'react-native';
 import { FC, useState } from 'react';
 import * as Animatable from 'react-native-animatable';
+import { CustomAnimation } from 'react-native-animatable';
 import { IPostsProps } from '@/lib/types';
-import { icons } from '@/constants';
 
 interface IRecentProps {
   recentPosts: Array<IPostsProps>;
@@ -19,21 +13,25 @@ interface ILatestProps {
   item: IPostsProps;
 }
 
-const zoomIn = {
+const zoomIn: CustomAnimation = {
   0: {
-    scale: 0.8,
+    scaleX: 0.8,
+    scaleY: 0.8,
   },
   1: {
-    scale: 1,
+    scaleX: 1,
+    scaleY: 1,
   },
 };
 
-const zoomOut = {
+const zoomOut: CustomAnimation = {
   0: {
-    scale: 1,
+    scaleX: 1,
+    scaleY: 1,
   },
   1: {
-    scale: 0.8,
+    scaleX: 0.8,
+    scaleY: 0.8,
   },
 };
 
@@ -49,13 +47,8 @@ const LatestPost: FC<ILatestProps> = ({ activeItem, item }) => {
           source={{
             uri: item.photo,
           }}
-          className='w-52 h-72 rounded-[33px] my-2 overflow-hidden shadow-lg shadow-black/40'
+          className='w-52 h-72 rounded-3xl my-2 overflow-hidden shadow-lg shadow-black/40'
           resizeMode='cover'
-        />
-        <Image
-          source={item.author.avatar ?? icons.defaultAvatar}
-          className='w-12 h-12 absolute top-4 left-4 rounded-[50%] border-2 border-primaryBG'
-          resizeMode='contain'
         />
       </View>
     </Animatable.View>

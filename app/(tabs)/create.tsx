@@ -266,12 +266,12 @@ const createScreen = () => {
           />
           <TouchableOpacity
             onPress={handleCameraStatus}
-            className='bg-gray-50 rounded-3xl flex flex-row self-center justify-center items-center m-5'
+            className='rounded-3xl w-11 h-11 flex flex-row self-center justify-center items-center m-5'
           >
             <Image
-              src={icons.cameraDark}
-              className='w-11 h-11 m-3'
+              source={icons.camera}
               resizeMode='contain'
+              className='w-11 h-11 m-3'
             />
           </TouchableOpacity>
           <View className='flex-row w-full justify-between'>
