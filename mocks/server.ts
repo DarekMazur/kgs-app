@@ -127,9 +127,6 @@ const updateUsers = () => {
   });
 };
 
-updatePosts();
-updateUsers();
-
 const updateDemoUser = async () => {
   await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
@@ -148,4 +145,74 @@ const updateDemoUser = async () => {
   });
 };
 
+const updateDemoUsersWithAllPeaks = async () => {
+  const peaks = db.peak.getAll();
+
+  const shuffle = <T>(array: T[]) => {
+    for (let i = array.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      // eslint-disable-next-line no-param-reassign
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
+
+  const shuffledPeaks = shuffle(peaks);
+
+  const demoUserID = faker.string.uuid();
+  const demoUserUsername = faker.internet.userName();
+  const demoUserFirstName = faker.person.firstName();
+  const demoUserAvatar = faker.image.avatar();
+
+  db.user.create({
+    id: demoUserID,
+    username: demoUserUsername,
+    firstName: demoUserFirstName,
+    avatar: demoUserAvatar,
+  });
+
+  for (let i = 0; i < peaks.length; i += 1) {
+    db.post.create({
+      author: {
+        id: demoUserID,
+        username: demoUserUsername,
+        firstName: demoUserFirstName,
+        avatar: demoUserAvatar,
+      },
+      peak: db.peak.findFirst({
+        where: {
+          id: {
+            equals: shuffledPeaks[i].id,
+          },
+        },
+      })!,
+    });
+  }
+
+  db.user.update({
+    where: {
+      id: {
+        equals: demoUserID,
+      },
+    },
+    data: {
+      posts: db.post.findMany({
+        where: {
+          author: {
+            id: {
+              equals: demoUserID,
+            },
+          },
+        },
+      }),
+    },
+  });
+};
+
+updatePosts();
+updateUsers();
 updateDemoUser();
+
+for (let i = 0; i < faker.number.int({ min: 3, max: 10 }); i += 1) {
+  updateDemoUsersWithAllPeaks();
+}
