@@ -25,7 +25,13 @@ const peaksScreen = () => {
       {!loading ? (
         <FlatList
           ref={ref}
-          data={peaks as IPeakProps[]}
+          data={
+            searchQuery
+              ? (peaks as IPeakProps[]).filter((peak) =>
+                  peak.name.toLowerCase().includes(searchQuery.toLowerCase()),
+                )
+              : (peaks as IPeakProps[])
+          }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
@@ -65,15 +71,15 @@ const peaksScreen = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Lorem Ipsum
+                Szukasz {searchQuery}?
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Dolor sit amet
+                Takiego szczytu nie ma w Koronie Gór Świętokrzyskich
               </Text>
 
               <ButtonCustom
-                title='Back to Explore'
-                handlePress={() => router.push('/home')}
+                title='Wyczyść'
+                handlePress={() => setSearchQuery('')}
                 containerStyles='w-full my-5'
               />
             </View>
