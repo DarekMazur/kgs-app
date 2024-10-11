@@ -1,19 +1,21 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, Text, View, TextInput } from 'react-native';
 import { router } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import useApi from '@/hooks/useApi';
 import { getAllPeaks } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import PostCard from '@/components/PostCard';
-import { images } from '@/constants';
+import { colors, icons, images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { IPeakProps } from '@/lib/types';
+import SearchInput from '@/components/SearchInput';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
   const ref = useRef(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useScrollToTop(ref);
 
@@ -23,7 +25,13 @@ const peaksScreen = () => {
       {!loading ? (
         <FlatList
           ref={ref}
-          data={peaks as IPeakProps[]}
+          data={
+            searchQuery
+              ? (peaks as IPeakProps[]).filter((peak) =>
+                  peak.name.toLowerCase().includes(searchQuery.toLowerCase()),
+                )
+              : (peaks as IPeakProps[])
+          }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
@@ -45,6 +53,7 @@ const peaksScreen = () => {
                     Szczyty do zdobycia
                   </Text>
                 </View>
+
                 <View>
                   <Image
                     source={images.logoW}
@@ -53,20 +62,24 @@ const peaksScreen = () => {
                   />
                 </View>
               </View>
+              <SearchInput
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+              />
             </View>
           )}
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Lorem Ipsum
+                Szukasz {searchQuery}?
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Dolor sit amet
+                Takiego szczytu nie ma w Koronie Gór Świętokrzyskich
               </Text>
 
               <ButtonCustom
-                title='Back to Explore'
-                handlePress={() => router.push('/home')}
+                title='Wyczyść'
+                handlePress={() => setSearchQuery('')}
                 containerStyles='w-full my-5'
               />
             </View>
