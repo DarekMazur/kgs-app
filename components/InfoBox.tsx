@@ -1,4 +1,4 @@
-import { View, Text, ViewStyle } from 'react-native';
+import { View, Text } from 'react-native';
 import { FC } from 'react';
 
 interface IInfoBoxProps {

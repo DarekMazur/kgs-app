@@ -1,13 +1,12 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList, Image, Text, View, TextInput } from 'react-native';
-import { router } from 'expo-router';
+import { FlatList, Image, Text, View } from 'react-native';
 import { useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import useApi from '@/hooks/useApi';
 import { getAllPeaks } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import PostCard from '@/components/PostCard';
-import { colors, icons, images } from '@/constants';
+import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { IPeakProps } from '@/lib/types';
 import SearchInput from '@/components/SearchInput';
