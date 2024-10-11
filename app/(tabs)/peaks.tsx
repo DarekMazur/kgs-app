@@ -1,19 +1,20 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FlatList, Image, Text, View } from 'react-native';
+import { FlatList, Image, Text, View, TextInput } from 'react-native';
 import { router } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import useApi from '@/hooks/useApi';
 import { getAllPeaks } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import PostCard from '@/components/PostCard';
-import { images } from '@/constants';
+import { colors, icons, images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { IPeakProps } from '@/lib/types';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
   const ref = useRef(null);
+  const [searchQuery, setSearchQuery] = useState<string>();
 
   useScrollToTop(ref);
 
@@ -45,6 +46,7 @@ const peaksScreen = () => {
                     Szczyty do zdobycia
                   </Text>
                 </View>
+
                 <View>
                   <Image
                     source={images.logoW}
@@ -52,6 +54,20 @@ const peaksScreen = () => {
                     resizeMode='contain'
                   />
                 </View>
+              </View>
+              <View className='flex flex-row items-center space-x-4 w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary'>
+                <TextInput
+                  className='text-base mt-0.5 text-primary flex-1 font-mtregular'
+                  value={searchQuery}
+                  placeholder='Szukaj szczytu'
+                  placeholderTextColor={colors.gray.v100}
+                  onChangeText={(e) => setSearchQuery(e)}
+                />
+                <Image
+                  source={icons.search}
+                  className='w-5 h-5'
+                  resizeMode='contain'
+                />
               </View>
             </View>
           )}
