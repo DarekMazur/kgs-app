@@ -9,7 +9,7 @@ import useApi from '@/hooks/useApi';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '../../lib/helpers';
-import { IPostsProps, IUserRequireProps } from '../../lib/types';
+import { IPostsProps, IUserRequireProps } from '@/lib/types';
 
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);

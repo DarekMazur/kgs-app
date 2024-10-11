@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import * as Crypto from 'expo-crypto';
 import { handlers } from './handlers';
 import { db } from '@/mocks/db';
-import { IPeakProps, IUserRequireProps } from '@/lib/types';
+import { IPeakProps } from '@/lib/types';
 
 export const server = setupServer(...handlers);
 
