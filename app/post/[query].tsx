@@ -26,15 +26,20 @@ const postEdit = () => {
   const handleSave = async () => {
     try {
       await editPost({
-        ...post[0],
+        ...(post as IPostsProps[])[0],
         notes,
+        createdAt: new Date(Date.now()),
+        photo: '',
+        peak: null,
       });
 
       setGlobalUser({
         ...user,
         posts: [
-          ...user.posts.filter((userPost) => userPost.id !== post[0].id),
-          post[0],
+          ...(user.posts as IPostsProps[]).filter(
+            (userPost) => userPost.id !== (post as IPostsProps[])[0].id,
+          ),
+          (post as IPostsProps[])[0] as IPostsProps,
         ],
       });
 
