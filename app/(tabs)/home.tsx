@@ -14,7 +14,7 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
-import { IUserRequireProps } from '@/lib/types';
+import { IPeakProps, IPostsProps, IUserRequireProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
@@ -63,15 +63,15 @@ export const home = () => {
       <Loader isLoading={loading} />
       {!loading ? (
         <FlatList
-          data={posts}
+          data={posts as IPostsProps[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
-              peakId={item.peak.id}
+              peakId={(item.peak as IPeakProps).id}
               author={item.author.firstName ?? item.author.username}
               date={new Date(item.createdAt)}
-              title={item.peak.name}
+              title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               onPress={() => handleDelete(item.id)}
@@ -103,7 +103,7 @@ export const home = () => {
                   Ostatnio zdobyte:
                 </Text>
                 <Recent
-                  recentPosts={posts
+                  recentPosts={(posts as IPostsProps[])
                     .filter((post) => post.author?.id === user.id)
                     .slice(0, 5)}
                 />
