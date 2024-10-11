@@ -10,11 +10,12 @@ import PostCard from '@/components/PostCard';
 import { colors, icons, images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { IPeakProps } from '@/lib/types';
+import SearchInput from '@/components/SearchInput';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
   const ref = useRef(null);
-  const [searchQuery, setSearchQuery] = useState<string>();
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useScrollToTop(ref);
 
@@ -55,20 +56,10 @@ const peaksScreen = () => {
                   />
                 </View>
               </View>
-              <View className='flex flex-row items-center space-x-4 w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 focus:border-secondary'>
-                <TextInput
-                  className='text-base mt-0.5 text-primary flex-1 font-mtregular'
-                  value={searchQuery}
-                  placeholder='Szukaj szczytu'
-                  placeholderTextColor={colors.gray.v100}
-                  onChangeText={(e) => setSearchQuery(e)}
-                />
-                <Image
-                  source={icons.search}
-                  className='w-5 h-5'
-                  resizeMode='contain'
-                />
-              </View>
+              <SearchInput
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+              />
             </View>
           )}
           ListEmptyComponent={() => (
