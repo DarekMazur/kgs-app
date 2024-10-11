@@ -84,14 +84,14 @@ const rankingScreen = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Lorem Ipsum
+                Jeszcze nikomu nie udało się zdobyć wszystkich szczytów.
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Dolor sit amet
+                Wyrusz na szlak i bądź pierwszy!
               </Text>
 
               <ButtonCustom
-                title='Back to Explore'
+                title='Wróć'
                 handlePress={() => router.push('/home')}
                 containerStyles='w-full my-5'
               />
