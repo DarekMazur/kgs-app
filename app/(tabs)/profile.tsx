@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
 import { percentage } from '@/lib/helpers';
@@ -23,6 +24,9 @@ const profileScreen = () => {
   const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -59,6 +63,7 @@ const profileScreen = () => {
       <Loader isLoading={loading || peaksLoading} />
       {!loading && !peaksLoading ? (
         <FlatList
+          ref={ref}
           data={posts.filter((post) => post.author.id === user.id)}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (

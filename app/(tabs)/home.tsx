@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
@@ -31,6 +32,9 @@ export const home = () => {
   const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -63,6 +67,7 @@ export const home = () => {
       <Loader isLoading={loading} />
       {!loading ? (
         <FlatList
+          ref={ref}
           data={posts as IPostsProps[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (

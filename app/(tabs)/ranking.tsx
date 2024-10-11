@@ -1,7 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, Image, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { useScrollToTop } from '@react-navigation/native';
 import Loader from '@/components/Loader';
 import { getAllPeaks, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
@@ -16,6 +17,9 @@ const rankingScreen = () => {
   const [usersWithAllPeaks, setUsersWithAllPeaks] = useState<
     IUserRequireProps[]
   >([]);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   useEffect(() => {
     if (users && peaks) {
@@ -32,6 +36,7 @@ const rankingScreen = () => {
       <Loader isLoading={peaksLoading || usersLoading} />
       {!peaksLoading && !usersLoading ? (
         <FlatList
+          ref={ref}
           data={usersWithAllPeaks.sort(
             (a, b) =>
               new Date(
