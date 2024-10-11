@@ -7,16 +7,22 @@ import { getAllPeaks, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
+import { formatDate } from '../../lib/helpers';
+import { IPostsProps, IUserRequireProps } from '../../lib/types';
 
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
-  const [usersWithAllPeaks, setUsersWithAllPeaks] = useState();
+  const [usersWithAllPeaks, setUsersWithAllPeaks] = useState<
+    IUserRequireProps[]
+  >([]);
 
   useEffect(() => {
     if (users && peaks) {
       setUsersWithAllPeaks(
-        users.filter((user) => user.posts.length === peaks.length),
+        (users as IUserRequireProps[]).filter(
+          (user) => (user.posts as IPostsProps[]).length === peaks.length,
+        ),
       );
     }
   }, [peaks, users]);
@@ -26,12 +32,34 @@ const rankingScreen = () => {
       <Loader isLoading={peaksLoading || usersLoading} />
       {!peaksLoading && !usersLoading ? (
         <FlatList
-          data={usersWithAllPeaks}
-          keyExtractor={(item) => item.id}
+          data={usersWithAllPeaks.sort(
+            (a, b) =>
+              new Date(
+                (a.posts as IPostsProps[])[0].createdAt,
+              ).getMilliseconds() -
+              new Date(
+                (b.posts as IPostsProps[])[0].createdAt,
+              ).getMilliseconds(),
+          )}
+          keyExtractor={(item) => item.id as string}
           renderItem={({ item }) => (
-            <View>
-              <Image source={{ uri: item.avatar }} style={{ width: '100%' }} />
-              <Text>{item.username}</Text>
+            <View className='mx-4'>
+              <Text className='text-lg text-green flex-wrap mb-2'>
+                Zdobyto: {formatDate(new Date(item.posts![0].createdAt))}
+              </Text>
+              <View className='flex-row gap-3.5 items-center justify-start'>
+                <Image
+                  source={{ uri: item.avatar }}
+                  className='w-14 h-14 p-2 rounded-full'
+                  resizeMode='contain'
+                />
+                <Text className='text-xl text-primary flex-wrap'>
+                  {item.firstName
+                    ? `${item.firstName}${item.lastName ? ` ${item.lastName}` : null} (${item.username})`
+                    : item.username}
+                </Text>
+              </View>
+              <View className='h-px my-8 bg-gray-100 border-0 dark:bg-gray-50' />
             </View>
           )}
           ListHeaderComponent={() => (
