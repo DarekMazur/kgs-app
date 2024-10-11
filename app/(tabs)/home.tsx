@@ -8,13 +8,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
-import { IUserRequireProps } from '@/lib/types';
+import { IPeakProps, IPostsProps, IUserRequireProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
@@ -31,6 +32,9 @@ export const home = () => {
   const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -63,15 +67,16 @@ export const home = () => {
       <Loader isLoading={loading} />
       {!loading ? (
         <FlatList
-          data={posts}
+          ref={ref}
+          data={posts as IPostsProps[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
-              peakId={item.peak.id}
+              peakId={(item.peak as IPeakProps).id}
               author={item.author.firstName ?? item.author.username}
               date={new Date(item.createdAt)}
-              title={item.peak.name}
+              title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               onPress={() => handleDelete(item.id)}
@@ -103,7 +108,7 @@ export const home = () => {
                   Ostatnio zdobyte:
                 </Text>
                 <Recent
-                  recentPosts={posts
+                  recentPosts={(posts as IPostsProps[])
                     .filter((post) => post.author?.id === user.id)
                     .slice(0, 5)}
                 />
@@ -113,10 +118,10 @@ export const home = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Lorem Ipsum
+                Nikt jeszcze nie zdobył żadnego szczytu...
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Dolor sit amet
+                Bądź pierwszy, ruszaj na szlak!
               </Text>
 
               <ButtonCustom

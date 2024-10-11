@@ -1,6 +1,8 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FlatList, Image, Text, View } from 'react-native';
 import { router } from 'expo-router';
+import { useRef } from 'react';
+import { useScrollToTop } from '@react-navigation/native';
 import useApi from '@/hooks/useApi';
 import { getAllPeaks } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
@@ -11,11 +13,16 @@ import { IPeakProps } from '@/lib/types';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
+
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <Loader isLoading={loading} />
       {!loading ? (
         <FlatList
+          ref={ref}
           data={peaks as IPeakProps[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (

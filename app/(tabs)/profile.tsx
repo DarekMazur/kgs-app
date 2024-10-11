@@ -5,10 +5,12 @@ import {
   FlatList,
   Alert,
   RefreshControl,
+  Text,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
 import { percentage } from '@/lib/helpers';
@@ -17,12 +19,17 @@ import InfoBox from '@/components/InfoBox';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
+import { IPeakProps, IPostsProps } from '@/lib/types';
+import ButtonCustom from '@/components/ButtonCustom';
 
 const profileScreen = () => {
   const { user, setGlobalUser } = useGlobalContext();
   const { data: posts, loading, refetch } = useApi(getAllPosts);
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
+  const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -59,15 +66,18 @@ const profileScreen = () => {
       <Loader isLoading={loading || peaksLoading} />
       {!loading && !peaksLoading ? (
         <FlatList
-          data={posts.filter((post) => post.author.id === user.id)}
+          ref={ref}
+          data={(posts as IPostsProps[]).filter(
+            (post) => post.author.id === user.id,
+          )}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
-              peakId={item.peak.id}
+              peakId={(item.peak as IPeakProps).id}
               author={item.author.firstName ?? item.author.username}
               date={new Date(item.createdAt)}
-              title={item.peak.name}
+              title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               isAuthor
@@ -104,13 +114,33 @@ const profileScreen = () => {
               <InfoBox
                 title='Zdobytych szczytów:'
                 subtitle={`${
-                  posts.filter((post) => post.author.id === user.id).length || 0
+                  (posts as IPostsProps[]).filter(
+                    (post) => post.author.id === user.id,
+                  ).length || 0
                 } (${percentage(
-                  posts.filter((post) => post.author.id === user.id).length,
-                  peaks.length,
+                  (posts as IPostsProps[]).filter(
+                    (post) => post.author.id === user.id,
+                  ).length,
+                  (peaks as IPostsProps[]).length,
                 )}%)`}
                 containerStyles='mt-5'
                 titleStyles='text-lg'
+              />
+            </View>
+          )}
+          ListEmptyComponent={() => (
+            <View className='flex justify-center items-center px-4'>
+              <Text className='text-sm font-mtmedium text-gray-100'>
+                Brak zdobytych szczytów
+              </Text>
+              <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
+                Ruszaj na szlak!
+              </Text>
+
+              <ButtonCustom
+                title='Back to Explore'
+                handlePress={() => router.push('/home')}
+                containerStyles='w-full my-5'
               />
             </View>
           )}
