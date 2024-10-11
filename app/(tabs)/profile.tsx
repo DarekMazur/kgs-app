@@ -18,6 +18,7 @@ import InfoBox from '@/components/InfoBox';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
+import { IPeakProps, IPostsProps } from '@/lib/types';
 
 const profileScreen = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -64,15 +65,17 @@ const profileScreen = () => {
       {!loading && !peaksLoading ? (
         <FlatList
           ref={ref}
-          data={posts.filter((post) => post.author.id === user.id)}
+          data={(posts as IPostsProps[]).filter(
+            (post) => post.author.id === user.id,
+          )}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
-              peakId={item.peak.id}
+              peakId={(item.peak as IPeakProps).id}
               author={item.author.firstName ?? item.author.username}
               date={new Date(item.createdAt)}
-              title={item.peak.name}
+              title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               isAuthor
@@ -109,10 +112,14 @@ const profileScreen = () => {
               <InfoBox
                 title='Zdobytych szczytów:'
                 subtitle={`${
-                  posts.filter((post) => post.author.id === user.id).length || 0
+                  (posts as IPostsProps[]).filter(
+                    (post) => post.author.id === user.id,
+                  ).length || 0
                 } (${percentage(
-                  posts.filter((post) => post.author.id === user.id).length,
-                  peaks.length,
+                  (posts as IPostsProps[]).filter(
+                    (post) => post.author.id === user.id,
+                  ).length,
+                  (peaks as IPostsProps[]).length,
                 )}%)`}
                 containerStyles='mt-5'
                 titleStyles='text-lg'
