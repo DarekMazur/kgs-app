@@ -10,6 +10,7 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { IPeakProps } from '@/lib/types';
 import SearchInput from '@/components/SearchInput';
+import Footer from '@/components/Footer';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
@@ -83,6 +84,7 @@ const peaksScreen = () => {
               />
             </View>
           )}
+          ListFooterComponent={() => <Footer />}
         />
       ) : null}
     </SafeAreaView>

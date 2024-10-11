@@ -8,6 +8,7 @@ import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 import { IRegisterProps } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
+import Footer from '@/components/Footer';
 
 const signUp = () => {
   const { isLogged } = useGlobalContext();
