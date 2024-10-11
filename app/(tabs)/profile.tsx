@@ -5,6 +5,7 @@ import {
   FlatList,
   Alert,
   RefreshControl,
+  Text,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -19,6 +20,7 @@ import useApi from '@/hooks/useApi';
 import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import { IPeakProps, IPostsProps } from '@/lib/types';
+import ButtonCustom from '@/components/ButtonCustom';
 
 const profileScreen = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -123,6 +125,22 @@ const profileScreen = () => {
                 )}%)`}
                 containerStyles='mt-5'
                 titleStyles='text-lg'
+              />
+            </View>
+          )}
+          ListEmptyComponent={() => (
+            <View className='flex justify-center items-center px-4'>
+              <Text className='text-sm font-mtmedium text-gray-100'>
+                Brak zdobytych szczytów
+              </Text>
+              <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
+                Ruszaj na szlak!
+              </Text>
+
+              <ButtonCustom
+                title='Back to Explore'
+                handlePress={() => router.push('/home')}
+                containerStyles='w-full my-5'
               />
             </View>
           )}
