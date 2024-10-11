@@ -118,10 +118,10 @@ export const home = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Lorem Ipsum
+                Nikt jeszcze nie zdobył żadnego szczytu...
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Dolor sit amet
+                Bądź pierwszy, ruszaj na szlak!
               </Text>
 
               <ButtonCustom
