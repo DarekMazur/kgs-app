@@ -23,6 +23,7 @@ import ranking from '../assets/icons/ranking.png';
 import search from '../assets/icons/search.png';
 import terms from '../assets/icons/terms.png';
 import termsKGS from '../assets/icons/termsKGS.png';
+import gear from '../assets/icons/gear.png';
 
 export default {
   home,
@@ -50,4 +51,5 @@ export default {
   search,
   termsKGS,
   terms,
+  gear,
 };

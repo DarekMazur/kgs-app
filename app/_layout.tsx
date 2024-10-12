@@ -43,6 +43,7 @@ const RootLayout = () => {
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen name='(profile)' options={{ headerShown: false }} />
+        <Stack.Screen name='(dashboard)' options={{ headerShown: false }} />
         <Stack.Screen name='(terms)' options={{ headerShown: false }} />
         <Stack.Screen
           name='menu'
