@@ -8,6 +8,7 @@ import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { IUserProps } from '@/lib/types';
 import { logIn } from '@/lib/getDataFromApi';
+import Footer from '@/components/Footer';
 
 const initUser: IUserProps = {
   email: null,

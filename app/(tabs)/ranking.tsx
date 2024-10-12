@@ -10,6 +10,7 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '../../lib/helpers';
 import { IPostsProps, IUserRequireProps } from '@/lib/types';
+import Footer from '@/components/Footer';
 
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
@@ -102,6 +103,7 @@ const rankingScreen = () => {
               />
             </View>
           )}
+          ListFooterComponent={() => <Footer />}
         />
       ) : null}
     </SafeAreaView>

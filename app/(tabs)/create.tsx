@@ -25,6 +25,7 @@ import CameraCustom from '@/components/CameraCustom';
 import ErrorCustom from '@/components/ErrorCustom';
 import { IPeakProps, IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
+import Footer from '@/components/Footer';
 
 const initialPostData = {
   id: '',

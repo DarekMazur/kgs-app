@@ -67,6 +67,34 @@ const Menu: FC<IMenuProps> = () => {
           />
           <Text className='text-primary text-lg'>Wyloguj</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          className='m-4 mt-10 p-2 flex-row items-center w-[60%] justify-start'
+          onPress={() => {
+            setRoute('/kgs');
+            router.replace('/kgs');
+          }}
+        >
+          <Image
+            source={icons.termsKGS}
+            resizeMode='contain'
+            className='w-8 h-8 mr-3'
+          />
+          <Text className='text-primary text-lg'>Regulamin odznaki</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          className='m-4 mt-10 p-2 flex-row items-center w-[60%] justify-start'
+          onPress={() => {
+            setRoute('/app-terms');
+            router.replace('/app-terms');
+          }}
+        >
+          <Image
+            source={icons.terms}
+            resizeMode='contain'
+            className='w-8 h-8 mr-3'
+          />
+          <Text className='text-primary text-lg'>Polityka prywatności</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

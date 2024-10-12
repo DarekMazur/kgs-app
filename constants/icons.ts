@@ -21,6 +21,8 @@ import eye from '../assets/icons/eye.png';
 import noVision from '../assets/icons/noVision.png';
 import ranking from '../assets/icons/ranking.png';
 import search from '../assets/icons/search.png';
+import terms from '../assets/icons/terms.png';
+import termsKGS from '../assets/icons/termsKGS.png';
 
 export default {
   home,
@@ -46,4 +48,6 @@ export default {
   noVision,
   ranking,
   search,
+  termsKGS,
+  terms,
 };

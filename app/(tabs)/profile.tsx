@@ -21,6 +21,7 @@ import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import { IPeakProps, IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
+import Footer from '@/components/Footer';
 
 const profileScreen = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -147,6 +148,7 @@ const profileScreen = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          ListFooterComponent={() => <Footer />}
         />
       ) : null}
     </SafeAreaView>

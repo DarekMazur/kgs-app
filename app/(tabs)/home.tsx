@@ -19,6 +19,7 @@ import { IPeakProps, IPostsProps, IUserRequireProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
+import Footer from '@/components/Footer';
 
 const greetings = (user: IUserRequireProps) => {
   if (user.firstName || user.lastName) {
@@ -134,6 +135,7 @@ export const home = () => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
+          ListFooterComponent={() => <Footer />}
         />
       ) : null}
     </SafeAreaView>

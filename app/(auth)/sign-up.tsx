@@ -1,7 +1,15 @@
-import { Text, ScrollView, View, Image, Alert } from 'react-native';
+import {
+  Text,
+  ScrollView,
+  View,
+  Image,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
+import Checkbox from 'expo-checkbox';
 import { images, schema } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
@@ -12,6 +20,7 @@ import { createUser } from '@/lib/getDataFromApi';
 const signUp = () => {
   const { isLogged } = useGlobalContext();
   const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
+  const [isChecked, setChecked] = useState(false);
 
   useEffect(() => {
     if (isLogged) {
@@ -21,6 +30,10 @@ const signUp = () => {
 
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {
+      if (!isChecked) {
+        Alert.alert('Błąd...', 'Musisz zatwierdzić politykę prywatności');
+        return;
+      }
       if (!schema.emailRegex.test(newUser.email)) {
         Alert.alert('Błąd...', 'Niepoprawny format adresu email');
         return;
@@ -94,6 +107,18 @@ const signUp = () => {
               isPassword
               mode='email'
             />
+            <View className='flex-row flex-wrap items-center gap-3.5 mt-4'>
+              <Checkbox value={isChecked} onValueChange={setChecked} />
+              <View className='flex-row flex-wrap gap-1.5'>
+                <Text className='text-primary'>Akceptuję</Text>
+                <TouchableOpacity
+                  className='mr-2'
+                  onPress={() => router.push('/app-terms')}
+                >
+                  <Text className='text-secondary'>politykę prywatności</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
 
           <ButtonCustom
@@ -102,7 +127,10 @@ const signUp = () => {
             containerStyles='mt-7'
             isLoading={false}
             isDisabled={
-              !newUser.username || !newUser.email || !newUser.password
+              !newUser.username ||
+              !newUser.email ||
+              !newUser.password ||
+              !isChecked
             }
           />
 

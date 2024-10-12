@@ -17,6 +17,7 @@ import { IUserRequireProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import { icons } from '@/constants';
 import { editUser, getSingleUser } from '@/lib/getDataFromApi';
+import Footer from '@/components/Footer';
 
 const profileEdit = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -185,6 +186,7 @@ const profileEdit = () => {
             isLoading={false}
           />
         </View>
+        <Footer />
       </ScrollView>
     </SafeAreaView>
   );
