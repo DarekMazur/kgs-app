@@ -10,6 +10,33 @@ export const handlers = [
     return HttpResponse.json(db.user.getAll());
   }),
 
+  http.get(`${process.env.EXPO_PUBLIC_API_URL}/current`, ({ request }) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const token = request.headers.map.authorization;
+
+    if (token) {
+      try {
+        if (token.split(' ')[1] === process.env.EXPO_PUBLIC_JWT) {
+          const current = db.user.findFirst({
+            where: {
+              email: {
+                equals: 'tu@mail.com',
+              },
+            },
+          });
+
+          return HttpResponse.json(current);
+        }
+        return HttpResponse.json('Error', { status: 404 });
+      } catch (err) {
+        return HttpResponse.json((err as Error).message, { status: 403 });
+      }
+    }
+
+    return HttpResponse.json('', { status: 403 });
+  }),
+
   http.get(
     `${process.env.EXPO_PUBLIC_API_URL}/users/:userId`,
     async ({ params }) => {

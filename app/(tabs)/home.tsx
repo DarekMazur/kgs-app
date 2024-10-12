@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
@@ -34,6 +34,12 @@ export const home = () => {
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
+
+  useEffect(() => {
+    if (!user.id) {
+      router.replace('/sign-in');
+    }
+  }, []);
 
   useScrollToTop(ref);
 

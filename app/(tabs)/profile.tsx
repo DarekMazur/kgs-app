@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
@@ -29,6 +29,12 @@ const profileScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
+
+  useEffect(() => {
+    if (!user.id) {
+      router.replace('/sign-in');
+    }
+  }, []);
 
   useScrollToTop(ref);
 
@@ -54,6 +60,7 @@ const profileScreen = () => {
               ...user,
               posts: user.posts?.filter((post) => post.id !== id),
             });
+            onRefresh();
           } catch (error) {
             Alert.alert('Błąd...', (error as Error).message);
           }

@@ -18,15 +18,15 @@ import { IRegisterProps } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
 
 const signUp = () => {
-  const { isLogged } = useGlobalContext();
+  const { user } = useGlobalContext();
   const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
   const [isChecked, setChecked] = useState(false);
 
   useEffect(() => {
-    if (isLogged) {
+    if (user.id) {
       router.replace('/home');
     }
-  }, [isLogged]);
+  }, [user]);
 
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {

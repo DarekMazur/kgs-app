@@ -93,7 +93,11 @@ const createScreen = () => {
     }, []),
   );
 
-  useEffect(() => {}, [user, distances]);
+  useEffect(() => {
+    if (!user.id) {
+      router.replace('/sign-in');
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user && distances.length > 0) {

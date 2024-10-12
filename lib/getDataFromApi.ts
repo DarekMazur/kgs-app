@@ -7,6 +7,17 @@ export const getAllUsers = async () => {
   return users.json();
 };
 
+export const currentUser = async (token: string) => {
+  const user = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/current`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return user.json();
+};
+
 export const getSingleUser = async (userId: string) => {
   const user = await fetch(
     `${process.env.EXPO_PUBLIC_API_URL}/users/${userId}`,
