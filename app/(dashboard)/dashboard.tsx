@@ -5,6 +5,7 @@ import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { IPostsProps, IUserRequireProps } from '@/lib/types';
 import { icons, images } from '@/constants';
+import Footer from '@/components/Footer';
 
 const Dashboard = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
@@ -201,6 +202,7 @@ const Dashboard = () => {
             </TouchableOpacity>
           </>
         ) : null}
+        <Footer />
       </ScrollView>
     </SafeAreaView>
   );
