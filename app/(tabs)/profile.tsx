@@ -8,8 +8,8 @@ import {
   Text,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
@@ -44,6 +44,16 @@ const profileScreen = () => {
     setRefreshing(false);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh();
+
+      return () => {
+        return <View />;
+      };
+    }, []),
+  );
+
   const handleDelete = (id: string) => {
     Alert.alert('Czy chcesz usunąć wpis?', '', [
       {
@@ -56,11 +66,6 @@ const profileScreen = () => {
         onPress: async () => {
           try {
             await deletePost(id).then(onRefresh);
-            setGlobalUser({
-              ...user,
-              posts: user.posts?.filter((post) => post.id !== id),
-            });
-            onRefresh();
           } catch (error) {
             Alert.alert('Błąd...', (error as Error).message);
           }
