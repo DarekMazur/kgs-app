@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { images } from '@/constants';
@@ -36,6 +36,10 @@ export const home = () => {
   const ref = useRef(null);
 
   useScrollToTop(ref);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   const onRefresh = async () => {
     setRefreshing(true);

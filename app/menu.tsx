@@ -2,6 +2,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { FC, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Href, router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { icons } from '@/constants';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 
@@ -13,9 +14,19 @@ const Menu: FC<IMenuProps> = () => {
   const { setGlobalUser, setIsLoggedIn } = useGlobalContext();
   const [route, setRoute] = useState<Href<string | object>>('/profile');
 
+  // eslint-disable-next-line consistent-return
+  const clearData = async () => {
+    try {
+      await AsyncStorage.setItem('jwt', '');
+    } catch (e) {
+      return null;
+    }
+  };
+
   const handleLogout = () => {
     setGlobalUser(initNewUser);
     setIsLoggedIn();
+    clearData();
     router.replace('/sign-in');
   };
 

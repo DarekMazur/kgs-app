@@ -140,6 +140,13 @@ const updateDemoUser = async () => {
       },
       data: {
         password: hashedPassword,
+        role: db.role.findFirst({
+          where: {
+            id: {
+              equals: 1,
+            },
+          },
+        })!,
       },
     });
   });

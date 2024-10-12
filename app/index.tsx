@@ -1,12 +1,14 @@
-import { Text, View, Image, ScrollView } from 'react-native';
+import { Text, View, Image, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { images } from '../constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import '@/mocks/msw.polyfills';
 import { server } from '@/mocks/server';
+import { currentUser } from '@/lib/getDataFromApi';
 
 // eslint-disable-next-line no-undef
 if (__DEV__) {
@@ -14,9 +16,31 @@ if (__DEV__) {
 }
 
 const Index = () => {
-  const { isLogged } = useGlobalContext();
+  const { isLogged, setGlobalUser, setIsLoggedIn } = useGlobalContext();
+
+  // eslint-disable-next-line consistent-return
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('jwt');
+      if (value !== null) {
+        try {
+          const current = await currentUser(value as string);
+          if (current) {
+            setGlobalUser(current);
+            setIsLoggedIn();
+            router.push('/home');
+          }
+        } catch (err) {
+          Alert.alert('Error', (err as Error).message);
+        }
+      }
+    } catch (e) {
+      return null;
+    }
+  };
 
   useEffect(() => {
+    getData();
     if (isLogged) {
       router.replace('/home');
     }

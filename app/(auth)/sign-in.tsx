@@ -2,6 +2,7 @@ import { Text, ScrollView, View, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
@@ -25,10 +26,19 @@ const signIn = () => {
     }
   }, []);
 
+  const storeData = async (value: string) => {
+    try {
+      await AsyncStorage.setItem('jwt', value);
+    } catch (e) {
+      return null;
+    }
+  };
+
   const handleSubmit = async () => {
     if (user.email && user.password) {
       try {
         const loggedUser = await logIn(user.email.toLowerCase(), user.password);
+        storeData(process.env.EXPO_PUBLIC_JWT as string);
         setGlobalUser(loggedUser);
         setIsLoggedIn();
 

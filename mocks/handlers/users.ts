@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, StrictRequest } from 'msw';
 import uuid from 'react-native-uuid';
 import * as Crypto from 'expo-crypto';
 import { db } from '@/mocks/db';
@@ -8,6 +8,33 @@ import { IRegisterProps, IUserRequireProps } from '@/lib/types';
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, () => {
     return HttpResponse.json(db.user.getAll());
+  }),
+
+  http.get(`${process.env.EXPO_PUBLIC_API_URL}/current`, ({ request }) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const token = request.headers.map.authorization;
+
+    if (token) {
+      try {
+        if (token.split(' ')[1] === process.env.EXPO_PUBLIC_JWT) {
+          const current = db.user.findFirst({
+            where: {
+              email: {
+                equals: 'tu@mail.com',
+              },
+            },
+          });
+
+          return HttpResponse.json(current);
+        }
+        return HttpResponse.json('Error', { status: 403 });
+      } catch (err) {
+        return HttpResponse.json((err as Error).message, { status: 403 });
+      }
+    }
+
+    return HttpResponse.json('', { status: 403 });
   }),
 
   http.get(
