@@ -40,12 +40,8 @@ const rankingScreen = () => {
           ref={ref}
           data={usersWithAllPeaks.sort(
             (a, b) =>
-              new Date(
-                (a.posts as IPostsProps[])[0].createdAt,
-              ).getMilliseconds() -
-              new Date(
-                (b.posts as IPostsProps[])[0].createdAt,
-              ).getMilliseconds(),
+              new Date((a.posts as IPostsProps[])[0].createdAt).getTime() -
+              new Date((b.posts as IPostsProps[])[0].createdAt).getTime(),
           )}
           keyExtractor={(item) => item.id as string}
           renderItem={({ item }) => (

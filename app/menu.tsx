@@ -112,20 +112,23 @@ const Menu: FC<IMenuProps> = () => {
           <Text className='text-primary text-lg'>Polityka prywatności</Text>
         </TouchableOpacity>
         {user.role!.id < 3 ? (
-          <TouchableOpacity
-            className='m-4 mt-10 p-2 flex-row items-center w-[60%] justify-start'
-            onPress={() => {
-              setRoute('/dashboard');
-              router.replace('/dashboard');
-            }}
-          >
-            <Image
-              source={icons.gear}
-              resizeMode='contain'
-              className='w-8 h-8 mr-3'
-            />
-            <Text className='text-primary text-lg'>Panel</Text>
-          </TouchableOpacity>
+          <>
+            <View className='h-px mt-10 my-8 bg-gray-100 border-0 dark:bg-gray-50' />
+            <TouchableOpacity
+              className='mx-4 p-2 flex-row items-center w-[60%] justify-start '
+              onPress={() => {
+                setRoute('/dashboard');
+                router.replace('/dashboard');
+              }}
+            >
+              <Image
+                source={icons.gear}
+                resizeMode='contain'
+                className='w-8 h-8 mr-3'
+              />
+              <Text className='text-lg text-primary'>Panel</Text>
+            </TouchableOpacity>
+          </>
         ) : null}
       </View>
     </SafeAreaView>

@@ -13,7 +13,7 @@ server.events.on('request:start', ({ request }) => {
   console.log('MSW intercepted:', request.method, request.url);
 });
 
-const demoUserRegistrationTime = faker.date.past().getMilliseconds();
+const demoUserRegistrationTime = faker.date.past().getTime();
 const demoUserId = faker.string.uuid();
 
 const createRoles = () => {
@@ -37,7 +37,12 @@ const createUsers = () => {
     registrationDate: demoUserRegistrationTime,
   });
   for (let i = 0; i < faker.number.int({ min: 55, max: 70 }); i += 1) {
-    db.user.create();
+    db.user.create({
+      registrationDate:
+        faker.number.int({ min: 0, max: 3 }) === 0
+          ? faker.date.recent().getTime()
+          : faker.date.past().getTime(),
+    });
   }
 };
 
