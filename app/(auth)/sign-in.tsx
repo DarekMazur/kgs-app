@@ -9,7 +9,6 @@ import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { IUserProps } from '@/lib/types';
 import { logIn } from '@/lib/getDataFromApi';
-import Footer from '@/components/Footer';
 
 const initUser: IUserProps = {
   email: null,
@@ -17,30 +16,33 @@ const initUser: IUserProps = {
 };
 
 const signIn = () => {
-  const { setGlobalUser, isLogged, setIsLoggedIn } = useGlobalContext();
-  const [user, setUser] = useState<IUserProps>(initUser);
+  const { setGlobalUser, user } = useGlobalContext();
+  const [loggedUser, setLoggedUser] = useState<IUserProps>(initUser);
 
   useEffect(() => {
-    if (isLogged) {
+    if (user.id) {
       router.replace('/home');
     }
-  }, []);
+  }, [user]);
 
   const storeData = async (value: string) => {
     try {
       await AsyncStorage.setItem('jwt', value);
+      return true;
     } catch (e) {
       return null;
     }
   };
 
   const handleSubmit = async () => {
-    if (user.email && user.password) {
+    if (loggedUser.email && loggedUser.password) {
       try {
-        const loggedUser = await logIn(user.email.toLowerCase(), user.password);
+        const currentUser = await logIn(
+          loggedUser.email.toLowerCase(),
+          loggedUser.password,
+        );
         storeData(process.env.EXPO_PUBLIC_JWT as string);
-        setGlobalUser(loggedUser);
-        setIsLoggedIn();
+        setGlobalUser(currentUser);
 
         router.replace('/home');
       } catch (err) {
@@ -71,17 +73,21 @@ const signIn = () => {
             <InputCustom
               placeholder='Email'
               title='Email'
-              value={user.email ?? ''}
-              handleOnChange={(e: string) => setUser({ ...user, email: e })}
+              value={loggedUser.email ?? ''}
+              handleOnChange={(e: string) =>
+                setLoggedUser({ ...loggedUser, email: e })
+              }
               mode='email'
               hint='next'
             />
 
             <InputCustom
               placeholder='Hasło'
-              value={user.password ?? ''}
+              value={loggedUser.password ?? ''}
               title='Hasło'
-              handleOnChange={(e: string) => setUser({ ...user, password: e })}
+              handleOnChange={(e: string) =>
+                setLoggedUser({ ...loggedUser, password: e })
+              }
               isPassword
             />
           </View>
@@ -91,7 +97,7 @@ const signIn = () => {
             handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
-            isDisabled={!user.email || !user.password}
+            isDisabled={!loggedUser.email || !loggedUser.password}
           />
 
           <View className='flex justify-center mt-5 flex-row gap-2'>

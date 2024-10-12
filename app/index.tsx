@@ -1,7 +1,7 @@
 import { Text, View, Image, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { images } from '../constants';
 import ButtonCustom from '@/components/ButtonCustom';
@@ -16,9 +16,9 @@ if (__DEV__) {
 }
 
 const Index = () => {
-  const { isLogged, setGlobalUser, setIsLoggedIn } = useGlobalContext();
+  const { setGlobalUser } = useGlobalContext();
+  const [isLoggin, setIsLoggin] = useState<boolean>(false);
 
-  // eslint-disable-next-line consistent-return
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('jwt');
@@ -27,13 +27,18 @@ const Index = () => {
           const current = await currentUser(value as string);
           if (current) {
             setGlobalUser(current);
-            setIsLoggedIn();
+            setIsLoggin(true);
             router.push('/home');
+            return true;
           }
+
+          return false;
         } catch (err) {
           Alert.alert('Error', (err as Error).message);
         }
       }
+
+      return false;
     } catch (e) {
       return null;
     }
@@ -41,7 +46,7 @@ const Index = () => {
 
   useEffect(() => {
     getData();
-    if (isLogged) {
+    if (isLoggin) {
       router.replace('/home');
     }
   }, []);

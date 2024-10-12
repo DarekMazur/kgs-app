@@ -1,5 +1,5 @@
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Href, router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,8 +11,14 @@ interface IMenuProps {
 }
 
 const Menu: FC<IMenuProps> = () => {
-  const { setGlobalUser, setIsLoggedIn } = useGlobalContext();
+  const { setGlobalUser, user } = useGlobalContext();
   const [route, setRoute] = useState<Href<string | object>>('/profile');
+
+  useEffect(() => {
+    if (!user.id) {
+      router.replace('/sign-in');
+    }
+  }, [user]);
 
   // eslint-disable-next-line consistent-return
   const clearData = async () => {
@@ -25,7 +31,6 @@ const Menu: FC<IMenuProps> = () => {
 
   const handleLogout = () => {
     setGlobalUser(initNewUser);
-    setIsLoggedIn();
     clearData();
     router.replace('/sign-in');
   };

@@ -35,11 +35,13 @@ export const home = () => {
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
 
-  useScrollToTop(ref);
-
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    if (!user.id) {
+      router.replace('/sign-in');
+    }
+  }, []);
+
+  useScrollToTop(ref);
 
   const onRefresh = async () => {
     setRefreshing(true);
