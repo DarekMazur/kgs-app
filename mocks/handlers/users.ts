@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { http, HttpResponse, StrictRequest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import uuid from 'react-native-uuid';
 import * as Crypto from 'expo-crypto';
 import { db } from '@/mocks/db';
@@ -28,7 +28,7 @@ export const handlers = [
 
           return HttpResponse.json(current);
         }
-        return HttpResponse.json('Error', { status: 403 });
+        return HttpResponse.json('Error', { status: 404 });
       } catch (err) {
         return HttpResponse.json((err as Error).message, { status: 403 });
       }
