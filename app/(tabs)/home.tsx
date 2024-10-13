@@ -15,13 +15,13 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
-import { IPeakProps, IPostsProps, IUserRequireProps } from '@/lib/types';
+import { IPeakProps, IPostsProps, IUserProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
 
-const greetings = (user: IUserRequireProps) => {
+const greetings = (user: IUserProps) => {
   if (user.firstName || user.lastName) {
     return `${user.firstName ? `${user.firstName} ` : null}${user.lastName}`;
   }

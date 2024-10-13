@@ -6,12 +6,12 @@ export interface IRoleTypes {
   type: string;
 }
 
-export interface IUserProps {
+export interface ISignInProps {
   email: string | null;
   password: string | null;
 }
 
-export interface IRegisterProps extends IUserProps {
+export interface IRegisterProps extends ISignInProps {
   username: string | null;
 }
 
@@ -40,15 +40,17 @@ export interface IPostsProps {
   peak: IPeakProps | null;
 }
 
-export interface IUserRequireProps extends IRegisterProps {
+export interface IUserProps extends IRegisterProps {
   id: string | null;
   firstName?: string;
   lastName?: string;
   avatar?: string;
-  registrationDate: number | null;
+  registrationDate: number;
   description?: string;
-  role: IRoleTypes | null;
+  role: IRoleTypes;
   posts?: IPostsProps[];
+  isSuspended: boolean;
+  isBanned: boolean;
 }
 
 export interface ITabIconProps {

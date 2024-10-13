@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import uuid from 'react-native-uuid';
 import * as Crypto from 'expo-crypto';
 import { db } from '@/mocks/db';
-import { IRegisterProps, IUserRequireProps } from '@/lib/types';
+import { IRegisterProps, IUserProps } from '@/lib/types';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, () => {
@@ -79,6 +79,8 @@ export const handlers = [
       avatar: '',
       description: '',
       posts: [],
+      isSuspended: false,
+      isBanned: false,
       role: db.role.findFirst({
         where: {
           type: {
@@ -97,7 +99,7 @@ export const handlers = [
     `${process.env.EXPO_PUBLIC_API_URL}/users/:postId`,
     // eslint-disable-next-line consistent-return
     async ({ request }) => {
-      const updatedUser = (await request.json()) as IUserRequireProps;
+      const updatedUser = (await request.json()) as IUserProps;
       const user = db.user.findFirst({
         where: {
           id: {

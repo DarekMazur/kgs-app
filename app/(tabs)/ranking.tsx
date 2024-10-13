@@ -9,15 +9,13 @@ import useApi from '@/hooks/useApi';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '../../lib/helpers';
-import { IPostsProps, IUserRequireProps } from '@/lib/types';
+import { IPostsProps, IUserProps } from '@/lib/types';
 import Footer from '@/components/Footer';
 
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
-  const [usersWithAllPeaks, setUsersWithAllPeaks] = useState<
-    IUserRequireProps[]
-  >([]);
+  const [usersWithAllPeaks, setUsersWithAllPeaks] = useState<IUserProps[]>([]);
   const ref = useRef(null);
 
   useScrollToTop(ref);
@@ -25,7 +23,7 @@ const rankingScreen = () => {
   useEffect(() => {
     if (users && peaks) {
       setUsersWithAllPeaks(
-        (users as IUserRequireProps[]).filter(
+        (users as IUserProps[]).filter(
           (user) => (user.posts as IPostsProps[]).length === peaks.length,
         ),
       );

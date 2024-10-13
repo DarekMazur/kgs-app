@@ -1,13 +1,14 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { router } from 'expo-router';
 import { getAllPosts, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { IPostsProps, IUserRequireProps } from '@/lib/types';
+import { IPostsProps, IUserProps } from '@/lib/types';
 import { icons, images } from '@/constants';
 import Footer from '@/components/Footer';
 
-const Dashboard = () => {
+const dashboard = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
   const { data: posts, loading: postsLoading } = useApi(getAllPosts);
 
@@ -15,9 +16,9 @@ const Dashboard = () => {
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
       <Loader isLoading={usersLoading || postsLoading} />
       <ScrollView>
-        <View className='flex justify-between items-center flex-row mb-6'>
+        <View className='flex justify-between items-center flex-row mb-2'>
           <View>
-            <Text className='text-red text-3xl font-mtblack'>Dashboard</Text>
+            <Text className='text-red text-3xl font-mtblack'>Panel główny</Text>
           </View>
           <View>
             <Image
@@ -27,6 +28,17 @@ const Dashboard = () => {
             />
           </View>
         </View>
+        <TouchableOpacity
+          className='flex-row flex-wrap items-center gap-2.5 mb-8'
+          onPress={() => router.push('/home')}
+        >
+          <Image
+            source={icons.logout}
+            className='w-6 h-6'
+            resizeMode='contain'
+          />
+          <Text className='text-primary font-mtblack'>Zamknij panel</Text>
+        </TouchableOpacity>
         {!usersLoading && users ? (
           <>
             <View className='flex-wrap flex-row gap-1.5'>
@@ -39,7 +51,7 @@ const Dashboard = () => {
               <Text className='text-primary'>w tym</Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (users as IUserRequireProps[]).filter(
+                  (users as IUserProps[]).filter(
                     (user) =>
                       Date.now() - user.registrationDate! <
                       1000 * 60 * 60 * 24 * 7,
@@ -53,7 +65,7 @@ const Dashboard = () => {
               <TouchableOpacity onPress={() => {}}>
                 <Text className='text-secondary font-mtblack'>
                   {
-                    (users as IUserRequireProps[]).sort(
+                    (users as IUserProps[]).sort(
                       (a, b) => b.registrationDate! - a.registrationDate!,
                     )[0].username
                   }
@@ -131,7 +143,10 @@ const Dashboard = () => {
           <>
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-green font-mtblack'>
-                {users.filter((user) => user.isSuspended).length}
+                {
+                  (users as IUserProps[]).filter((user) => user.isSuspended)
+                    .length
+                }
               </Text>
               <Text className='text-primary'>zawieszonych Użytkowników,</Text>
             </View>
@@ -148,7 +163,7 @@ const Dashboard = () => {
             </TouchableOpacity>
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-green font-mtblack'>
-                {users.filter((user) => user.isBanned).length}
+                {(users as IUserProps[]).filter((user) => user.isBanned).length}
               </Text>
               <Text className='text-primary'>zablokowanych Użytkowników,</Text>
             </View>
@@ -174,23 +189,21 @@ const Dashboard = () => {
               </Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (users as IUserRequireProps[]).filter(
-                    (user) => user.role?.id === 1,
-                  ).length
+                  (users as IUserProps[]).filter((user) => user.role?.id === 1)
+                    .length
                 }
               </Text>
               <Text className='text-primary'>Administratorów oraz</Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (users as IUserRequireProps[]).filter(
-                    (user) => user.role?.id === 2,
-                  ).length
+                  (users as IUserProps[]).filter((user) => user.role?.id === 2)
+                    .length
                 }
               </Text>
               <Text className='text-primary'>Moderatorów</Text>
             </View>
             <TouchableOpacity
-              className='flex-row gap-x-2 mt-4 items-center'
+              className='flex-row gap-x-2 mt-4 mb-10 items-center'
               onPress={() => {}}
             >
               <Image
@@ -208,4 +221,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default dashboard;

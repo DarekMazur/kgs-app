@@ -13,7 +13,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import InfoBox from '@/components/InfoBox';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
-import { IUserRequireProps } from '@/lib/types';
+import { IUserProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import { icons } from '@/constants';
 import { editUser, getSingleUser } from '@/lib/getDataFromApi';
@@ -21,7 +21,7 @@ import Footer from '@/components/Footer';
 
 const profileEdit = () => {
   const { user, setGlobalUser } = useGlobalContext();
-  const [editedUser, setEditedUser] = useState<IUserRequireProps>(user);
+  const [editedUser, setEditedUser] = useState<IUserProps>(user);
 
   useEffect(() => {
     setEditedUser({ ...editedUser, password: null });
