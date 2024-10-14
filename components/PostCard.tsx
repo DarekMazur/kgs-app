@@ -75,6 +75,15 @@ const PostCard: FC<IPostCardProps> = ({
           <Text className='py-2 text-4xl text-red font-obregular'>{title}</Text>
         ) : null}
         <Text className='pb-3 leading-5'>{notes}</Text>
+        {user.role.id < 3 ? (
+          <TouchableOpacity onPress={() => {}}>
+            <Image
+              source={icons.teamPostEdit}
+              className='w-[25px] h-[25px] self-center my-3'
+              resizeMode='contain'
+            />
+          </TouchableOpacity>
+        ) : null}
         {date ? <Text className='italic'>{formatDate(date)}</Text> : null}
       </View>
       {isAuthor ? (

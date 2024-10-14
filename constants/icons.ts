@@ -29,6 +29,8 @@ import suspended from '../assets/icons/suspended.png';
 import banned from '../assets/icons/banned.png';
 import appTeam from '../assets/icons/appTeam.png';
 import hidden from '../assets/icons/hidden.png';
+import teamPostEdit from '../assets/icons/teamPostEdit.png';
+import teamUserEdit from '../assets/icons/teamUserEdit.png';
 
 export default {
   home,
@@ -62,4 +64,6 @@ export default {
   banned,
   appTeam,
   hidden,
+  teamPostEdit,
+  teamUserEdit,
 };

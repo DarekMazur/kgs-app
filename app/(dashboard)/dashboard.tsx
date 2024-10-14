@@ -7,6 +7,7 @@ import Loader from '@/components/Loader';
 import { IPostsProps, IUserProps } from '@/lib/types';
 import { icons, images } from '@/constants';
 import Footer from '@/components/Footer';
+import IconButton from '@/components/IconButton';
 
 const dashboard = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
@@ -28,17 +29,13 @@ const dashboard = () => {
             />
           </View>
         </View>
-        <TouchableOpacity
-          className='flex-row flex-wrap items-center gap-2.5 mb-8'
+        <IconButton
+          icon={icons.logout}
+          iconSize={6}
           onPress={() => router.push('/home')}
-        >
-          <Image
-            source={icons.logout}
-            className='w-6 h-6'
-            resizeMode='contain'
-          />
-          <Text className='text-primary font-mtblack'>Zamknij panel</Text>
-        </TouchableOpacity>
+          title='Zamknij panel'
+          color='primary'
+        />
         {!usersLoading && users ? (
           <>
             <View className='flex-wrap flex-row gap-1.5'>
@@ -72,17 +69,11 @@ const dashboard = () => {
                 </Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              className='flex-row gap-x-2 mt-4 items-center'
+            <IconButton
+              icon={icons.defaultAvatar}
               onPress={() => {}}
-            >
-              <Image
-                source={icons.defaultAvatar}
-                className='h-8 w-8'
-                resizeMode='contain'
-              />
-              <Text className='text-secondary'>Zobacz wszystkich</Text>
-            </TouchableOpacity>
+              title='Zobacz wszystkich'
+            />
           </>
         ) : null}
         {!postsLoading && posts ? (
@@ -135,17 +126,11 @@ const dashboard = () => {
               </Text>
               <Text className='text-primary'>wpisów ukrytych.</Text>
             </View>
-            <TouchableOpacity
-              className='flex-row gap-x-2 mt-4 items-center'
+            <IconButton
+              icon={icons.post}
               onPress={() => {}}
-            >
-              <Image
-                source={icons.post}
-                className='h-8 w-8'
-                resizeMode='contain'
-              />
-              <Text className='text-secondary'>Zobacz wszystkie</Text>
-            </TouchableOpacity>
+              title='Zobacz wszystkie'
+            />
           </>
         ) : null}
         {!usersLoading && users ? (
@@ -159,34 +144,22 @@ const dashboard = () => {
               </Text>
               <Text className='text-primary'>zawieszonych Użytkowników,</Text>
             </View>
-            <TouchableOpacity
-              className='flex-row gap-x-2 mt-4 items-center'
+            <IconButton
+              icon={icons.suspended}
               onPress={() => {}}
-            >
-              <Image
-                source={icons.suspended}
-                className='h-8 w-8'
-                resizeMode='contain'
-              />
-              <Text className='text-secondary'>Zobacz wszystkich</Text>
-            </TouchableOpacity>
+              title='Zobacz wszystkich'
+            />
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-red font-mtblack'>
                 {(users as IUserProps[]).filter((user) => user.isBanned).length}
               </Text>
               <Text className='text-primary'>zablokowanych Użytkowników,</Text>
             </View>
-            <TouchableOpacity
-              className='flex-row gap-x-2 mt-4 items-center'
+            <IconButton
+              icon={icons.banned}
               onPress={() => {}}
-            >
-              <Image
-                source={icons.banned}
-                className='h-8 w-8'
-                resizeMode='contain'
-              />
-              <Text className='text-secondary'>Zobacz wszystkich</Text>
-            </TouchableOpacity>
+              title='Zobacz wszystkich'
+            />
           </>
         ) : null}
         <View className='h-px mt-10 bg-gray-100 border-0 dark:bg-gray-50 my-5' />
@@ -211,17 +184,11 @@ const dashboard = () => {
               </Text>
               <Text className='text-primary'>Moderatorów</Text>
             </View>
-            <TouchableOpacity
-              className='flex-row gap-x-2 mt-4 mb-10 items-center'
+            <IconButton
+              icon={icons.appTeam}
               onPress={() => {}}
-            >
-              <Image
-                source={icons.appTeam}
-                className='h-8 w-8'
-                resizeMode='contain'
-              />
-              <Text className='text-secondary'>Zobacz wszystkich</Text>
-            </TouchableOpacity>
+              title='Zobacz wszystkich'
+            />
           </>
         ) : null}
         <Footer />
