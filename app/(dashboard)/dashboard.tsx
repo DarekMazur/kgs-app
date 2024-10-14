@@ -151,7 +151,7 @@ const dashboard = () => {
         {!usersLoading && users ? (
           <>
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
-              <Text className='text-green font-mtblack'>
+              <Text className='text-red font-mtblack'>
                 {
                   (users as IUserProps[]).filter((user) => user.isSuspended)
                     .length
@@ -171,7 +171,7 @@ const dashboard = () => {
               <Text className='text-secondary'>Zobacz wszystkich</Text>
             </TouchableOpacity>
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
-              <Text className='text-green font-mtblack'>
+              <Text className='text-red font-mtblack'>
                 {(users as IUserProps[]).filter((user) => user.isBanned).length}
               </Text>
               <Text className='text-primary'>zablokowanych Użytkowników,</Text>
