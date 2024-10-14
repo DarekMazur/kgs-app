@@ -38,6 +38,7 @@ export interface IPostsProps {
   notes: string;
   photo: string;
   peak: IPeakProps | null;
+  isHidden?: boolean;
 }
 
 export interface IUserProps extends IRegisterProps {

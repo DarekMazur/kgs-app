@@ -39,6 +39,7 @@ const initialPostData = {
   notes: '',
   photo: '',
   peak: null,
+  isHidden: false,
 };
 
 interface IDistancesArrayElem {
@@ -120,6 +121,7 @@ const createScreen = () => {
           notes: postData.notes,
           photo: postData.photo,
           peak: peak[0],
+          isHidden: false,
         });
       };
 
