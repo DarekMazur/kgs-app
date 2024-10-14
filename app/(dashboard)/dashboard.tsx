@@ -126,6 +126,15 @@ const dashboard = () => {
                 </Text>
               </TouchableOpacity>
             </View>
+            <View className='flex-wrap flex-row gap-1.5 mt-7'>
+              <Text className='text-red font-mtblack'>
+                {
+                  (posts as IPostsProps[]).filter((post) => post.isHidden)
+                    .length
+                }
+              </Text>
+              <Text className='text-primary'>wpisów ukrytych.</Text>
+            </View>
             <TouchableOpacity
               className='flex-row gap-x-2 mt-4 items-center'
               onPress={() => {}}
@@ -180,7 +189,7 @@ const dashboard = () => {
             </TouchableOpacity>
           </>
         ) : null}
-        <View className='h-px mt-10 my-8 bg-gray-100 border-0 dark:bg-gray-50 my-5' />
+        <View className='h-px mt-10 bg-gray-100 border-0 dark:bg-gray-50 my-5' />
         {!usersLoading && users ? (
           <>
             <View className='flex-wrap flex-row gap-1.5'>
