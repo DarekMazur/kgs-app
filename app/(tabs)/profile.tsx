@@ -89,12 +89,14 @@ const profileScreen = () => {
               id={item.id}
               peakId={(item.peak as IPeakProps).id}
               author={item.author.firstName ?? item.author.username}
+              authorId={item.author.id}
               date={new Date(item.createdAt)}
               title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               isAuthor
               onPress={() => handleDelete(item.id)}
+              isHidden={item.isHidden}
             />
           )}
           ListHeaderComponent={() => (

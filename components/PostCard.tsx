@@ -3,30 +3,41 @@ import { FC } from 'react';
 import { router } from 'expo-router';
 import { formatDate } from '@/lib/helpers';
 import { icons } from '@/constants';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 interface IPostCardProps {
   id: string;
   peakId: string;
   author?: string;
+  authorId: string;
   date?: Date;
   title: string;
   photoUrl: string;
   notes?: string;
   isAuthor?: boolean;
   onPress?: () => void;
+  isHidden?: boolean;
 }
 
 const PostCard: FC<IPostCardProps> = ({
   id,
   peakId,
   author,
+  authorId,
   date,
   title,
   notes,
   photoUrl,
   isAuthor,
   onPress,
+  isHidden,
 }) => {
+  const { user } = useGlobalContext();
+
+  if (isHidden && authorId !== user.id) {
+    return null;
+  }
+
   return (
     <View className='w-[90%] pt-3 pb-10 m-3 mb-8 bg-gray-100 self-center rounded-2xl'>
       <Text className='text-center text-xl font-mtsemibold'>
@@ -37,6 +48,18 @@ const PostCard: FC<IPostCardProps> = ({
         className='w-full h-[250px] self-center m-3 relative'
         resizeMode='cover'
       />
+      {isHidden ? (
+        <TouchableOpacity
+          className='absolute right-2 top-[40px]'
+          onPress={() => router.push(`/peak/${peakId}`)}
+        >
+          <Image
+            source={icons.hidden}
+            className='w-9 h-9 m-3'
+            resizeMode='contain'
+          />
+        </TouchableOpacity>
+      ) : null}
       <TouchableOpacity
         className='absolute right-2 top-[240px]'
         onPress={() => router.push(`/peak/${peakId}`)}

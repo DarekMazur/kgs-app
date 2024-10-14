@@ -28,6 +28,7 @@ import post from '../assets/icons/post.png';
 import suspended from '../assets/icons/suspended.png';
 import banned from '../assets/icons/banned.png';
 import appTeam from '../assets/icons/appTeam.png';
+import hidden from '../assets/icons/hidden.png';
 
 export default {
   home,
@@ -60,4 +61,5 @@ export default {
   suspended,
   banned,
   appTeam,
+  hidden,
 };

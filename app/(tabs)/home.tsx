@@ -92,12 +92,14 @@ export const home = () => {
               id={item.id}
               peakId={(item.peak as IPeakProps).id}
               author={item.author.firstName ?? item.author.username}
+              authorId={item.author.id}
               date={new Date(item.createdAt)}
               title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               onPress={() => handleDelete(item.id)}
               isAuthor={user.id === item.author.id}
+              isHidden={item.isHidden}
             />
           )}
           ListHeaderComponent={() => (
