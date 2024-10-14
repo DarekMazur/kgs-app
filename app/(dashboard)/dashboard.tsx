@@ -31,7 +31,7 @@ const dashboard = () => {
         </View>
         <IconButton
           icon={icons.logout}
-          iconSize={6}
+          iconSize='6'
           onPress={() => router.push('/home')}
           title='Zamknij panel'
           color='primary'
