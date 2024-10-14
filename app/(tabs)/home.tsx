@@ -30,7 +30,7 @@ const greetings = (user: IUserProps) => {
 };
 
 export const home = () => {
-  const { data: posts, loading, refetch } = useApi(getAllPosts);
+  const { data: posts, loading, reFetch } = useApi(getAllPosts);
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
@@ -45,7 +45,7 @@ export const home = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await reFetch();
     setRefreshing(false);
   };
 

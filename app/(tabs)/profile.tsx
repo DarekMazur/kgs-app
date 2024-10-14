@@ -25,7 +25,7 @@ import Footer from '@/components/Footer';
 
 const profileScreen = () => {
   const { user, setGlobalUser } = useGlobalContext();
-  const { data: posts, loading, refetch } = useApi(getAllPosts);
+  const { data: posts, loading, reFetch } = useApi(getAllPosts);
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
@@ -40,7 +40,7 @@ const profileScreen = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await reFetch();
     setRefreshing(false);
   };
 
