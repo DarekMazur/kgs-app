@@ -1,6 +1,6 @@
 import { Image, Text, View } from 'react-native';
 import { FC } from 'react';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import { useRoute } from '@react-navigation/core';
 import { formatDate } from '@/lib/helpers';
 import { icons } from '@/constants';
@@ -51,7 +51,7 @@ const PostCard: FC<IPostCardProps> = ({
           <IconButton
             icon={icons.teamUserEdit}
             iconStyle='m-3 h-6 w-6'
-            onPress={() => {}}
+            onPress={() => router.push(`/admin/user/${authorId}`)}
             containerStyles='m-0 p-0'
           />
         ) : null}
@@ -83,7 +83,7 @@ const PostCard: FC<IPostCardProps> = ({
         {user.role.id < 3 && author && route.name !== 'profile' ? (
           <IconButton
             icon={icons.teamPostEdit}
-            onPress={() => {}}
+            onPress={() => router.push(`/admin/post/${id}`)}
             iconStyle='self-center my-3 h-[25px] w-[25px]'
             containerStyles='m-0 m-0'
           />
