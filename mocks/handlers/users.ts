@@ -21,7 +21,7 @@ export const handlers = [
           const current = db.user.findFirst({
             where: {
               email: {
-                equals: 'tu@mail.com',
+                equals: 'ta@mail.com',
               },
             },
           });

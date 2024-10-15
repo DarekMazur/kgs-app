@@ -53,6 +53,7 @@ const RootLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen name='admin/posts' options={{ headerShown: false }} />
         <Stack.Screen name='post/[query]' options={{ headerShown: false }} />
         <Stack.Screen name='peak/[query]' options={{ headerShown: false }} />
         <Stack.Screen
