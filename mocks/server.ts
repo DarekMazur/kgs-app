@@ -14,7 +14,11 @@ server.events.on('request:start', ({ request }) => {
 });
 
 const demoUserRegistrationTime = faker.date.past().getTime();
+const demoAdminRegistrationTime = faker.date.past().getTime();
+const demoModRegistrationTime = faker.date.past().getTime();
 const demoUserId = faker.string.uuid();
+const demoAdminId = faker.string.uuid();
+const demoModId = faker.string.uuid();
 
 const createRoles = () => {
   db.role.create({ id: 1, name: 'Administrator', type: 'admin' });
@@ -35,6 +39,20 @@ const createUsers = () => {
     password: '123',
     username: 'TestUser',
     registrationDate: demoUserRegistrationTime,
+  });
+  db.user.create({
+    id: demoAdminId,
+    email: 'ta@mail.com',
+    password: '123',
+    username: 'TestAdmin',
+    registrationDate: demoAdminRegistrationTime,
+  });
+  db.user.create({
+    id: demoModId,
+    email: 'tm@mail.com',
+    password: '123',
+    username: 'TestModerator',
+    registrationDate: demoModRegistrationTime,
   });
   for (let i = 0; i < faker.number.int({ min: 55, max: 70 }); i += 1) {
     db.user.create({
@@ -148,7 +166,51 @@ const updateDemoUser = async () => {
         role: db.role.findFirst({
           where: {
             id: {
+              equals: 3,
+            },
+          },
+        })!,
+      },
+    });
+  });
+  await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    `123${demoAdminRegistrationTime.toString()}`,
+  ).then((hashedPassword) => {
+    db.user.update({
+      where: {
+        id: {
+          equals: demoAdminId,
+        },
+      },
+      data: {
+        password: hashedPassword,
+        role: db.role.findFirst({
+          where: {
+            id: {
               equals: 1,
+            },
+          },
+        })!,
+      },
+    });
+  });
+  await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    `123${demoModRegistrationTime.toString()}`,
+  ).then((hashedPassword) => {
+    db.user.update({
+      where: {
+        id: {
+          equals: demoModId,
+        },
+      },
+      data: {
+        password: hashedPassword,
+        role: db.role.findFirst({
+          where: {
+            id: {
+              equals: 2,
             },
           },
         })!,
