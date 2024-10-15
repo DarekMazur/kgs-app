@@ -1,6 +1,7 @@
-import { Image, Text, View, TouchableOpacity, Touchable } from 'react-native';
+import { Image, Text, View } from 'react-native';
 import { FC } from 'react';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
+import { useRoute } from '@react-navigation/core';
 import { formatDate } from '@/lib/helpers';
 import { icons } from '@/constants';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -34,6 +35,7 @@ const PostCard: FC<IPostCardProps> = ({
   isHidden,
 }) => {
   const { user } = useGlobalContext();
+  const route = useRoute();
 
   if (isHidden && authorId !== user.id) {
     return null;
@@ -45,7 +47,7 @@ const PostCard: FC<IPostCardProps> = ({
         <Text className='text-center text-xl font-mtsemibold'>
           {author ? `przez ${author}` : title}
         </Text>
-        {user.role.id < 3 ? (
+        {user.role.id < 3 && author && route.name !== 'profile' ? (
           <IconButton
             icon={icons.teamUserEdit}
             iconStyle='m-3 h-6 w-6'
@@ -78,7 +80,7 @@ const PostCard: FC<IPostCardProps> = ({
           <Text className='py-2 text-4xl text-red font-obregular'>{title}</Text>
         ) : null}
         <Text className='pb-3 leading-5'>{notes}</Text>
-        {user.role.id < 3 ? (
+        {user.role.id < 3 && author && route.name !== 'profile' ? (
           <IconButton
             icon={icons.teamPostEdit}
             onPress={() => {}}

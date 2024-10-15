@@ -88,7 +88,11 @@ const profileScreen = () => {
             <PostCard
               id={item.id}
               peakId={(item.peak as IPeakProps).id}
-              author={item.author.firstName ?? item.author.username}
+              author={
+                item.author.firstName.length > 0
+                  ? item.author.firstName
+                  : item.author.username
+              }
               authorId={item.author.id}
               date={new Date(item.createdAt)}
               title={(item.peak as IPeakProps).name}
