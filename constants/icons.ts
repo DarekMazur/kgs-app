@@ -31,6 +31,7 @@ import appTeam from '../assets/icons/appTeam.png';
 import hidden from '../assets/icons/hidden.png';
 import teamPostEdit from '../assets/icons/teamPostEdit.png';
 import teamUserEdit from '../assets/icons/teamUserEdit.png';
+import filter from '../assets/icons/filter.png';
 
 export default {
   home,
@@ -66,4 +67,5 @@ export default {
   hidden,
   teamPostEdit,
   teamUserEdit,
+  filter,
 };

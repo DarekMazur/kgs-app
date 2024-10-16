@@ -1,11 +1,12 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View, ScrollView } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 import { getAllPosts } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { IPostsProps } from '@/lib/types';
+import { icons } from '@/constants';
 
 const adminPostsView = () => {
   const { data: posts, loading, reFetch } = useApi(getAllPosts);
@@ -21,7 +22,7 @@ const adminPostsView = () => {
       <Loader isLoading={loading} />
       {!loading && posts ? (
         <>
-          <View className='flex-row flex-wrap items-start gap-3.5 my-3'>
+          <View className='flex-row flex-wrap items-start gap-3.5 relative'>
             <View className='text-primary flex-row gap-x-2.5'>
               <Checkbox
                 value={formBox.isLatest}
@@ -62,11 +63,21 @@ const adminPostsView = () => {
                 Wpisy zablokowanych użytkowników
               </Text>
             </View>
+            <TouchableOpacity
+              className='w-16 h-11 items-center justify-center absolute -left-3 -bottom-11 z-10'
+              onPress={() => {}}
+            >
+              <Image
+                source={icons.filter}
+                className='w-7 h-7'
+                resizeMode='contain'
+              />
+            </TouchableOpacity>
           </View>
-          <ScrollView>
+          <ScrollView className='mt-11'>
             {posts.map((post) => (
-              <View className='text-primary text-xl'>
-                <Text className='text-primary font-mtbold my-4'>
+              <View className='text-primary text-xl border-primary border-2 rounded-xl p-2 my-2'>
+                <Text className='text-primary font-mtbold py-2 mb-4'>
                   {(post as IPostsProps).author.username}
                 </Text>
                 <Text className='text-primary'>
