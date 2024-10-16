@@ -128,7 +128,7 @@ const dashboard = () => {
             </View>
             <IconButton
               icon={icons.post}
-              onPress={() => router.push('/admin/posts')}
+              onPress={() => router.push('/posts')}
               title='Zobacz wszystkie'
             />
           </>
