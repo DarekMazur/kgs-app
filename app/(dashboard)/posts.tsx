@@ -9,7 +9,7 @@ import {
   Switch,
 } from 'react-native';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getAllPosts } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
@@ -19,7 +19,6 @@ import { IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 
 const initFormBox = {
-  isOpen: false,
   isLatest: false,
   isHidden: false,
   isSuspended: false,
@@ -28,28 +27,58 @@ const initFormBox = {
 
 const postsPanel = () => {
   const { data: posts, loading: postsLoading } = useApi(getAllPosts);
+  const [filteredPosts, setFilteredPosts] = useState<IPostsProps[] | null>();
   const [formBox, setFormBox] = useState(initFormBox);
+  const [currentFormBox, setCurrentFormBox] = useState(initFormBox);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const toggleSwitch = (
-    switchElement:
-      | 'isOpen'
-      | 'isLatest'
-      | 'isHidden'
-      | 'isSuspended'
-      | 'isBanned',
-  ) => {
-    const newFormBox = { ...formBox };
-    newFormBox[switchElement] = !newFormBox[switchElement];
+  useEffect(() => {
+    setFilteredPosts(posts as IPostsProps[]);
+  }, [posts]);
 
-    setFormBox(newFormBox);
-  };
+  useEffect(() => {
+    if (filteredPosts) {
+      if (formBox.isLatest) {
+        setFilteredPosts(
+          (posts as IPostsProps[]).filter(
+            (post) =>
+              Date.now() - new Date(post.createdAt).getTime() <
+              1000 * 60 * 60 * 24 * 7,
+          ),
+        );
+      }
+
+      if (formBox.isHidden) {
+        setFilteredPosts(filteredPosts.filter((post) => post.isHidden));
+      }
+
+      if (formBox.isSuspended) {
+        setFilteredPosts(
+          filteredPosts.filter((post) => post.author.isSuspended),
+        );
+      }
+
+      if (formBox.isBanned) {
+        setFilteredPosts(filteredPosts.filter((post) => post.author.isBanned));
+      }
+
+      if (
+        !formBox.isLatest &&
+        !formBox.isHidden &&
+        !formBox.isSuspended &&
+        !formBox.isBanned
+      ) {
+        setFilteredPosts(posts as IPostsProps[]);
+      }
+    }
+  }, [formBox]);
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-5'>
       <Loader isLoading={postsLoading} />
 
       <ScrollView>
-        {!postsLoading && posts ? (
+        {!postsLoading && filteredPosts ? (
           <>
             <View className='flex justify-between items-center flex-row mb-2'>
               <View>
@@ -76,9 +105,7 @@ const postsPanel = () => {
             </TouchableOpacity>
             <TouchableOpacity
               className='items-end justify-end mb-8'
-              onPress={() =>
-                setFormBox({ ...formBox, isOpen: !formBox.isOpen })
-              }
+              onPress={() => setIsModalOpen(true)}
             >
               <Image
                 source={icons.filter}
@@ -86,7 +113,7 @@ const postsPanel = () => {
                 resizeMode='contain'
               />
             </TouchableOpacity>
-            {posts.map((post) => (
+            {filteredPosts.map((post) => (
               <View className='text-primary text-xl border-primary border-2 rounded-xl p-2 my-2'>
                 <Text className='text-primary font-mtbold py-2 mb-4'>
                   {(post as IPostsProps).author.username}
@@ -100,14 +127,17 @@ const postsPanel = () => {
             <Modal
               animationType='slide'
               transparent
-              visible={formBox.isOpen}
+              visible={isModalOpen}
               onRequestClose={() => {
-                setFormBox({ ...formBox, isOpen: !formBox.isOpen });
+                setIsModalOpen(false);
               }}
             >
               <View className='h-full relative bg-primaryBG justify-center p-5'>
                 <TouchableOpacity
-                  onPress={() => setFormBox(initFormBox)}
+                  onPress={() => {
+                    setIsModalOpen(false);
+                    setCurrentFormBox(formBox);
+                  }}
                   className='absolute top-20 right-6 w-full items-end mb-10'
                 >
                   <Image
@@ -123,11 +153,18 @@ const postsPanel = () => {
                       true: colors.gray.v100,
                     }}
                     thumbColor={
-                      formBox.isLatest ? colors.gray.v200 : colors.black.v200
+                      currentFormBox.isLatest
+                        ? colors.gray.v200
+                        : colors.black.v200
                     }
                     ios_backgroundColor={colors.gray.v100}
-                    onValueChange={() => toggleSwitch('isLatest')}
-                    value={formBox.isLatest}
+                    onValueChange={() =>
+                      setCurrentFormBox({
+                        ...currentFormBox,
+                        isLatest: !currentFormBox.isLatest,
+                      })
+                    }
+                    value={currentFormBox.isLatest}
                   />
                   <Text className='text-primary font-mtblack'>
                     Ostatnie posty
@@ -140,11 +177,18 @@ const postsPanel = () => {
                       true: colors.gray.v100,
                     }}
                     thumbColor={
-                      formBox.isHidden ? colors.gray.v200 : colors.black.v200
+                      currentFormBox.isHidden
+                        ? colors.gray.v200
+                        : colors.black.v200
                     }
                     ios_backgroundColor={colors.gray.v100}
-                    onValueChange={() => toggleSwitch('isHidden')}
-                    value={formBox.isHidden}
+                    onValueChange={() =>
+                      setCurrentFormBox({
+                        ...currentFormBox,
+                        isHidden: !currentFormBox.isHidden,
+                      })
+                    }
+                    value={currentFormBox.isHidden}
                   />
                   <Text className='text-primary font-mtblack'>
                     Ukryte posty
@@ -157,11 +201,18 @@ const postsPanel = () => {
                       true: colors.gray.v100,
                     }}
                     thumbColor={
-                      formBox.isSuspended ? colors.gray.v200 : colors.black.v200
+                      currentFormBox.isSuspended
+                        ? colors.gray.v200
+                        : colors.black.v200
                     }
                     ios_backgroundColor={colors.gray.v100}
-                    onValueChange={() => toggleSwitch('isSuspended')}
-                    value={formBox.isSuspended}
+                    onValueChange={() =>
+                      setCurrentFormBox({
+                        ...currentFormBox,
+                        isSuspended: !currentFormBox.isSuspended,
+                      })
+                    }
+                    value={currentFormBox.isSuspended}
                   />
                   <Text className='text-primary font-mtblack'>
                     Wpisy zawieszonych użytkowników
@@ -174,11 +225,18 @@ const postsPanel = () => {
                       true: colors.gray.v100,
                     }}
                     thumbColor={
-                      formBox.isBanned ? colors.gray.v200 : colors.black.v200
+                      currentFormBox.isBanned
+                        ? colors.gray.v200
+                        : colors.black.v200
                     }
                     ios_backgroundColor={colors.gray.v100}
-                    onValueChange={() => toggleSwitch('isBanned')}
-                    value={formBox.isBanned}
+                    onValueChange={() =>
+                      setCurrentFormBox({
+                        ...currentFormBox,
+                        isBanned: !currentFormBox.isBanned,
+                      })
+                    }
+                    value={currentFormBox.isBanned}
                   />
                   <Text className='text-primary font-mtblack'>
                     Wpisy zablokowanych użytkowników
@@ -186,9 +244,10 @@ const postsPanel = () => {
                 </View>
                 <ButtonCustom
                   title='Zastosuj'
-                  handlePress={() =>
-                    setFormBox({ ...formBox, isOpen: !formBox.isOpen })
-                  }
+                  handlePress={() => {
+                    setFormBox(currentFormBox);
+                    setIsModalOpen(false);
+                  }}
                 />
               </View>
             </Modal>
