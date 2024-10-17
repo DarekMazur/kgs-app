@@ -3,24 +3,33 @@ import {
   Image,
   Text,
   View,
-  ScrollView,
   TouchableOpacity,
   FlatList,
+  Switch,
+  Modal,
 } from 'react-native';
 import { router } from 'expo-router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { icons, images } from '@/constants';
+import { colors, icons, images } from '@/constants';
 import Footer from '@/components/Footer';
-import { IPostsProps, IUserProps } from '@/lib/types';
+import { IUserProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
+
+const initForm = {
+  isInTeam: true,
+  isSuspended: false,
+  isBanned: false,
+};
 
 const usersPanel = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
   const ref = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [formBox, setFormBox] = useState(initForm);
 
   useScrollToTop(ref);
 
@@ -92,6 +101,16 @@ const usersPanel = () => {
                 />
                 <Text className='text-primary font-mtblack'>Zamknij panel</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                className='items-end justify-end mb-8'
+                onPress={() => setIsModalOpen(true)}
+              >
+                <Image
+                  source={icons.filter}
+                  className='w-6 h-6'
+                  resizeMode='contain'
+                />
+              </TouchableOpacity>
             </>
           )}
           ListEmptyComponent={() => (
@@ -110,6 +129,97 @@ const usersPanel = () => {
           ListFooterComponent={() => <Footer />}
         />
       ) : null}
+      <Modal
+        animationType='slide'
+        transparent
+        visible={isModalOpen}
+        onRequestClose={() => {
+          setIsModalOpen(false);
+        }}
+      >
+        <View className='h-full relative bg-primaryBG justify-center p-5'>
+          <TouchableOpacity
+            onPress={() => {
+              setIsModalOpen(false);
+              setFormBox(formBox);
+            }}
+            className='absolute top-20 right-6 w-full items-end mb-10'
+          >
+            <Image
+              source={icons.close}
+              resizeMode='contain'
+              className='w-7 h-7'
+            />
+          </TouchableOpacity>
+          <View className='text-primary flex-row gap-x-2.5 my-4'>
+            <Switch
+              trackColor={{
+                false: colors.gray.v200,
+                true: colors.gray.v100,
+              }}
+              thumbColor={
+                formBox.isInTeam ? colors.gray.v200 : colors.black.v200
+              }
+              ios_backgroundColor={colors.gray.v100}
+              onValueChange={() =>
+                setFormBox({
+                  ...formBox,
+                  isInTeam: !formBox.isInTeam,
+                })
+              }
+              value={formBox.isInTeam}
+            />
+            <Text className='text-primary font-mtblack'>Zespół</Text>
+          </View>
+          <View className='text-primary flex-row gap-x-2.5 my-4'>
+            <Switch
+              trackColor={{
+                false: colors.gray.v200,
+                true: colors.gray.v100,
+              }}
+              thumbColor={
+                formBox.isSuspended ? colors.gray.v200 : colors.black.v200
+              }
+              ios_backgroundColor={colors.gray.v100}
+              onValueChange={() =>
+                setFormBox({
+                  ...formBox,
+                  isSuspended: !formBox.isSuspended,
+                })
+              }
+              value={formBox.isSuspended}
+            />
+            <Text className='text-primary font-mtblack'>Zawieszeni</Text>
+          </View>
+          <View className='text-primary flex-row gap-x-2.5 my-4 mb-7'>
+            <Switch
+              trackColor={{
+                false: colors.gray.v200,
+                true: colors.gray.v100,
+              }}
+              thumbColor={
+                formBox.isBanned ? colors.gray.v200 : colors.black.v200
+              }
+              ios_backgroundColor={colors.gray.v100}
+              onValueChange={() =>
+                setFormBox({
+                  ...formBox,
+                  isBanned: !formBox.isBanned,
+                })
+              }
+              value={formBox.isBanned}
+            />
+            <Text className='text-primary font-mtblack'>Zablokowani</Text>
+          </View>
+          <ButtonCustom
+            title='Zastosuj'
+            handlePress={() => {
+              setFormBox(formBox);
+              setIsModalOpen(false);
+            }}
+          />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
