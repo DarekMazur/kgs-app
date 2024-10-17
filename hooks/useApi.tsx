@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { IPeakProps, IPostsProps, IUserRequireProps } from '@/lib/types';
+import { IPeakProps, IPostsProps, IUserProps } from '@/lib/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useApi = (fn: () => Promise<any>) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<
-    IPostsProps[] | IUserRequireProps[] | IPeakProps[] | null
+    IPostsProps[] | IUserProps[] | IPeakProps[] | null
   >(null);
 
   const fetchData = async () => {
@@ -25,9 +25,9 @@ const useApi = (fn: () => Promise<any>) => {
     fetchData();
   }, []);
 
-  const refetch = () => fetchData();
+  const reFetch = () => fetchData();
 
-  return { data, loading, refetch };
+  return { data, loading, reFetch };
 };
 
 export default useApi;

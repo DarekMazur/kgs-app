@@ -25,7 +25,7 @@ import Footer from '@/components/Footer';
 
 const profileScreen = () => {
   const { user, setGlobalUser } = useGlobalContext();
-  const { data: posts, loading, refetch } = useApi(getAllPosts);
+  const { data: posts, loading, reFetch } = useApi(getAllPosts);
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
@@ -40,7 +40,7 @@ const profileScreen = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await reFetch();
     setRefreshing(false);
   };
 
@@ -88,13 +88,19 @@ const profileScreen = () => {
             <PostCard
               id={item.id}
               peakId={(item.peak as IPeakProps).id}
-              author={item.author.firstName ?? item.author.username}
+              author={
+                item.author.firstName.length > 0
+                  ? item.author.firstName
+                  : item.author.username
+              }
+              authorId={item.author.id}
               date={new Date(item.createdAt)}
               title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               isAuthor
               onPress={() => handleDelete(item.id)}
+              isHidden={item.isHidden}
             />
           )}
           ListHeaderComponent={() => (

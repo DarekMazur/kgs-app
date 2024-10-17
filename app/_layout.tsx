@@ -43,6 +43,7 @@ const RootLayout = () => {
           options={{ headerShown: false, gestureEnabled: false }}
         />
         <Stack.Screen name='(profile)' options={{ headerShown: false }} />
+        <Stack.Screen name='(dashboard)' options={{ headerShown: false }} />
         <Stack.Screen name='(terms)' options={{ headerShown: false }} />
         <Stack.Screen
           name='menu'
@@ -52,8 +53,17 @@ const RootLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen name='admin/posts' options={{ headerShown: false }} />
         <Stack.Screen name='post/[query]' options={{ headerShown: false }} />
         <Stack.Screen name='peak/[query]' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='admin/post/[query]'
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='admin/user/[query]'
+          options={{ headerShown: false }}
+        />
       </Stack>
     </GlobalProvider>
   );

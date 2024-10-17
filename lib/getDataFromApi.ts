@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import * as Crypto from 'expo-crypto';
-import { IPostsProps, IUserRequireProps } from '@/lib/types';
+import { IPostsProps, IUserProps } from '@/lib/types';
 
 export const getAllUsers = async () => {
   const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
@@ -104,7 +104,7 @@ export const createUser = async (
 };
 
 // eslint-disable-next-line consistent-return
-export const editUser = async (updateData: IUserRequireProps) => {
+export const editUser = async (updateData: IUserProps) => {
   const updateUser = async () => {
     const update = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/users/${updateData.id}`,

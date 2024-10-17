@@ -39,6 +39,7 @@ const initialPostData = {
   notes: '',
   photo: '',
   peak: null,
+  isHidden: false,
 };
 
 interface IDistancesArrayElem {
@@ -48,7 +49,7 @@ interface IDistancesArrayElem {
 }
 
 const createScreen = () => {
-  const { data: peaks, loading, refetch } = useApi(getAllPeaks);
+  const { data: peaks, loading, reFetch } = useApi(getAllPeaks);
   const { user, setGlobalUser } = useGlobalContext();
   const cameraRef = useRef(null);
   const [permission, requestPermission] = useCameraPermissions();
@@ -64,7 +65,7 @@ const createScreen = () => {
   useScrollToTop(ref);
 
   const onRefresh = async () => {
-    await refetch();
+    await reFetch();
   };
 
   useEffect(() => {
@@ -120,6 +121,7 @@ const createScreen = () => {
           notes: postData.notes,
           photo: postData.photo,
           peak: peak[0],
+          isHidden: false,
         });
       };
 

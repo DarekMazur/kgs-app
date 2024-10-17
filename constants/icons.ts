@@ -23,6 +23,15 @@ import ranking from '../assets/icons/ranking.png';
 import search from '../assets/icons/search.png';
 import terms from '../assets/icons/terms.png';
 import termsKGS from '../assets/icons/termsKGS.png';
+import gear from '../assets/icons/gear.png';
+import post from '../assets/icons/post.png';
+import suspended from '../assets/icons/suspended.png';
+import banned from '../assets/icons/banned.png';
+import appTeam from '../assets/icons/appTeam.png';
+import hidden from '../assets/icons/hidden.png';
+import teamPostEdit from '../assets/icons/teamPostEdit.png';
+import teamUserEdit from '../assets/icons/teamUserEdit.png';
+import filter from '../assets/icons/filter.png';
 
 export default {
   home,
@@ -50,4 +59,13 @@ export default {
   search,
   termsKGS,
   terms,
+  gear,
+  post,
+  suspended,
+  banned,
+  appTeam,
+  hidden,
+  teamPostEdit,
+  teamUserEdit,
+  filter,
 };

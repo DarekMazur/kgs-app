@@ -15,13 +15,13 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
-import { IPeakProps, IPostsProps, IUserRequireProps } from '@/lib/types';
+import { IPeakProps, IPostsProps, IUserProps } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
 
-const greetings = (user: IUserRequireProps) => {
+const greetings = (user: IUserProps) => {
   if (user.firstName || user.lastName) {
     return `${user.firstName ? `${user.firstName} ` : null}${user.lastName}`;
   }
@@ -30,7 +30,7 @@ const greetings = (user: IUserRequireProps) => {
 };
 
 export const home = () => {
-  const { data: posts, loading, refetch } = useApi(getAllPosts);
+  const { data: posts, loading, reFetch } = useApi(getAllPosts);
   const { user } = useGlobalContext();
   const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
@@ -45,7 +45,7 @@ export const home = () => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
+    await reFetch();
     setRefreshing(false);
   };
 
@@ -91,13 +91,19 @@ export const home = () => {
             <PostCard
               id={item.id}
               peakId={(item.peak as IPeakProps).id}
-              author={item.author.firstName ?? item.author.username}
+              author={
+                item.author.firstName.length > 0
+                  ? item.author.firstName
+                  : item.author.username
+              }
+              authorId={item.author.id}
               date={new Date(item.createdAt)}
               title={(item.peak as IPeakProps).name}
               notes={item.notes}
               photoUrl={item.photo}
               onPress={() => handleDelete(item.id)}
               isAuthor={user.id === item.author.id}
+              isHidden={item.isHidden}
             />
           )}
           ListHeaderComponent={() => (
