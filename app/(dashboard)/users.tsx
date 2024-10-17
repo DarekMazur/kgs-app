@@ -9,7 +9,7 @@ import {
   Modal,
 } from 'react-native';
 import { router } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
@@ -19,27 +19,69 @@ import Footer from '@/components/Footer';
 import { IUserProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 
-const initForm = {
+const initFormBox = {
   isInTeam: true,
+  isLatest: false,
   isSuspended: false,
   isBanned: false,
 };
 
 const usersPanel = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
-  const ref = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [formBox, setFormBox] = useState(initForm);
+  const [filteredUsers, setFilteredUsers] = useState<IUserProps[] | null>();
+  const [formBox, setFormBox] = useState(initFormBox);
+  const [currentFormBox, setCurrentFormBox] = useState(initFormBox);
+  const ref = useRef(null);
 
   useScrollToTop(ref);
+
+  useEffect(() => {
+    setFilteredUsers(users as IUserProps[]);
+  }, [users]);
+
+  useEffect(() => {
+    if (filteredUsers) {
+      if (formBox.isLatest) {
+        setFilteredUsers(
+          (users as IUserProps[]).filter(
+            (user) =>
+              Date.now() - new Date(user.registrationDate).getTime() <
+              1000 * 60 * 60 * 24 * 7,
+          ),
+        );
+      }
+
+      if (!formBox.isInTeam) {
+        setFilteredUsers(filteredUsers.filter((user) => user.role?.id === 3));
+      }
+
+      if (formBox.isSuspended) {
+        setFilteredUsers(filteredUsers.filter((user) => user.isSuspended));
+      }
+
+      if (formBox.isBanned) {
+        setFilteredUsers(filteredUsers.filter((user) => user.isBanned));
+      }
+
+      if (
+        !formBox.isLatest &&
+        formBox.isInTeam &&
+        !formBox.isSuspended &&
+        !formBox.isBanned
+      ) {
+        setFilteredUsers(users as IUserProps[]);
+      }
+    }
+  }, [formBox]);
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
       <Loader isLoading={usersLoading} />
-      {!usersLoading && users ? (
+      {!usersLoading && filteredUsers ? (
         <FlatList
           ref={ref}
-          data={users as IUserProps[]}
+          data={filteredUsers as IUserProps[]}
           keyExtractor={(item) => item.id!}
           renderItem={({ item, index }) => (
             <View className='w-full p-5 m-3 flex-row gap-x-4 border-b-2 border-primary'>
@@ -141,7 +183,6 @@ const usersPanel = () => {
           <TouchableOpacity
             onPress={() => {
               setIsModalOpen(false);
-              setFormBox(formBox);
             }}
             className='absolute top-20 right-6 w-full items-end mb-10'
           >
@@ -158,16 +199,16 @@ const usersPanel = () => {
                 true: colors.gray.v100,
               }}
               thumbColor={
-                formBox.isInTeam ? colors.gray.v200 : colors.black.v200
+                currentFormBox.isInTeam ? colors.gray.v200 : colors.black.v200
               }
               ios_backgroundColor={colors.gray.v100}
               onValueChange={() =>
-                setFormBox({
-                  ...formBox,
-                  isInTeam: !formBox.isInTeam,
+                setCurrentFormBox({
+                  ...currentFormBox,
+                  isInTeam: !currentFormBox.isInTeam,
                 })
               }
-              value={formBox.isInTeam}
+              value={currentFormBox.isInTeam}
             />
             <Text className='text-primary font-mtblack'>Zespół</Text>
           </View>
@@ -178,16 +219,40 @@ const usersPanel = () => {
                 true: colors.gray.v100,
               }}
               thumbColor={
-                formBox.isSuspended ? colors.gray.v200 : colors.black.v200
+                currentFormBox.isLatest ? colors.gray.v200 : colors.black.v200
               }
               ios_backgroundColor={colors.gray.v100}
               onValueChange={() =>
-                setFormBox({
-                  ...formBox,
-                  isSuspended: !formBox.isSuspended,
+                setCurrentFormBox({
+                  ...currentFormBox,
+                  isLatest: !currentFormBox.isLatest,
                 })
               }
-              value={formBox.isSuspended}
+              value={currentFormBox.isLatest}
+            />
+            <Text className='text-primary font-mtblack'>
+              Najnowsi Użytkownicy
+            </Text>
+          </View>
+          <View className='text-primary flex-row gap-x-2.5 my-4'>
+            <Switch
+              trackColor={{
+                false: colors.gray.v200,
+                true: colors.gray.v100,
+              }}
+              thumbColor={
+                currentFormBox.isSuspended
+                  ? colors.gray.v200
+                  : colors.black.v200
+              }
+              ios_backgroundColor={colors.gray.v100}
+              onValueChange={() =>
+                setCurrentFormBox({
+                  ...currentFormBox,
+                  isSuspended: !currentFormBox.isSuspended,
+                })
+              }
+              value={currentFormBox.isSuspended}
             />
             <Text className='text-primary font-mtblack'>Zawieszeni</Text>
           </View>
@@ -198,23 +263,23 @@ const usersPanel = () => {
                 true: colors.gray.v100,
               }}
               thumbColor={
-                formBox.isBanned ? colors.gray.v200 : colors.black.v200
+                currentFormBox.isBanned ? colors.gray.v200 : colors.black.v200
               }
               ios_backgroundColor={colors.gray.v100}
               onValueChange={() =>
-                setFormBox({
-                  ...formBox,
-                  isBanned: !formBox.isBanned,
+                setCurrentFormBox({
+                  ...currentFormBox,
+                  isBanned: !currentFormBox.isBanned,
                 })
               }
-              value={formBox.isBanned}
+              value={currentFormBox.isBanned}
             />
             <Text className='text-primary font-mtblack'>Zablokowani</Text>
           </View>
           <ButtonCustom
             title='Zastosuj'
             handlePress={() => {
-              setFormBox(formBox);
+              setFormBox(currentFormBox);
               setIsModalOpen(false);
             }}
           />
