@@ -28,7 +28,7 @@ const Index = () => {
           if (current) {
             setGlobalUser(current);
             setIsLoggin(true);
-            router.push('/posts');
+            router.push('/team');
             return true;
           }
 

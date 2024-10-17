@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
+import { useScrollToTop } from '@react-navigation/native';
 import { getAllPosts } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
@@ -32,6 +33,8 @@ const postsPanel = () => {
   const [currentFormBox, setCurrentFormBox] = useState(initFormBox);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const ref = useRef(null);
+
+  useScrollToTop(ref);
 
   useEffect(() => {
     setFilteredPosts(posts as IPostsProps[]);
