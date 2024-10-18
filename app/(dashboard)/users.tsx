@@ -1,23 +1,16 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Image,
-  Text,
-  View,
-  TouchableOpacity,
-  FlatList,
-  Switch,
-  Modal,
-} from 'react-native';
+import { Image, Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { colors, icons, images } from '@/constants';
+import { icons, images } from '@/constants';
 import Footer from '@/components/Footer';
-import { IUserProps } from '@/lib/types';
+import { IUserProps, IUsersFiltersProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
+import Filters from '@/components/Filters';
 
 const initFormBox = {
   isInTeam: true,
@@ -31,7 +24,6 @@ const usersPanel = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [filteredUsers, setFilteredUsers] = useState<IUserProps[] | null>();
   const [formBox, setFormBox] = useState(initFormBox);
-  const [currentFormBox, setCurrentFormBox] = useState(initFormBox);
   const ref = useRef(null);
 
   useScrollToTop(ref);
@@ -74,6 +66,29 @@ const usersPanel = () => {
       }
     }
   }, [formBox]);
+
+  const setNewForm = (form: IUsersFiltersProps) => {
+    return setFormBox(form);
+  };
+
+  const filters = [
+    {
+      title: 'isInTeam',
+      description: 'Zespół',
+    },
+    {
+      title: 'isLatest',
+      description: 'Najnowsi Użytkownicy',
+    },
+    {
+      title: 'isSuspended',
+      description: 'Zawieszeni',
+    },
+    {
+      title: 'isBanned',
+      description: 'Zablokowani',
+    },
+  ];
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
@@ -171,120 +186,13 @@ const usersPanel = () => {
           ListFooterComponent={() => <Footer />}
         />
       ) : null}
-      <Modal
-        animationType='slide'
-        transparent
-        visible={isModalOpen}
-        onRequestClose={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <View className='h-full relative bg-primaryBG justify-center p-5'>
-          <TouchableOpacity
-            onPress={() => {
-              setIsModalOpen(false);
-            }}
-            className='absolute top-20 right-6 w-full items-end mb-10'
-          >
-            <Image
-              source={icons.close}
-              resizeMode='contain'
-              className='w-7 h-7'
-            />
-          </TouchableOpacity>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isInTeam ? colors.gray.v200 : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isInTeam: !currentFormBox.isInTeam,
-                })
-              }
-              value={currentFormBox.isInTeam}
-            />
-            <Text className='text-primary font-mtblack'>Zespół</Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isLatest ? colors.gray.v200 : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isLatest: !currentFormBox.isLatest,
-                })
-              }
-              value={currentFormBox.isLatest}
-            />
-            <Text className='text-primary font-mtblack'>
-              Najnowsi Użytkownicy
-            </Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isSuspended
-                  ? colors.gray.v200
-                  : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isSuspended: !currentFormBox.isSuspended,
-                })
-              }
-              value={currentFormBox.isSuspended}
-            />
-            <Text className='text-primary font-mtblack'>Zawieszeni</Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4 mb-7'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isBanned ? colors.gray.v200 : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isBanned: !currentFormBox.isBanned,
-                })
-              }
-              value={currentFormBox.isBanned}
-            />
-            <Text className='text-primary font-mtblack'>Zablokowani</Text>
-          </View>
-          <ButtonCustom
-            title='Zastosuj'
-            handlePress={() => {
-              setFormBox(currentFormBox);
-              setIsModalOpen(false);
-            }}
-          />
-        </View>
-      </Modal>
+      <Filters
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        form={formBox}
+        setNewForm={setNewForm}
+        filters={filters}
+      />
     </SafeAreaView>
   );
 };

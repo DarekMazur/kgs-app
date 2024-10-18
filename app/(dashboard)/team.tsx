@@ -1,32 +1,38 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Image,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Switch,
-  Modal,
-} from 'react-native';
+import { Image, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { colors, icons, images } from '@/constants';
+import { icons, images } from '@/constants';
 import Footer from '@/components/Footer';
-import { IUserProps } from '@/lib/types';
-import ButtonCustom from '@/components/ButtonCustom';
+import { ITeamFilterProps, IUserProps } from '@/lib/types';
+import Filters from '@/components/Filters';
 
 const usersPanel = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
   const ref = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [showAdmin, setShowAdmin] = useState<boolean>(true);
-  const [showMods, setShowMods] = useState<boolean>(true);
+  const [formBox, setFormBox] = useState({ showAdmin: true, showMods: true });
 
   useScrollToTop(ref);
+
+  const filters = [
+    {
+      title: 'showAdmin',
+      description: 'Administratorzy',
+    },
+    {
+      title: 'showMods',
+      description: 'Moderatorzy',
+    },
+  ];
+
+  const setNewForm = (form: ITeamFilterProps) => {
+    return setFormBox(form);
+  };
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
@@ -63,12 +69,12 @@ const usersPanel = () => {
             resizeMode='contain'
           />
         </TouchableOpacity>
-        {showAdmin && (
+        {formBox.showAdmin && (
           <Text className='text-green text-2xl font-mtblack'>
             Administratorzy
           </Text>
         )}
-        {!usersLoading && users && showAdmin
+        {!usersLoading && users && formBox.showAdmin
           ? users
               .filter((user) => (user as IUserProps).role?.id === 1)
               .map((user, index) => (
@@ -89,12 +95,12 @@ const usersPanel = () => {
                 </View>
               ))
           : null}
-        {showMods && (
+        {formBox.showMods && (
           <Text className='text-green text-2xl font-mtblack mt-5'>
             Moderatorzy
           </Text>
         )}
-        {!usersLoading && users && showMods
+        {!usersLoading && users && formBox.showMods
           ? users
               .filter((user) => (user as IUserProps).role?.id === 2)
               .map((user, index) => (
@@ -117,61 +123,13 @@ const usersPanel = () => {
           : null}
         <Footer />
       </ScrollView>
-      <Modal
-        animationType='slide'
-        transparent
-        visible={isModalOpen}
-        onRequestClose={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <View className='h-full relative bg-primaryBG justify-center p-5'>
-          <TouchableOpacity
-            onPress={() => {
-              setIsModalOpen(false);
-            }}
-            className='absolute top-20 right-6 w-full items-end mb-10'
-          >
-            <Image
-              source={icons.close}
-              resizeMode='contain'
-              className='w-7 h-7'
-            />
-          </TouchableOpacity>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={showAdmin ? colors.gray.v200 : colors.black.v200}
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() => setShowAdmin((prevState) => !prevState)}
-              value={showAdmin}
-            />
-            <Text className='text-primary font-mtblack'>Administratorzy</Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4 mb-7'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={showMods ? colors.gray.v200 : colors.black.v200}
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() => setShowMods((prevState) => !prevState)}
-              value={showMods}
-            />
-            <Text className='text-primary font-mtblack'>Moderatorzy</Text>
-          </View>
-          <ButtonCustom
-            title='Zastosuj'
-            handlePress={() => {
-              setIsModalOpen(false);
-            }}
-          />
-        </View>
-      </Modal>
+      <Filters
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        form={formBox}
+        setNewForm={setNewForm}
+        filters={filters}
+      />
     </SafeAreaView>
   );
 };

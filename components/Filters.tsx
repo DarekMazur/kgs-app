@@ -19,7 +19,9 @@ interface IFiltersProps {
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
   form: IPostFiltersProps | IUsersFiltersProps | ITeamFilterProps;
-  setNewForm: (form: IPostFiltersProps) => void;
+  setNewForm: (
+    form: IPostFiltersProps | IUsersFiltersProps | ITeamFilterProps,
+  ) => void;
   filters: {
     title: string;
     description: string;
