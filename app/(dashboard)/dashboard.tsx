@@ -1,13 +1,14 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import { getAllPosts, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { IPostsProps, IUserProps } from '@/lib/types';
-import { icons, images } from '@/constants';
+import { icons } from '@/constants';
 import Footer from '@/components/Footer';
 import IconButton from '@/components/IconButton';
+import ScreenHeader from '@/components/ScreenHeader';
 
 const dashboard = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
@@ -17,18 +18,11 @@ const dashboard = () => {
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
       <Loader isLoading={usersLoading || postsLoading} />
       <ScrollView>
-        <View className='flex justify-between items-center flex-row mb-2'>
+        <ScreenHeader>
           <View>
             <Text className='text-red text-3xl font-mtblack'>Panel główny</Text>
           </View>
-          <View>
-            <Image
-              source={images.logoW}
-              className='w-20 h-20'
-              resizeMode='contain'
-            />
-          </View>
-        </View>
+        </ScreenHeader>
         <IconButton
           icon={icons.logout}
           iconStyle='h-6 w-6'

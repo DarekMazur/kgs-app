@@ -6,11 +6,12 @@ import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { icons, images } from '@/constants';
+import { icons } from '@/constants';
 import Footer from '@/components/Footer';
 import { IUserProps, IUsersFiltersProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
+import ScreenHeader from '@/components/ScreenHeader';
 
 const initFormBox = {
   isInTeam: true,
@@ -133,20 +134,11 @@ const usersPanel = () => {
           )}
           ListHeaderComponent={() => (
             <>
-              <View className='flex justify-between items-center flex-row mb-2'>
-                <View>
-                  <Text className='text-red text-3xl font-mtblack'>
-                    Użytkownicy
-                  </Text>
-                </View>
-                <View>
-                  <Image
-                    source={images.logoW}
-                    className='w-20 h-20'
-                    resizeMode='contain'
-                  />
-                </View>
-              </View>
+              <ScreenHeader>
+                <Text className='text-red text-3xl font-mtblack'>
+                  Użytkownicy
+                </Text>
+              </ScreenHeader>
               <TouchableOpacity
                 className='flex-row flex-wrap items-center gap-2.5 mb-8'
                 onPress={() => router.push('/home')}

@@ -6,10 +6,11 @@ import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { icons, images } from '@/constants';
+import { icons } from '@/constants';
 import Footer from '@/components/Footer';
 import { ITeamFilterProps, IUserProps } from '@/lib/types';
 import Filters from '@/components/Filters';
+import ScreenHeader from '@/components/ScreenHeader';
 
 const usersPanel = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
@@ -38,16 +39,9 @@ const usersPanel = () => {
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
       <Loader isLoading={usersLoading} />
       <ScrollView ref={ref}>
-        <View className='flex justify-between items-center flex-row mb-2'>
+        <ScreenHeader>
           <Text className='text-red text-3xl font-mtblack'>Zespół</Text>
-          <View>
-            <Image
-              source={images.logoW}
-              className='w-20 h-20'
-              resizeMode='contain'
-            />
-          </View>
-        </View>
+        </ScreenHeader>
         <TouchableOpacity
           className='flex-row flex-wrap items-center gap-2.5 mb-8'
           onPress={() => router.push('/home')}

@@ -1,17 +1,9 @@
-import {
-  Text,
-  View,
-  Image,
-  FlatList,
-  Alert,
-  RefreshControl,
-} from 'react-native';
+import { Text, View, FlatList, Alert, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
@@ -20,6 +12,7 @@ import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
+import ScreenHeader from '@/components/ScreenHeader';
 
 const greetings = (user: IUserProps) => {
   if (user.firstName || user.lastName) {
@@ -108,7 +101,7 @@ export const home = () => {
           )}
           ListHeaderComponent={() => (
             <View className='flex my-6 px-4 space-y-6'>
-              <View className='flex justify-between items-start flex-row mb-6'>
+              <ScreenHeader>
                 <View>
                   <Text className='text-xl text-primary'>
                     Cześć,{'\n'}
@@ -118,14 +111,7 @@ export const home = () => {
                   </Text>
                   <Text className='text-primary text-xl'>witaj ponownie</Text>
                 </View>
-                <View>
-                  <Image
-                    source={images.logoW}
-                    className='w-20 h-20'
-                    resizeMode='contain'
-                  />
-                </View>
-              </View>
+              </ScreenHeader>
               <View>
                 <Text className='text-xl text-secondary text-center'>
                   Ostatnio zdobyte:
