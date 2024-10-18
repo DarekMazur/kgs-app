@@ -62,3 +62,21 @@ export interface ITabIconProps {
   name: string;
   focused: boolean;
 }
+
+export interface IPostFiltersProps {
+  isLatest: boolean;
+  isHidden: boolean;
+  isSuspended: boolean;
+  isBanned: boolean;
+}
+
+export interface IUsersFiltersProps {
+  isInTeam: boolean;
+  isLatest: boolean;
+  isSuspended: boolean;
+  isBanned: boolean;
+}
+export interface ITeamFilterProps {
+  showAdmin: boolean;
+  showMods: boolean;
+}

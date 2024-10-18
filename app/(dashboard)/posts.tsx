@@ -1,23 +1,16 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Image,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Modal,
-  Switch,
-} from 'react-native';
+import { Image, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { getAllPosts } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { colors, icons, images } from '@/constants';
+import { icons, images } from '@/constants';
 import Footer from '@/components/Footer';
-import { IPostsProps } from '@/lib/types';
+import { IPostFiltersProps, IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
+import Filters from '@/components/Filters';
 
 const initFormBox = {
   isLatest: false,
@@ -30,9 +23,27 @@ const postsPanel = () => {
   const { data: posts, loading: postsLoading } = useApi(getAllPosts);
   const [filteredPosts, setFilteredPosts] = useState<IPostsProps[] | null>();
   const [formBox, setFormBox] = useState(initFormBox);
-  const [currentFormBox, setCurrentFormBox] = useState(initFormBox);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const ref = useRef(null);
+
+  const filters = [
+    {
+      title: 'isLatest',
+      description: 'Ostatnie posty',
+    },
+    {
+      title: 'isHidden',
+      description: 'Ukryte posty',
+    },
+    {
+      title: 'isSuspended',
+      description: 'Wpisy zawieszonych użytkowników',
+    },
+    {
+      title: 'isBanned',
+      description: 'Wpisy zablokowanych użytkowników',
+    },
+  ];
 
   useScrollToTop(ref);
 
@@ -76,6 +87,10 @@ const postsPanel = () => {
       }
     }
   }, [formBox]);
+
+  const setNewForm = (form: IPostFiltersProps) => {
+    return setFormBox(form);
+  };
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-5'>
@@ -148,123 +163,13 @@ const postsPanel = () => {
           ListFooterComponent={() => <Footer />}
         />
       ) : null}
-      <Modal
-        animationType='slide'
-        transparent
-        visible={isModalOpen}
-        onRequestClose={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <View className='h-full relative bg-primaryBG justify-center p-5'>
-          <TouchableOpacity
-            onPress={() => {
-              setIsModalOpen(false);
-              setCurrentFormBox(formBox);
-            }}
-            className='absolute top-20 right-6 w-full items-end mb-10'
-          >
-            <Image
-              source={icons.close}
-              resizeMode='contain'
-              className='w-7 h-7'
-            />
-          </TouchableOpacity>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isLatest ? colors.gray.v200 : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isLatest: !currentFormBox.isLatest,
-                })
-              }
-              value={currentFormBox.isLatest}
-            />
-            <Text className='text-primary font-mtblack'>Ostatnie posty</Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isHidden ? colors.gray.v200 : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isHidden: !currentFormBox.isHidden,
-                })
-              }
-              value={currentFormBox.isHidden}
-            />
-            <Text className='text-primary font-mtblack'>Ukryte posty</Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isSuspended
-                  ? colors.gray.v200
-                  : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isSuspended: !currentFormBox.isSuspended,
-                })
-              }
-              value={currentFormBox.isSuspended}
-            />
-            <Text className='text-primary font-mtblack'>
-              Wpisy zawieszonych użytkowników
-            </Text>
-          </View>
-          <View className='text-primary flex-row gap-x-2.5 my-4 mb-7'>
-            <Switch
-              trackColor={{
-                false: colors.gray.v200,
-                true: colors.gray.v100,
-              }}
-              thumbColor={
-                currentFormBox.isBanned ? colors.gray.v200 : colors.black.v200
-              }
-              ios_backgroundColor={colors.gray.v100}
-              onValueChange={() =>
-                setCurrentFormBox({
-                  ...currentFormBox,
-                  isBanned: !currentFormBox.isBanned,
-                })
-              }
-              value={currentFormBox.isBanned}
-            />
-            <Text className='text-primary font-mtblack'>
-              Wpisy zablokowanych użytkowników
-            </Text>
-          </View>
-          <ButtonCustom
-            title='Zastosuj'
-            handlePress={() => {
-              setFormBox(currentFormBox);
-              setIsModalOpen(false);
-            }}
-          />
-        </View>
-      </Modal>
+      <Filters
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        form={formBox}
+        setNewForm={setNewForm}
+        filters={filters}
+      />
     </SafeAreaView>
   );
 };
