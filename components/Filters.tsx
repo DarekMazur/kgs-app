@@ -35,7 +35,9 @@ const Filters: FC<IFiltersProps> = ({
   setNewForm,
   filters,
 }) => {
-  const [currentFormBox, setCurrentFormBox] = useState(form);
+  const [currentFormBox, setCurrentFormBox] = useState<
+    IPostFiltersProps | IUsersFiltersProps | ITeamFilterProps
+  >(form);
 
   const handleClose = (isCurrent: boolean) => {
     const newForm = isCurrent ? currentFormBox : form;
@@ -74,7 +76,7 @@ const Filters: FC<IFiltersProps> = ({
                 true: colors.gray.v100,
               }}
               thumbColor={
-                currentFormBox[filter.title]
+                currentFormBox[filter.title as keyof typeof currentFormBox]
                   ? colors.gray.v200
                   : colors.black.v200
               }
@@ -82,10 +84,15 @@ const Filters: FC<IFiltersProps> = ({
               onValueChange={() =>
                 setCurrentFormBox({
                   ...currentFormBox,
-                  [filter.title]: !currentFormBox[filter.title],
+                  [filter.title]:
+                    !currentFormBox[
+                      filter.title as keyof typeof currentFormBox
+                    ],
                 })
               }
-              value={currentFormBox[filter.title]}
+              value={
+                currentFormBox[filter.title as keyof typeof currentFormBox]
+              }
             />
             <Text className='text-primary font-mtblack'>
               {filter.description}
@@ -95,7 +102,6 @@ const Filters: FC<IFiltersProps> = ({
         <ButtonCustom
           title='Zastosuj'
           handlePress={() => {
-            // setFormBox(currentFormBox);
             handleClose(true);
             setIsModalOpen(false);
           }}

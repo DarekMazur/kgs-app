@@ -190,7 +190,7 @@ const usersPanel = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         form={formBox}
-        setNewForm={setNewForm}
+        setNewForm={(form) => setNewForm(form as IUsersFiltersProps)}
         filters={filters}
       />
     </SafeAreaView>

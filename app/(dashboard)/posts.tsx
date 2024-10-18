@@ -167,7 +167,7 @@ const postsPanel = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         form={formBox}
-        setNewForm={setNewForm}
+        setNewForm={(form) => setNewForm(form as IPostFiltersProps)}
         filters={filters}
       />
     </SafeAreaView>
