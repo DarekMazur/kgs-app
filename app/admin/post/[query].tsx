@@ -1,9 +1,9 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import useApi from '@/hooks/useApi';
-import { getSinglePost } from '@/lib/getDataFromApi';
+import { editPost, editUser, getSinglePost } from '@/lib/getDataFromApi';
 import { IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
@@ -19,6 +19,91 @@ const adminPostEdit = () => {
       setPostData((data as IPostsProps[])[0]);
     }
   }, [data]);
+
+  const handleHide = () => {
+    if (postData) {
+      Alert.alert('Czy chcesz ukryć wpis?', '', [
+        {
+          text: 'Anuluj',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              await editPost({
+                ...postData,
+                isHidden: true,
+              });
+            } catch (error) {
+              Alert.alert('Błąd...', (error as Error).message);
+            }
+          },
+        },
+      ]);
+    }
+  };
+
+  const handleSuspend = () => {
+    if (postData) {
+      Alert.alert(
+        `Czy chcesz zawiesić Użytkownika ${postData?.author.username}?`,
+        '',
+        [
+          {
+            text: 'Anuluj',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: async () => {
+              try {
+                const user = await getSinglePost(postData.author.id);
+                await editUser({
+                  ...user,
+                  isSuspended: true,
+                });
+              } catch (error) {
+                Alert.alert('Błąd...', (error as Error).message);
+              }
+            },
+          },
+        ],
+      );
+    }
+  };
+
+  const handleBan = () => {
+    if (postData) {
+      Alert.alert(
+        `Czy chcesz zablokować Użytkownika ${postData?.author.username}?`,
+        '',
+        [
+          {
+            text: 'Anuluj',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: async () => {
+              try {
+                const user = await getSinglePost(postData.author.id);
+                await editUser({
+                  ...user,
+                  isBanned: true,
+                });
+              } catch (error) {
+                Alert.alert('Błąd...', (error as Error).message);
+              }
+            },
+          },
+        ],
+      );
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -37,13 +122,17 @@ const adminPostEdit = () => {
         </>
       ) : null}
       <View>
-        <IconButton icon={icons.hidden} onPress={() => {}} title='Ukryj wpis' />
+        <IconButton
+          icon={icons.hidden}
+          onPress={handleHide}
+          title='Ukryj wpis'
+        />
         <IconButton
           icon={icons.suspended}
-          onPress={() => {}}
+          onPress={handleSuspend}
           title='Ostrzeżenie'
         />
-        <IconButton icon={icons.banned} onPress={() => {}} title='Ban' />
+        <IconButton icon={icons.banned} onPress={handleBan} title='Ban' />
       </View>
     </SafeAreaView>
   );
