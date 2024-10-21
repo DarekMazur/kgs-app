@@ -99,7 +99,7 @@ const adminPostEdit = () => {
             text: 'OK',
             onPress: async () => {
               try {
-                const user = await getSinglePost(postData.author.id);
+                const user = await getSingleUser(postData.author.id);
                 await editUser({
                   ...user[0],
                   isBanned: true,

@@ -135,6 +135,8 @@ export const handlers = [
             lastName: updatedUser.lastName ?? oldData.lastName,
             avatar: updatedUser.avatar ?? oldData.avatar,
             description: updatedUser.description ?? oldData.description,
+            isSuspended: updatedUser.isSuspended ?? oldData.isSuspended,
+            isBanned: updatedUser.isBanned ?? oldData.isBanned,
             role: db.role.findFirst({
               where: {
                 id: {
