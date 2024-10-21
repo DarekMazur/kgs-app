@@ -69,11 +69,20 @@ const adminPostEdit = () => {
             text: 'OK',
             onPress: async () => {
               try {
+                setIsLoading(true);
                 const user = await getSingleUser(postData.author.id);
                 await editUser({
                   ...user[0],
                   isSuspended: true,
                 });
+                setPostData({
+                  ...postData,
+                  author: {
+                    ...postData.author,
+                    isSuspended: !postData.author.isSuspended,
+                  },
+                });
+                setIsLoading(false);
               } catch (error) {
                 Alert.alert('Błąd...', (error as Error).message);
               }
@@ -99,11 +108,20 @@ const adminPostEdit = () => {
             text: 'OK',
             onPress: async () => {
               try {
+                setIsLoading(true);
                 const user = await getSingleUser(postData.author.id);
                 await editUser({
                   ...user[0],
                   isBanned: true,
                 });
+                setPostData({
+                  ...postData,
+                  author: {
+                    ...postData.author,
+                    isBanned: !postData.author.isBanned,
+                  },
+                });
+                setIsLoading(false);
               } catch (error) {
                 Alert.alert('Błąd...', (error as Error).message);
               }
@@ -137,11 +155,23 @@ const adminPostEdit = () => {
           title={postData?.isHidden ? 'Pokaż post' : 'Ukryj wpis'}
         />
         <IconButton
-          icon={icons.suspended}
+          icon={
+            postData?.author.isSuspended
+              ? icons.suspended
+              : icons.suspendedActive
+          }
           onPress={handleSuspend}
-          title='Ostrzeżenie'
+          title={
+            postData?.author.isSuspended
+              ? 'Zdejmij zawieszenie'
+              : 'Zawieś Użytkownika'
+          }
         />
-        <IconButton icon={icons.banned} onPress={handleBan} title='Ban' />
+        <IconButton
+          icon={postData?.author.isBanned ? icons.banned : icons.bannedActive}
+          onPress={handleBan}
+          title={postData?.author.isBanned ? 'Zdejmij bana' : 'Ban'}
+        />
       </View>
     </SafeAreaView>
   );
