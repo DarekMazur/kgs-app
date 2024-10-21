@@ -32,6 +32,8 @@ import hidden from '../assets/icons/hidden.png';
 import teamPostEdit from '../assets/icons/teamPostEdit.png';
 import teamUserEdit from '../assets/icons/teamUserEdit.png';
 import filter from '../assets/icons/filter.png';
+import suspendedActive from '../assets/icons/suspendedRed.png';
+import bannedActive from '../assets/icons/bannedRed.png';
 
 export default {
   home,
@@ -68,4 +70,6 @@ export default {
   teamPostEdit,
   teamUserEdit,
   filter,
+  suspendedActive,
+  bannedActive,
 };

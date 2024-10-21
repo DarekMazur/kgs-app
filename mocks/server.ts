@@ -117,6 +117,9 @@ const updatePosts = () => {
           username: author?.username,
           firstName: author?.firstName,
           avatar: author?.avatar,
+          isSuspended: author?.isSuspended,
+          isBanned: author?.isBanned,
+          role: author?.role?.id ?? 3,
         },
         peak: peak as any | IPeakProps, // eslint-disable-line @typescript-eslint/no-explicit-any
       },

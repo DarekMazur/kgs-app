@@ -35,12 +35,13 @@ export interface IPostsProps {
     avatar: string;
     isSuspended: boolean;
     isBanned: boolean;
+    role: number;
   };
   createdAt: Date;
   notes: string;
   photo: string;
   peak: IPeakProps | null;
-  isHidden?: boolean;
+  isHidden: boolean;
 }
 
 export interface IUserProps extends IRegisterProps {

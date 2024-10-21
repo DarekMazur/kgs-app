@@ -1,7 +1,14 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image, Text, View, FlatList, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import { useEffect, useRef, useState } from 'react';
+import {
+  Image,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  RefreshControl,
+} from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { getAllPosts } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
@@ -12,6 +19,7 @@ import { IPostFiltersProps, IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
+import IconButton from '@/components/IconButton';
 
 const initFormBox = {
   isLatest: false,
@@ -21,10 +29,11 @@ const initFormBox = {
 };
 
 const postsPanel = () => {
-  const { data: posts, loading: postsLoading } = useApi(getAllPosts);
+  const { data: posts, loading: postsLoading, reFetch } = useApi(getAllPosts);
   const [filteredPosts, setFilteredPosts] = useState<IPostsProps[] | null>();
   const [formBox, setFormBox] = useState(initFormBox);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState(false);
   const ref = useRef(null);
 
   const filters = [
@@ -47,6 +56,22 @@ const postsPanel = () => {
   ];
 
   useScrollToTop(ref);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await reFetch();
+    setRefreshing(false);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh();
+
+      return () => {
+        return <View />;
+      };
+    }, []),
+  );
 
   useEffect(() => {
     setFilteredPosts(posts as IPostsProps[]);
@@ -103,12 +128,31 @@ const postsPanel = () => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View className='text-primary text-xl border-primary border-2 rounded-xl p-2 my-2'>
-              <Text className='text-primary font-mtbold py-2 mb-4'>
-                {(item as IPostsProps).author.username}
-              </Text>
+              <View className='py-2 mb-4 gap-2 flex-row items-center'>
+                <Text
+                  className={`${item.author.isBanned ? 'text-red' : item.author.role === 1 ? 'text-orange-700' : item.author.role === 2 ? 'text-orange-300' : 'text-primary'} ${item.author.isBanned ? 'line-through' : ''} font-mtbold`}
+                >
+                  {(item as IPostsProps).author.username}
+                </Text>
+                {item.isHidden || item.author.isSuspended ? (
+                  <Image
+                    source={
+                      item.author.isSuspended
+                        ? icons.suspendedActive
+                        : icons.hidden
+                    }
+                    className='h-5 w-5'
+                    resizeMode='contain'
+                  />
+                ) : null}
+              </View>
               <Text className='text-primary'>
                 {(item as IPostsProps).notes}
               </Text>
+              <IconButton
+                icon={icons.editLight}
+                onPress={() => router.push(`/admin/post/${item.id}`)}
+              />
             </View>
           )}
           ListHeaderComponent={() => (
@@ -118,6 +162,20 @@ const postsPanel = () => {
                   <Text className='text-red text-3xl font-mtblack'>Posty</Text>
                 </View>
               </ScreenHeader>
+              <View className='mb-5'>
+                <Text className='text-lg font-mtblack text-primary'>
+                  Legenda:
+                </Text>
+                <View className='flex-row flex-wrap gap-x-2.5'>
+                  <Text className='text-orange-700 font-mtbold'>
+                    Administrator
+                  </Text>
+                  <Text className='text-orange-300 font-mtbold'>Moderator</Text>
+                  <Text className='text-red line-through font-mtbold'>
+                    Zablokowany
+                  </Text>
+                </View>
+              </View>
               <TouchableOpacity
                 className='flex-row flex-wrap items-center gap-2.5 mb-3'
                 onPress={() => router.push('/home')}
@@ -154,6 +212,9 @@ const postsPanel = () => {
               />
             </View>
           )}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           ListFooterComponent={() => <Footer />}
         />
       ) : null}

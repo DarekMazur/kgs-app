@@ -135,6 +135,8 @@ export const handlers = [
             lastName: updatedUser.lastName ?? oldData.lastName,
             avatar: updatedUser.avatar ?? oldData.avatar,
             description: updatedUser.description ?? oldData.description,
+            isSuspended: updatedUser.isSuspended ?? oldData.isSuspended,
+            isBanned: updatedUser.isBanned ?? oldData.isBanned,
             role: db.role.findFirst({
               where: {
                 id: {
@@ -142,6 +144,22 @@ export const handlers = [
                 },
               },
             })!,
+          },
+        });
+
+        db.post.update({
+          where: {
+            author: {
+              id: {
+                equals: updatedUser.id as string,
+              },
+            },
+          },
+          data: {
+            author: {
+              isSuspended: updatedUser.isSuspended,
+              isBanned: updatedUser.isBanned,
+            },
           },
         });
 

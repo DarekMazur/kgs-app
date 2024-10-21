@@ -50,9 +50,12 @@ export const handlers = [
         username: user.username,
         firstName: user.firstName,
         avatar: user.avatar,
+        isSuspended: user.isSuspended,
+        isBanned: user.isBanned,
       },
       notes: newPost.notes,
       photo: newPost.photo,
+      isHidden: false,
       peak: db.peak.findFirst({
         where: {
           id: {
@@ -92,6 +95,7 @@ export const handlers = [
           },
           data: {
             notes: updatedPost.notes,
+            isHidden: updatedPost.isHidden,
           },
         });
 

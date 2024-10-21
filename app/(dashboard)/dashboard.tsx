@@ -1,6 +1,7 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View, TouchableOpacity, ScrollView } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { getAllPosts, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
@@ -11,8 +12,31 @@ import IconButton from '@/components/IconButton';
 import ScreenHeader from '@/components/ScreenHeader';
 
 const dashboard = () => {
-  const { data: users, loading: usersLoading } = useApi(getAllUsers);
-  const { data: posts, loading: postsLoading } = useApi(getAllPosts);
+  const {
+    data: users,
+    loading: usersLoading,
+    reFetch: usersReFetch,
+  } = useApi(getAllUsers);
+  const {
+    data: posts,
+    loading: postsLoading,
+    reFetch: postsReFetch,
+  } = useApi(getAllPosts);
+
+  const onRefresh = async () => {
+    await usersReFetch();
+    await postsReFetch();
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      onRefresh();
+
+      return () => {
+        return <View />;
+      };
+    }, []),
+  );
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-4'>
