@@ -1,6 +1,6 @@
 import { View, Text, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import useApi from '@/hooks/useApi';
 import {
@@ -13,6 +13,7 @@ import { IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { icons } from '@/constants';
+import ButtonCustom from '@/components/ButtonCustom';
 
 const adminPostEdit = () => {
   const { query } = useLocalSearchParams();
@@ -135,23 +136,24 @@ const adminPostEdit = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className='bg-primaryBG h-full w-full p-5'>
       <Loader isLoading={loading || isLoading} />
       {postData ? (
         <>
           <View>
-            <Text>{`${postData.peak?.name} ${postData.author.username}`}</Text>
+            <Text className='text-primary text-xl font-mtblack'>{`${postData.peak?.name} dodany przez ${postData.author.username}`}</Text>
             <Image
               source={{ uri: postData.photo }}
-              className='w-full h-[200px]'
+              className='w-full h-[200px] my-2 rounded-lg'
               resizeMode='cover'
             />
           </View>
-          <Text>{postData.notes}</Text>
+          <Text className='text-primary'>{postData.notes}</Text>
         </>
       ) : null}
-      <View>
+      <View className='my-3'>
         <IconButton
+          containerStyles='my-3'
           isDisabled={postData?.author.isBanned}
           icon={
             postData?.isHidden || postData?.author.isBanned
@@ -162,6 +164,7 @@ const adminPostEdit = () => {
           title={postData?.isHidden ? 'Pokaż post' : 'Ukryj wpis'}
         />
         <IconButton
+          containerStyles='my-3'
           isDisabled={postData?.author.isBanned}
           icon={
             postData?.author.isSuspended || postData?.author.isBanned
@@ -176,11 +179,13 @@ const adminPostEdit = () => {
           }
         />
         <IconButton
+          containerStyles='my-3'
           icon={postData?.author.isBanned ? icons.banned : icons.bannedActive}
           onPress={handleBan}
           title={postData?.author.isBanned ? 'Zdejmij bana' : 'Ban'}
         />
       </View>
+      <ButtonCustom title='Wróć' handlePress={router.back} />
     </SafeAreaView>
   );
 };
