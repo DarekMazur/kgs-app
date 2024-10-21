@@ -3,7 +3,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import useApi from '@/hooks/useApi';
-import { editPost, editUser, getSinglePost } from '@/lib/getDataFromApi';
+import {
+  editPost,
+  editUser,
+  getSinglePost,
+  getSingleUser,
+} from '@/lib/getDataFromApi';
 import { IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
@@ -64,9 +69,9 @@ const adminPostEdit = () => {
             text: 'OK',
             onPress: async () => {
               try {
-                const user = await getSinglePost(postData.author.id);
+                const user = await getSingleUser(postData.author.id);
                 await editUser({
-                  ...user,
+                  ...user[0],
                   isSuspended: true,
                 });
               } catch (error) {
@@ -96,7 +101,7 @@ const adminPostEdit = () => {
               try {
                 const user = await getSinglePost(postData.author.id);
                 await editUser({
-                  ...user,
+                  ...user[0],
                   isBanned: true,
                 });
               } catch (error) {
