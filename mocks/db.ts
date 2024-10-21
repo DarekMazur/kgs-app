@@ -32,6 +32,7 @@ export const db = factory({
       avatar: () => faker.image.avatar(),
       isSuspended: () => faker.datatype.boolean({ probability: 0 }),
       isBanned: () => faker.datatype.boolean({ probability: 0 }),
+      role: () => faker.number.int({ min: 1, max: 3 }),
     },
     createdAt: () => faker.date.past(),
     notes: () => faker.lorem.paragraph(),

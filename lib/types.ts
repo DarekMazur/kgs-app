@@ -35,6 +35,7 @@ export interface IPostsProps {
     avatar: string;
     isSuspended: boolean;
     isBanned: boolean;
+    role: number;
   };
   createdAt: Date;
   notes: string;

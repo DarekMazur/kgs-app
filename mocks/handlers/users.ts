@@ -147,6 +147,22 @@ export const handlers = [
           },
         });
 
+        db.post.update({
+          where: {
+            author: {
+              id: {
+                equals: updatedUser.id as string,
+              },
+            },
+          },
+          data: {
+            author: {
+              isSuspended: updatedUser.isSuspended,
+              isBanned: updatedUser.isBanned,
+            },
+          },
+        });
+
         return HttpResponse.json(updatedUser, { status: 201 });
       }
     },
