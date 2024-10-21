@@ -12,6 +12,7 @@ import { IUserProps, IUsersFiltersProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
+import IconButton from '@/components/IconButton';
 
 const initFormBox = {
   isInTeam: true,
@@ -100,36 +101,43 @@ const usersPanel = () => {
           data={filteredUsers as IUserProps[]}
           keyExtractor={(item) => item.id!}
           renderItem={({ item, index }) => (
-            <View className='w-full p-5 m-3 flex-row gap-x-4 border-b-2 border-primary'>
-              <Image
-                source={{ uri: (item as IUserProps).avatar }}
-                className='w-14 h-14'
-                resizeMode='contain'
-              />
-              <View>
-                <View className='flex-row items-center gap-x-2'>
-                  <Text
-                    className={`${item.isBanned ? 'text-red line-through' : 'text-primary'} text-lg`}
-                  >
-                    {`${index + 1}. ${(item as IUserProps).username}`}
+            <View className='p-5 m-3 border-b-2 border-primary'>
+              <View className='w-full flex-row gap-x-4'>
+                <Image
+                  source={{ uri: (item as IUserProps).avatar }}
+                  className='w-14 h-14'
+                  resizeMode='contain'
+                />
+                <View>
+                  <View className='flex-row items-center gap-x-2'>
+                    <Text
+                      className={`${item.isBanned ? 'text-red line-through' : 'text-primary'} text-lg`}
+                    >
+                      {`${index + 1}. ${(item as IUserProps).username}`}
+                    </Text>
+                    {item.isSuspended ? (
+                      <Image
+                        source={icons.suspended}
+                        className='w-5 h-5'
+                        resizeMode='contain'
+                      />
+                    ) : null}
+                  </View>
+                  <Text className='text-primary my-2'>
+                    {`${(item as IUserProps).firstName} ${(item as IUserProps).lastName}`}
                   </Text>
-                  {item.isSuspended ? (
-                    <Image
-                      source={icons.suspended}
-                      className='w-5 h-5'
-                      resizeMode='contain'
-                    />
-                  ) : null}
+                  <Text
+                    className={`${(item as IUserProps).role?.id < 3 ? 'text-green' : 'text-primary'} my-2 font-mtbold`}
+                  >
+                    {(item as IUserProps).role?.name}
+                  </Text>
                 </View>
-                <Text className='text-primary my-2'>
-                  {`${(item as IUserProps).firstName} ${(item as IUserProps).lastName}`}
-                </Text>
-                <Text
-                  className={`${(item as IUserProps).role?.id < 3 ? 'text-green' : 'text-primary'} my-2 font-mtbold`}
-                >
-                  {(item as IUserProps).role?.name}
-                </Text>
               </View>
+              <IconButton
+                icon={icons.editLight}
+                onPress={() => router.push(`/admin/user/${item.id}`)}
+                title='Edytuj'
+              />
             </View>
           )}
           ListHeaderComponent={() => (

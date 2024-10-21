@@ -69,7 +69,10 @@ const Filters: FC<IFiltersProps> = ({
           />
         </TouchableOpacity>
         {filters.map((filter) => (
-          <View className='text-primary flex-row gap-x-2.5 my-4'>
+          <View
+            key={filter.title}
+            className='text-primary flex-row gap-x-2.5 my-4'
+          >
             <Switch
               trackColor={{
                 false: colors.gray.v200,

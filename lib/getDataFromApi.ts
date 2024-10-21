@@ -164,3 +164,9 @@ export const createPost = async (postData: IPostsProps) => {
     Alert.alert('Błąd...', (err as Error).message);
   }
 };
+
+export const getAllRoles = async () => {
+  const posts = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/roles`);
+
+  return posts.json();
+};
