@@ -12,6 +12,7 @@ import { IPostFiltersProps, IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
+import IconButton from '@/components/IconButton';
 
 const initFormBox = {
   isLatest: false,
@@ -118,6 +119,10 @@ const postsPanel = () => {
               <Text className='text-primary'>
                 {(item as IPostsProps).notes}
               </Text>
+              <IconButton
+                icon={icons.editLight}
+                onPress={() => router.push(`/admin/post/${item.id}`)}
+              />
             </View>
           )}
           ListHeaderComponent={() => (
