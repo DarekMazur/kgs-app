@@ -13,6 +13,7 @@ interface IIconButtonProps {
   color?: string;
   iconStyle?: string;
   containerStyles?: string;
+  isDisabled?: boolean;
 }
 
 const IconButton: FC<IIconButtonProps> = ({
@@ -22,11 +23,13 @@ const IconButton: FC<IIconButtonProps> = ({
   color,
   containerStyles,
   iconStyle,
+  isDisabled,
 }) => {
   return (
     <TouchableOpacity
       className={`flex-row gap-x-2 mt-4 mb-10 items-center ${containerStyles}`}
       onPress={onPress}
+      disabled={isDisabled}
     >
       <Image
         source={icon}
@@ -34,7 +37,9 @@ const IconButton: FC<IIconButtonProps> = ({
         resizeMode='contain'
       />
       {title ? (
-        <Text className={`text-${color ?? 'secondary'} font-mtblack`}>
+        <Text
+          className={`text-${isDisabled ? 'gray-100' : (color ?? 'secondary')} font-mtblack`}
+        >
           {title}
         </Text>
       ) : null}

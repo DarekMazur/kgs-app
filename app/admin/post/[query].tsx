@@ -73,7 +73,7 @@ const adminPostEdit = () => {
                 const user = await getSingleUser(postData.author.id);
                 await editUser({
                   ...user[0],
-                  isSuspended: true,
+                  isSuspended: !user[0].isSuspended,
                 });
                 setPostData({
                   ...postData,
@@ -112,12 +112,14 @@ const adminPostEdit = () => {
                 const user = await getSingleUser(postData.author.id);
                 await editUser({
                   ...user[0],
-                  isBanned: true,
+                  isSuspended: false,
+                  isBanned: !user[0].isBanned,
                 });
                 setPostData({
                   ...postData,
                   author: {
                     ...postData.author,
+                    isSuspended: false,
                     isBanned: !postData.author.isBanned,
                   },
                 });
@@ -150,13 +152,19 @@ const adminPostEdit = () => {
       ) : null}
       <View>
         <IconButton
-          icon={postData?.isHidden ? icons.eye : icons.hidden}
+          isDisabled={postData?.author.isBanned}
+          icon={
+            postData?.isHidden || postData?.author.isBanned
+              ? icons.eye
+              : icons.hidden
+          }
           onPress={handleHide}
           title={postData?.isHidden ? 'Pokaż post' : 'Ukryj wpis'}
         />
         <IconButton
+          isDisabled={postData?.author.isBanned}
           icon={
-            postData?.author.isSuspended
+            postData?.author.isSuspended || postData?.author.isBanned
               ? icons.suspended
               : icons.suspendedActive
           }

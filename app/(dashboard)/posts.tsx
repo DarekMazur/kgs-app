@@ -134,16 +134,12 @@ const postsPanel = () => {
                 >
                   {(item as IPostsProps).author.username}
                 </Text>
-                {item.isHidden ||
-                item.author.isSuspended ||
-                item.author.isBanned ? (
+                {item.isHidden || item.author.isSuspended ? (
                   <Image
                     source={
-                      item.author.isBanned
-                        ? icons.bannedActive
-                        : item.author.isSuspended
-                          ? icons.suspendedActive
-                          : icons.hidden
+                      item.author.isSuspended
+                        ? icons.suspendedActive
+                        : icons.hidden
                     }
                     className='h-5 w-5'
                     resizeMode='contain'
