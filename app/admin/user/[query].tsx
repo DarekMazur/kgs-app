@@ -147,7 +147,7 @@ const adminUserEdit = () => {
   };
 
   return (
-    <SafeAreaView className='bg-primaryBG h-full w-full p-5'>
+    <SafeAreaView className='bg-primaryBG h-full w-full p-7'>
       <Loader isLoading={loading || isLoading} />
       <ScrollView>
         {userData ? (
