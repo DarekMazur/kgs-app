@@ -222,7 +222,7 @@ const updateDemoUser = async () => {
   });
 };
 
-const updateDemoUsersWithAllPeaks = async () => {
+const createDemoUsersWithAllPeaks = async () => {
   const peaks = db.peak.getAll();
 
   const shuffle = <T>(array: T[]) => {
@@ -266,30 +266,48 @@ const updateDemoUsersWithAllPeaks = async () => {
     });
   }
 
-  db.user.update({
-    where: {
-      id: {
-        equals: demoUserID,
-      },
-    },
-    data: {
-      posts: db.post.findMany({
-        where: {
-          author: {
-            id: {
-              equals: demoUserID,
-            },
+  db.user.create({
+    role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    registrationDate:
+      faker.number.int({ min: 0, max: 3 }) === 0
+        ? faker.date.recent().getTime()
+        : faker.date.past().getTime(),
+    posts: db.post.findMany({
+      where: {
+        author: {
+          id: {
+            equals: demoUserID,
           },
         },
-      }),
-    },
+      },
+    }),
+  });
+};
+
+const updateUsersWithNoRole = () => {
+  const users = db.user.getAll().filter((user) => user.role === undefined);
+
+  users.forEach((user) => {
+    db.user.update({
+      where: {
+        id: {
+          equals: user.id,
+        },
+      },
+      data: {
+        role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+      },
+    });
   });
 };
 
 updatePosts();
 updateUsers();
+
 updateDemoUser();
 
 for (let i = 0; i < faker.number.int({ min: 3, max: 10 }); i += 1) {
-  updateDemoUsersWithAllPeaks();
+  createDemoUsersWithAllPeaks();
 }
+
+updateUsersWithNoRole();
