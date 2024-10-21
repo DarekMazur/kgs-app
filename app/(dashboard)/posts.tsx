@@ -130,7 +130,7 @@ const postsPanel = () => {
             <View className='text-primary text-xl border-primary border-2 rounded-xl p-2 my-2'>
               <View className='py-2 mb-4 gap-2 flex-row items-center'>
                 <Text
-                  className={`${item.author.role === 1 ? 'text-orange-700' : item.author.role === 2 ? 'text-orange-300' : 'text-primary'} font-mtbold`}
+                  className={`${item.author.isBanned ? 'text-red' : item.author.role === 1 ? 'text-orange-700' : item.author.role === 2 ? 'text-orange-300' : 'text-primary'} ${item.author.isBanned ? 'line-through' : ''} font-mtbold`}
                 >
                   {(item as IPostsProps).author.username}
                 </Text>
@@ -166,6 +166,20 @@ const postsPanel = () => {
                   <Text className='text-red text-3xl font-mtblack'>Posty</Text>
                 </View>
               </ScreenHeader>
+              <View className='mb-5'>
+                <Text className='text-lg font-mtblack text-primary'>
+                  Legenda:
+                </Text>
+                <View className='flex-row flex-wrap gap-x-2.5'>
+                  <Text className='text-orange-700 font-mtbold'>
+                    Administrator
+                  </Text>
+                  <Text className='text-orange-300 font-mtbold'>Moderator</Text>
+                  <Text className='text-red line-through font-mtbold'>
+                    Zablokowany
+                  </Text>
+                </View>
+              </View>
               <TouchableOpacity
                 className='flex-row flex-wrap items-center gap-2.5 mb-3'
                 onPress={() => router.push('/home')}
