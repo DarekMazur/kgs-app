@@ -13,6 +13,7 @@ const adminPostEdit = () => {
   const { query } = useLocalSearchParams();
   const { data, loading } = useApi(() => getSinglePost(query as string));
   const [postData, setPostData] = useState<IPostsProps | undefined>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
@@ -32,10 +33,13 @@ const adminPostEdit = () => {
           text: 'OK',
           onPress: async () => {
             try {
+              setIsLoading(true);
               await editPost({
                 ...postData,
-                isHidden: true,
+                isHidden: !postData.isHidden,
               });
+              setPostData({ ...postData, isHidden: !postData.isHidden });
+              setIsLoading(false);
             } catch (error) {
               Alert.alert('Błąd...', (error as Error).message);
             }
@@ -107,7 +111,7 @@ const adminPostEdit = () => {
 
   return (
     <SafeAreaView>
-      <Loader isLoading={loading} />
+      <Loader isLoading={loading || isLoading} />
       {postData ? (
         <>
           <View>
@@ -123,9 +127,9 @@ const adminPostEdit = () => {
       ) : null}
       <View>
         <IconButton
-          icon={icons.hidden}
+          icon={postData?.isHidden ? icons.eye : icons.hidden}
           onPress={handleHide}
-          title='Ukryj wpis'
+          title={postData?.isHidden ? 'Pokaż post' : 'Ukryj wpis'}
         />
         <IconButton
           icon={icons.suspended}
