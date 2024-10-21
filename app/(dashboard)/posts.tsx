@@ -103,9 +103,18 @@ const postsPanel = () => {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View className='text-primary text-xl border-primary border-2 rounded-xl p-2 my-2'>
-              <Text className='text-primary font-mtbold py-2 mb-4'>
-                {(item as IPostsProps).author.username}
-              </Text>
+              <View className='py-2 mb-4 gap-2 flex-row items-center'>
+                <Text className='text-primary font-mtbold '>
+                  {(item as IPostsProps).author.username}
+                </Text>
+                {item.isHidden ? (
+                  <Image
+                    source={icons.hidden}
+                    className='h-5 w-5'
+                    resizeMode='contain'
+                  />
+                ) : null}
+              </View>
               <Text className='text-primary'>
                 {(item as IPostsProps).notes}
               </Text>
