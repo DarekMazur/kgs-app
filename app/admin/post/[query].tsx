@@ -14,9 +14,11 @@ import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const adminPostEdit = () => {
   const { query } = useLocalSearchParams();
+  const { user } = useGlobalContext();
   const { data, loading } = useApi(() => getSinglePost(query as string));
   const [postData, setPostData] = useState<IPostsProps | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -56,7 +58,7 @@ const adminPostEdit = () => {
   };
 
   const handleSuspend = () => {
-    if (postData) {
+    if (postData && user.role.id === 1) {
       Alert.alert(
         `Czy chcesz zawiesić Użytkownika ${postData?.author.username}?`,
         '',
@@ -71,10 +73,10 @@ const adminPostEdit = () => {
             onPress: async () => {
               try {
                 setIsLoading(true);
-                const user = await getSingleUser(postData.author.id);
+                const singleUser = await getSingleUser(postData.author.id);
                 await editUser({
-                  ...user[0],
-                  isSuspended: !user[0].isSuspended,
+                  ...singleUser[0],
+                  isSuspended: !singleUser[0].isSuspended,
                 });
                 setPostData({
                   ...postData,
@@ -95,7 +97,7 @@ const adminPostEdit = () => {
   };
 
   const handleBan = () => {
-    if (postData) {
+    if (postData && user.role.id === 1) {
       Alert.alert(
         `Czy chcesz zablokować Użytkownika ${postData?.author.username}?`,
         '',
@@ -110,11 +112,11 @@ const adminPostEdit = () => {
             onPress: async () => {
               try {
                 setIsLoading(true);
-                const user = await getSingleUser(postData.author.id);
+                const singleUser = await getSingleUser(postData.author.id);
                 await editUser({
-                  ...user[0],
+                  ...singleUser[0],
                   isSuspended: false,
-                  isBanned: !user[0].isBanned,
+                  isBanned: !singleUser[0].isBanned,
                 });
                 setPostData({
                   ...postData,
@@ -165,7 +167,7 @@ const adminPostEdit = () => {
         />
         <IconButton
           containerStyles='my-3'
-          isDisabled={postData?.author.isBanned}
+          isDisabled={postData?.author.isBanned || user.role.id !== 1}
           icon={
             postData?.author.isSuspended || postData?.author.isBanned
               ? icons.suspended
@@ -179,6 +181,7 @@ const adminPostEdit = () => {
           }
         />
         <IconButton
+          isDisabled={user.role.id !== 1}
           containerStyles='my-3'
           icon={postData?.author.isBanned ? icons.banned : icons.bannedActive}
           onPress={handleBan}

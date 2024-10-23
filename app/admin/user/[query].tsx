@@ -21,8 +21,10 @@ import IconButton from '@/components/IconButton';
 import { icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '@/lib/helpers';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const adminUserEdit = () => {
+  const { user } = useGlobalContext();
   const { query } = useLocalSearchParams();
   const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
   const { data, loading } = useApi(() => getSingleUser(query as string));
@@ -145,6 +147,19 @@ const adminUserEdit = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (user.role.id !== 1) {
+      Alert.alert('Uwaga', 'nie masz dostępu do tej części aplikacji!', [
+        {
+          text: 'OK',
+          onPress: () => {
+            router.replace('/home');
+          },
+        },
+      ]);
+    }
+  }, []);
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-7'>
