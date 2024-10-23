@@ -30,6 +30,7 @@ const TabLayout = () => {
         tabBarActiveTintColor: colors.green,
         tabBarInactiveTintColor: colors.gray.v100,
         tabBarShowLabel: false,
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: colors.black.v100,
           borderTopWidth: 1,
@@ -43,7 +44,6 @@ const TabLayout = () => {
         options={{
           tabBarLabel: 'Główna',
           title: 'Główna',
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.home}
@@ -59,7 +59,6 @@ const TabLayout = () => {
         options={{
           tabBarLabel: 'Profil',
           title: 'Profil',
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.profile}
@@ -75,7 +74,6 @@ const TabLayout = () => {
         options={{
           tabBarLabel: 'Szczyty',
           title: 'Szczyty',
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.mountain}
@@ -91,7 +89,6 @@ const TabLayout = () => {
         options={{
           tabBarLabel: 'Zdobywcy',
           title: 'Zdobywcy',
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.ranking}
@@ -107,7 +104,6 @@ const TabLayout = () => {
         options={{
           tabBarLabel: 'Nowy',
           title: 'Nowy',
-          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.add}

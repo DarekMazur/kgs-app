@@ -26,6 +26,7 @@ import ErrorCustom from '@/components/ErrorCustom';
 import { IPeakProps, IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 const initialPostData = {
   id: '',
@@ -34,6 +35,9 @@ const initialPostData = {
     username: '',
     firstName: '',
     avatar: '',
+    isSuspended: false,
+    isBanned: false,
+    role: 3,
   },
   createdAt: new Date(Date.now()),
   notes: '',
@@ -116,6 +120,9 @@ const createScreen = () => {
             username: user.username as string,
             firstName: user.firstName as string,
             avatar: user.avatar as string,
+            isSuspended: user.isSuspended as boolean,
+            isBanned: user.isBanned as boolean,
+            role: user.role.id as number,
           },
           createdAt: postData.createdAt,
           notes: postData.notes,

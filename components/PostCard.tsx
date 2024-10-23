@@ -11,7 +11,7 @@ interface IPostCardProps {
   id: string;
   peakId: string;
   author?: string;
-  authorId: string;
+  authorId?: string;
   date?: Date;
   title: string;
   photoUrl: string;
@@ -47,7 +47,10 @@ const PostCard: FC<IPostCardProps> = ({
         <Text className='text-center text-xl font-mtsemibold'>
           {author ? `przez ${author}` : title}
         </Text>
-        {user.role.id === 1 && author && route.name !== 'profile' ? (
+        {user.role.id === 1 &&
+        author &&
+        route.name !== 'profile' &&
+        authorId ? (
           <IconButton
             icon={icons.teamUserEdit}
             iconStyle='m-3 h-6 w-6'

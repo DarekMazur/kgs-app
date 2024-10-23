@@ -13,6 +13,7 @@ import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
 import ScreenHeader from '@/components/ScreenHeader';
+import Header from '@/components/Header';
 
 const greetings = (user: IUserProps) => {
   if (user.firstName || user.lastName) {
@@ -74,6 +75,7 @@ export const home = () => {
 
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
+      <Header />
       <Loader isLoading={loading} />
       {!loading ? (
         <FlatList

@@ -22,9 +22,10 @@ import Loader from '@/components/Loader';
 import { IPeakProps, IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 const profileScreen = () => {
-  const { user, setGlobalUser } = useGlobalContext();
+  const { user } = useGlobalContext();
   const { data: posts, loading, reFetch } = useApi(getAllPosts);
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const [refreshing, setRefreshing] = useState(false);
@@ -77,6 +78,7 @@ const profileScreen = () => {
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <Loader isLoading={loading || peaksLoading} />
+      <Header />
       {!loading && !peaksLoading ? (
         <FlatList
           ref={ref}
@@ -105,17 +107,6 @@ const profileScreen = () => {
           )}
           ListHeaderComponent={() => (
             <View className='w-full flex justify-center items-center mt-6 mb-12 px-4'>
-              <TouchableOpacity
-                onPress={() => router.push('/menu')}
-                className='flex w-full items-end mb-10'
-              >
-                <Image
-                  source={icons.bars}
-                  resizeMode='contain'
-                  className='w-6 h-6'
-                />
-              </TouchableOpacity>
-
               <View className='w-16 h-16 border border-green rounded-lg flex justify-center items-center'>
                 <Image
                   source={{ uri: user?.avatar }}

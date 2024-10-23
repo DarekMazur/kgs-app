@@ -11,6 +11,7 @@ import ButtonCustom from '@/components/ButtonCustom';
 import { IPeakProps } from '@/lib/types';
 import SearchInput from '@/components/SearchInput';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
@@ -22,6 +23,7 @@ const peaksScreen = () => {
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <Loader isLoading={loading} />
+      <Header />
       {!loading ? (
         <FlatList
           ref={ref}
