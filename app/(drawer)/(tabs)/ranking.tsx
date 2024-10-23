@@ -8,9 +8,10 @@ import { getAllPeaks, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
-import { formatDate } from '../../lib/helpers';
+import { formatDate } from '../../../lib/helpers';
 import { IPostsProps, IUserProps } from '@/lib/types';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
@@ -33,6 +34,7 @@ const rankingScreen = () => {
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full'>
       <Loader isLoading={peaksLoading || usersLoading} />
+      <Header />
       {!peaksLoading && !usersLoading ? (
         <FlatList
           ref={ref}
