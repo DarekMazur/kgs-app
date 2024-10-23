@@ -26,6 +26,12 @@ const Index = () => {
         try {
           const current = await currentUser(value as string);
           if (current) {
+            if (current.isBanned) {
+              return Alert.alert(
+                'Nie można zalogować',
+                'Twoje konto zostało zablokowane',
+              );
+            }
             setGlobalUser(current);
             setIsLoggin(true);
             router.push('/home');
