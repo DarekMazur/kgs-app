@@ -137,6 +137,10 @@ export const handlers = [
             description: updatedUser.description ?? oldData.description,
             isSuspended: updatedUser.isSuspended ?? oldData.isSuspended,
             isBanned: updatedUser.isBanned ?? oldData.isBanned,
+            totalSuspensions:
+              updatedUser.totalSuspensions ?? oldData.totalSuspensions,
+            suspensionTimeout:
+              updatedUser.suspensionTimeout ?? oldData.suspensionTimeout,
             role: db.role.findFirst({
               where: {
                 id: {

@@ -18,10 +18,25 @@ import { editUser, getAllRoles, getSingleUser } from '@/lib/getDataFromApi';
 import { IRoleTypes, IUserProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
-import { icons } from '@/constants';
+import { icons, constants } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '@/lib/helpers';
 import { useGlobalContext } from '@/context/GlobalProvider';
+
+const suspendTime = [
+  {
+    label: 'Doba',
+    value: 1,
+  },
+  {
+    label: 'Tydzień',
+    value: 7,
+  },
+  {
+    label: 'Miesiąc',
+    value: 30,
+  },
+];
 
 const adminUserEdit = () => {
   const { user } = useGlobalContext();
@@ -31,6 +46,10 @@ const adminUserEdit = () => {
   const [userData, setUserData] = useState<IUserProps | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
+  const [suspendOpen, setSuspendOpen] = useState(false);
+  const [suspendValue, setSuspendValue] = useState<number | null>(null);
+  const [suspendItems, setSuspendItems] =
+    useState<ItemType<ValueType>[]>(suspendTime);
   const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState<ItemType<ValueType>[]>([]);
 
@@ -53,10 +72,15 @@ const adminUserEdit = () => {
     }
   }, [data]);
 
+  // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
+    if (!suspendValue) {
+      Alert.alert('Błąd', 'Wybierz czas zawieszenia Użytkownika!');
+      return false;
+    }
     if (userData) {
       Alert.alert(
-        `Czy chcesz zawiesić Użytkownika ${userData?.username}?`,
+        `Czy chcesz zawiesić Użytkownika ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`,
         '',
         [
           {
@@ -69,13 +93,20 @@ const adminUserEdit = () => {
             onPress: async () => {
               try {
                 setIsLoading(true);
+                const timeout = new Date(
+                  Date.now() + constants.fullDayMilliseconds * suspendValue,
+                );
                 await editUser({
                   ...userData,
                   isSuspended: !userData.isSuspended,
+                  totalSuspensions: userData.totalSuspensions + 1,
+                  suspensionTimeout: timeout,
                 });
                 setUserData({
                   ...userData,
                   isSuspended: !userData.isSuspended,
+                  totalSuspensions: userData.totalSuspensions + 1,
+                  suspensionTimeout: timeout,
                 });
                 setIsLoading(false);
               } catch (error) {
@@ -170,6 +201,11 @@ const adminUserEdit = () => {
             <View>
               <Text className='text-primary text-xl font-mtblack'>{`${userData.firstName ? userData.firstName : null} ${userData.lastName ? userData.lastName : null} ${userData.firstName || userData.lastName ? '(' : null}${userData.username}${userData.firstName || userData.lastName ? ')' : null}`}</Text>
               <Text className='text-primary'>{userData.role?.name}</Text>
+              {userData.isBanned ? (
+                <Text className='text-red text-xl font-mtblack mb-3'>
+                  Konto zablokowane
+                </Text>
+              ) : null}
               <Image
                 source={{ uri: userData.avatar }}
                 className='w-[200px] h-[200px] my-4 rounded-lg self-center'
@@ -178,6 +214,12 @@ const adminUserEdit = () => {
             </View>
             <Text className='text-primary mb-3'>{userData.description}</Text>
             <Text className='text-primary mb-3'>{`Zarejestrowany: ${formatDate(new Date(userData.registrationDate))}`}</Text>
+            {constants.suspensionConditions(userData.suspensionTimeout) ? (
+              <Text className='text-red mb-3'>
+                {`Konto zawieszone do ${formatDate(userData.suspensionTimeout)}`}
+              </Text>
+            ) : null}
+            <Text className='text-primary mb-3'>{`Łącznie ostrzeżeń (zawieszeń): ${userData.totalSuspensions}`}</Text>
             {userData.posts?.map((post) => (
               <TouchableOpacity
                 key={post.id}
@@ -211,22 +253,38 @@ const adminUserEdit = () => {
           containerStyles='min-h-[40px] w-[200px] my-3 bg-blue-600'
           isDisabled={value && userData ? value === userData.role.type : true}
         />
-        <View className='my-3'>
-          <IconButton
-            containerStyles='my-3'
-            isDisabled={userData?.isBanned}
-            icon={
-              userData?.isSuspended || userData?.isBanned
-                ? icons.suspended
-                : icons.suspendedActive
-            }
-            onPress={handleSuspend}
-            title={
-              userData?.isSuspended
-                ? 'Zdejmij zawieszenie'
-                : 'Zawieś Użytkownika'
-            }
-          />
+        <View className='my-3 z-20'>
+          <View className='mb-3 z-20'>
+            <IconButton
+              containerStyles='my-3'
+              isDisabled={userData?.isBanned || !suspendValue}
+              icon={
+                userData?.isSuspended || userData?.isBanned
+                  ? icons.suspended
+                  : icons.suspendedActive
+              }
+              onPress={handleSuspend}
+              title={
+                userData?.isSuspended
+                  ? 'Zdejmij zawieszenie'
+                  : 'Zawieś Użytkownika'
+              }
+            />
+            <DropDownPicker
+              flatListProps={{
+                nestedScrollEnabled: true,
+                showsVerticalScrollIndicator: false,
+                scrollEnabled: false,
+              }}
+              placeholder='Czas zawieszenia'
+              open={suspendOpen}
+              value={suspendValue}
+              items={suspendItems}
+              setOpen={setSuspendOpen}
+              setValue={setSuspendValue}
+              setItems={setSuspendItems}
+            />
+          </View>
           <IconButton
             containerStyles='my-3'
             icon={userData?.isBanned ? icons.banned : icons.bannedActive}
@@ -234,7 +292,11 @@ const adminUserEdit = () => {
             title={userData?.isBanned ? 'Zdejmij bana' : 'Ban'}
           />
         </View>
-        <ButtonCustom title='Wróć' handlePress={router.back} />
+        <ButtonCustom
+          title='Wróć'
+          handlePress={router.back}
+          containerStyles='my-3 z-10'
+        />
       </ScrollView>
     </SafeAreaView>
   );
