@@ -13,7 +13,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import { getAllPosts } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { icons } from '@/constants';
+import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
 import { IPostFiltersProps, IPostsProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
@@ -84,7 +84,7 @@ const postsPanel = () => {
           (posts as IPostsProps[]).filter(
             (post) =>
               Date.now() - new Date(post.createdAt).getTime() <
-              1000 * 60 * 60 * 24 * 7,
+              constants.fullDayMilliseconds * 7,
           ),
         );
       }

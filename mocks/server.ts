@@ -39,6 +39,7 @@ const createUsers = () => {
     password: '123',
     username: 'TestUser',
     registrationDate: demoUserRegistrationTime,
+    suspensionTimeout: undefined,
   });
   db.user.create({
     id: demoAdminId,
@@ -46,6 +47,7 @@ const createUsers = () => {
     password: '123',
     username: 'TestAdmin',
     registrationDate: demoAdminRegistrationTime,
+    suspensionTimeout: undefined,
   });
   db.user.create({
     id: demoModId,
@@ -53,9 +55,11 @@ const createUsers = () => {
     password: '123',
     username: 'TestModerator',
     registrationDate: demoModRegistrationTime,
+    suspensionTimeout: undefined,
   });
   for (let i = 0; i < faker.number.int({ min: 55, max: 70 }); i += 1) {
     db.user.create({
+      suspensionTimeout: undefined,
       registrationDate:
         faker.number.int({ min: 0, max: 3 }) === 0
           ? faker.date.recent().getTime()
@@ -246,6 +250,7 @@ const createDemoUsersWithAllPeaks = async () => {
     username: demoUserUsername,
     firstName: demoUserFirstName,
     avatar: demoUserAvatar,
+    suspensionTimeout: undefined,
   });
 
   for (let i = 0; i < peaks.length; i += 1) {
@@ -285,9 +290,11 @@ const createDemoUsersWithAllPeaks = async () => {
 };
 
 const updateUsersWithNoRole = () => {
-  const users = db.user.getAll().filter((user) => user.role === undefined);
+  const usersWithNoRole = db.user
+    .getAll()
+    .filter((user) => user.role === undefined);
 
-  users.forEach((user) => {
+  usersWithNoRole.forEach((user) => {
     db.user.update({
       where: {
         id: {

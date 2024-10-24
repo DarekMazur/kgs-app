@@ -6,7 +6,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import { getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { icons } from '@/constants';
+import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
 import { IUserProps, IUsersFiltersProps } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
@@ -41,7 +41,7 @@ const usersPanel = () => {
           (users as IUserProps[]).filter(
             (user) =>
               Date.now() - new Date(user.registrationDate).getTime() <
-              1000 * 60 * 60 * 24 * 7,
+              constants.fullDayMilliseconds * 7,
           ),
         );
       }

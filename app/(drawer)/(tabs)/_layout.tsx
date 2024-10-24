@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router';
 import { View, Image, Text } from 'react-native';
 import { FC } from 'react';
-import { colors, icons } from '@/constants';
+import { colors, constants, icons } from '@/constants';
 import { ITabIconProps } from '@/lib/types';
+import { useGlobalContext } from '@/context/GlobalProvider';
 
 const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
   return (
@@ -24,6 +25,8 @@ const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
 };
 
 const TabLayout = () => {
+  const { user } = useGlobalContext();
+
   return (
     <Tabs
       screenOptions={{
@@ -99,21 +102,23 @@ const TabLayout = () => {
           ),
         }}
       />
-      <Tabs.Screen
-        name='create'
-        options={{
-          tabBarLabel: 'Nowy',
-          title: 'Nowy',
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon
-              icon={icons.add}
-              color={color}
-              name='Nowy'
-              focused={focused}
-            />
-          ),
-        }}
-      />
+      {constants.suspensionConditions(user.suspensionTimeout) ? null : (
+        <Tabs.Screen
+          name='create'
+          options={{
+            tabBarLabel: 'Nowy',
+            title: 'Nowy',
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.add}
+                color={color}
+                name='Nowy'
+                focused={focused}
+              />
+            ),
+          }}
+        />
+      )}
     </Tabs>
   );
 };
