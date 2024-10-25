@@ -153,6 +153,7 @@ const updateUsers = () => {
         },
       },
       data: {
+        suspensionTimeout: undefined,
         role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         posts: postsList || [],
       },
@@ -173,6 +174,7 @@ const updateDemoUser = async () => {
       },
       data: {
         password: hashedPassword,
+        suspensionTimeout: undefined,
         role: db.role.findFirst({
           where: {
             id: {
@@ -195,6 +197,7 @@ const updateDemoUser = async () => {
       },
       data: {
         password: hashedPassword,
+        suspensionTimeout: undefined,
         role: db.role.findFirst({
           where: {
             id: {
@@ -216,6 +219,7 @@ const updateDemoUser = async () => {
         },
       },
       data: {
+        suspensionTimeout: undefined,
         password: hashedPassword,
         role: db.role.findFirst({
           where: {
@@ -280,6 +284,7 @@ const createDemoUsersWithAllPeaks = async () => {
       faker.number.int({ min: 0, max: 3 }) === 0
         ? faker.date.recent().getTime()
         : faker.date.past().getTime(),
+    suspensionTimeout: undefined,
     posts: db.post.findMany({
       where: {
         author: {
@@ -305,6 +310,7 @@ const updateUsersWithNoRole = () => {
         },
       },
       data: {
+        suspensionTimeout: undefined,
         role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     });

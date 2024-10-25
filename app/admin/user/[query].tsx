@@ -74,7 +74,10 @@ const adminUserEdit = () => {
 
   // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
-    if (!suspendValue) {
+    if (
+      !suspendValue &&
+      !constants.suspensionConditions(new Date(userData.suspensionTimeout))
+    ) {
       Alert.alert('Błąd', 'Wybierz czas zawieszenia Użytkownika!');
       return false;
     }
@@ -98,18 +101,27 @@ const adminUserEdit = () => {
                 );
                 await editUser({
                   ...userData,
-                  totalSuspensions: userData.totalSuspensions + 1,
+                  totalSuspensions: constants.suspensionConditions(
+                    new Date(userData.suspensionTimeout),
+                  )
+                    ? userData.totalSuspensions
+                    : userData.totalSuspensions + 1,
                   suspensionTimeout: constants.suspensionConditions(
-                    userData.suspensionTimeout,
+                    new Date(userData.suspensionTimeout),
                   )
                     ? undefined
                     : timeout,
                 });
+                setSuspendValue(null);
                 setUserData({
                   ...userData,
-                  totalSuspensions: userData.totalSuspensions + 1,
+                  totalSuspensions: constants.suspensionConditions(
+                    new Date(userData.suspensionTimeout),
+                  )
+                    ? userData.totalSuspensions
+                    : userData.totalSuspensions + 1,
                   suspensionTimeout: constants.suspensionConditions(
-                    userData.suspensionTimeout,
+                    new Date(userData.suspensionTimeout),
                   )
                     ? undefined
                     : timeout,
@@ -228,7 +240,7 @@ const adminUserEdit = () => {
             <Text className='text-primary mb-3'>{`Zarejestrowany: ${formatDate(new Date(userData.registrationDate))}`}</Text>
             {constants.suspensionConditions(userData.suspensionTimeout) ? (
               <Text className='text-red mb-3'>
-                {`Konto zawieszone do ${formatDate(userData.suspensionTimeout as Date)}`}
+                {`Konto zawieszone do ${formatDate(new Date(userData.suspensionTimeout))}`}
               </Text>
             ) : null}
             <Text className='text-primary mb-3'>{`Łącznie ostrzeżeń (zawieszeń): ${userData.totalSuspensions}`}</Text>
@@ -269,7 +281,13 @@ const adminUserEdit = () => {
           <View className='mb-3 z-20'>
             <IconButton
               containerStyles='my-3'
-              isDisabled={userData?.isBanned || !suspendValue}
+              isDisabled={
+                userData?.isBanned ||
+                (!suspendValue &&
+                  !constants.suspensionConditions(
+                    new Date(userData?.suspensionTimeout),
+                  ))
+              }
               icon={
                 constants.suspensionConditions(userData?.suspensionTimeout) ||
                 userData?.isBanned
@@ -296,6 +314,12 @@ const adminUserEdit = () => {
               setOpen={setSuspendOpen}
               setValue={setSuspendValue}
               setItems={setSuspendItems}
+              disabled={
+                userData?.isBanned ||
+                constants.suspensionConditions(
+                  new Date(userData?.suspensionTimeout),
+                )
+              }
             />
           </View>
           <IconButton
