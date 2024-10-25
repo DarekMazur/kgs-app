@@ -70,4 +70,27 @@ export default {
       back: 'Wróć',
     },
   },
+  newPost: {
+    permissions: {
+      location: {
+        noPermission: 'Nie udzielono dostępu do lokalizacji',
+      },
+      camera: {
+        alert: 'Potrzebna jest zgoda na dostęp do aparatu!',
+        button: 'Przyznaj dostęp',
+      },
+    },
+    noPeak: 'W pobliżu nie ma szczytu',
+    buttons: {
+      back: 'Wróć',
+    },
+    alreadyVisited: 'Ten szczyt został już przez Ciebie zdobyty',
+    add: 'Dodaj wpis',
+    closest: 'Najbliższy szczyt:',
+    form: {
+      description: 'Opis',
+      cancel: 'Anuluj',
+      submit: 'Zapisz',
+    },
+  },
 };

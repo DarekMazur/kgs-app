@@ -27,6 +27,7 @@ import { IPeakProps, IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { pl } from '@/lang';
 
 const initialPostData = {
   id: '',
@@ -76,7 +77,10 @@ const createScreen = () => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Błąd...', 'Permission to access location was denied');
+        Alert.alert(
+          pl.alert.error,
+          pl.newPost.permissions.location.noPermission,
+        );
         return;
       }
 
@@ -175,10 +179,10 @@ const createScreen = () => {
   //   return (
   //     <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
   //       <Text className='text-2xl text-red text-center p-4'>
-  //         No peaks close enough!
+  //         {pl.newPost.noPeak}
   //       </Text>
   //       <ButtonCustom
-  //         title='Go back'
+  //         title={pl.newPost.buttons.back}
   //         handlePress={() => router.back()}
   //         containerStyles='w-[50%]'
   //       />
@@ -223,8 +227,8 @@ const createScreen = () => {
   if (!permission.granted) {
     return (
       <ErrorCustom
-        message='We need your permission to show the camera'
-        buttonTitle='Grant permission'
+        message={pl.newPost.permissions.camera.alert}
+        buttonTitle={pl.newPost.permissions.camera.button}
         handlePress={requestPermission}
       />
     );
@@ -233,8 +237,8 @@ const createScreen = () => {
   if (isDouble) {
     return (
       <ErrorCustom
-        message='You was here already...'
-        buttonTitle='Go back'
+        message={pl.newPost.alreadyVisited}
+        buttonTitle={pl.newPost.buttons.back}
         handlePress={() => router.back()}
       />
     );
@@ -259,17 +263,17 @@ const createScreen = () => {
         <View className='min-h-screen mx-6'>
           <View className='items-center justify-center mt-8'>
             <Text className='text-3xl text-secondary text-center'>
-              Dodaj wpis
+              {pl.newPost.add}
             </Text>
             <Text className='text-xl text-primary text-center mb-3'>
               {!loading && !isLoading
-                ? `Najbliższy szczyt: ${distances[0].name} (${distances[0].dist} km)`
+                ? `${pl.newPost.closest} ${distances[0].name} (${distances[0].dist} km)`
                 : null}
             </Text>
           </View>
           <InputCustom
-            placeholder='Opis'
-            title='Opis'
+            placeholder={pl.newPost.form.description}
+            title={pl.newPost.form.description}
             value={postData.notes ?? ''}
             hint='next'
             handleOnChange={(e: string) => {
@@ -294,12 +298,12 @@ const createScreen = () => {
           </TouchableOpacity>
           <View className='flex-row w-full justify-between'>
             <ButtonCustom
-              title='Anuluj'
+              title={pl.newPost.form.cancel}
               handlePress={() => router.back()}
               containerStyles='bg-red w-[40%]'
             />
             <ButtonCustom
-              title='Zapisz'
+              title={pl.newPost.form.submit}
               handlePress={handleSave}
               isDisabled={!postData.photo || !postData.notes}
               containerStyles='w-[40%]'
