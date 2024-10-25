@@ -93,4 +93,13 @@ export default {
       submit: 'Zapisz',
     },
   },
+  peaks: {
+    header: 'Korona Gór Śwętokrzyskich',
+    subheader: 'Szczyty do zdobycia',
+    search: {
+      Header: 'Szukasz',
+      noResults: 'Takiego szczytu nie ma w Koronie Gór Świętokrzyskich',
+      clear: 'Wyczyść',
+    },
+  },
 };

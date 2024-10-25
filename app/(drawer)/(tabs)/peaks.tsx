@@ -12,6 +12,7 @@ import { IPeakProps } from '@/lib/types';
 import SearchInput from '@/components/SearchInput';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { pl } from '@/lang';
 
 const peaksScreen = () => {
   const { data: peaks, loading } = useApi(getAllPeaks);
@@ -49,10 +50,10 @@ const peaksScreen = () => {
               <View className='flex justify-between items-start flex-row mb-6'>
                 <View>
                   <Text className='text-2xl text-secondary'>
-                    Korona Gór Śwętokrzyskich
+                    {pl.peaks.header}
                   </Text>
                   <Text className='text-primary text-xl'>
-                    Szczyty do zdobycia
+                    {pl.peaks.subheader}
                   </Text>
                 </View>
 
@@ -73,14 +74,14 @@ const peaksScreen = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Szukasz {searchQuery}?
+                {pl.peaks.search.header} {searchQuery}?
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Takiego szczytu nie ma w Koronie Gór Świętokrzyskich
+                {pl.peaks.search.noResults}
               </Text>
 
               <ButtonCustom
-                title='Wyczyść'
+                title={pl.peaks.serach.clear}
                 handlePress={() => setSearchQuery('')}
                 containerStyles='w-full my-5'
               />
