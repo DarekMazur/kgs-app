@@ -193,7 +193,22 @@ export default {
     },
     dashboard: {},
     post: {
-      list: {},
+      list: {
+        filters: {
+          latest: 'Ostatnie posty',
+          hidden: 'Ukryte posty',
+          fromSuspended: 'Wpisy zawieszonych użytkowników',
+          fromBanned: 'Wpisy zablokowanych użytkowników',
+        },
+        legend: {
+          title: 'Legenda:',
+          admin: 'Administator',
+          mod: 'Moderator',
+          banned: 'Zablokowany',
+        },
+        empty: 'Brak wpisów...',
+        back: 'Wróc',
+      },
     },
     user: {
       list: {
