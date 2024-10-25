@@ -15,7 +15,7 @@ import * as Location from 'expo-location';
 import { LocationObject } from 'expo-location';
 import { useScrollToTop } from '@react-navigation/native';
 import ButtonCustom from '@/components/ButtonCustom';
-import { icons, images } from '@/constants';
+import { constants, icons, images } from '@/constants';
 import { createPost, getAllPeaks, getSinglePeak } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -124,7 +124,7 @@ const createScreen = () => {
             username: user.username as string,
             firstName: user.firstName as string,
             avatar: user.avatar as string,
-            isSuspended: user.isSuspended as boolean,
+            isSuspended: constants.suspensionConditions(user.suspensionTimeout),
             isBanned: user.isBanned as boolean,
             role: user.role.id as number,
           },
