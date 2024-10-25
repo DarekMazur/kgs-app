@@ -55,19 +55,19 @@ export const home = () => {
   );
 
   const handleDelete = (id: string) => {
-    Alert.alert('Czy chcesz usunąć wpis?', '', [
+    Alert.alert(pl.home.alert.deleteConfirmation, '', [
       {
-        text: 'Anuluj',
+        text: pl.alert.cancel,
         onPress: () => {},
         style: 'cancel',
       },
       {
-        text: 'OK',
+        text: p.alert.confirm,
         onPress: async () => {
           try {
             await deletePost(id).then(onRefresh);
           } catch (error) {
-            Alert.alert('Błąd...', (error as Error).message);
+            Alert.alert(pl.alert.error, (error as Error).message);
           }
         },
       },
@@ -108,7 +108,7 @@ export const home = () => {
                 <View>
                   {constants.suspensionConditions(user.suspensionTimeout) ? (
                     <Text className='text-red text-2xl font-extrabold'>
-                      Twoje konto jest zawieszone!
+                      {pl.home.suspended}
                     </Text>
                   ) : null}
                   <Text className='text-xl text-primary'>
@@ -117,12 +117,12 @@ export const home = () => {
                       {greetings(user)}
                     </Text>{' '}
                   </Text>
-                  <Text className='text-primary text-xl'>witaj ponownie</Text>
+                  <Text className='text-primary text-xl'>{pl.home.header}</Text>
                 </View>
               </ScreenHeader>
               <View>
                 <Text className='text-xl text-secondary text-center'>
-                  Ostatnio zdobyte:
+                  {pl.home.latest}
                 </Text>
                 <Recent
                   recentPosts={(posts as IPostsProps[])
@@ -135,14 +135,14 @@ export const home = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Nikt jeszcze nie zdobył żadnego szczytu...
+                {pl.home.noPosts.header}
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Bądź pierwszy, ruszaj na szlak!
+                {pl.home.noPosts.subheader}
               </Text>
 
               <ButtonCustom
-                title='Back to Explore'
+                title={pl.home.buttons.back}
                 handlePress={() => router.push('/home')}
                 containerStyles='w-full my-5'
               />

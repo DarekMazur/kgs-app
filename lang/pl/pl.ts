@@ -3,6 +3,8 @@ export default {
     error: 'Błąd...',
     warning: 'Uwaga!',
     success: 'Sukces!',
+    confirm: 'OK',
+    cancel: 'Anuluj',
     login: 'Zaloguj się na swoje konto',
   },
   sing: {
@@ -53,5 +55,19 @@ export default {
       blocked: 'Twoje konto zostało zablokowane',
     },
   },
-  home: 'Home',
+  home: {
+    header: 'witaj ponownie',
+    alert: {
+      deleteConfirmation: 'Czy chcesz usunąć wpis?',
+    },
+    suspended: 'Twoje konto jest zawieszone!',
+    latest: 'Ostatnio zdobyte:',
+    noPosts: {
+      header: 'Nikt jeszcze nie zdobył żadnego szczytu...',
+      subheader: 'Bądź pierwszy, ruszaj na szlak!',
+    },
+    buttons: {
+      back: 'Wróć',
+    },
+  },
 };
