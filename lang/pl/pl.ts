@@ -103,6 +103,26 @@ export default {
     },
   },
   profile: {
+    edit: {
+      alert: {
+        cancel: 'Anulowano',
+        update: {
+          success: 'Dane zaktualizowano poprawnie',
+          error: 'nie udało się zaktualizować:',
+        },
+      },
+      form: {
+        title: 'Edytuj informacje',
+        username: 'Nazwa Użytkownika',
+        email: 'Email',
+        password: 'Hasło',
+        avatar: 'Zdjęcie',
+        name: 'Imię',
+        lastName: 'Nazwisko',
+        description: 'Opis',
+        submit: 'Zapisz',
+      },
+    },
     alert: {
       delete: {
         message: 'Czy chcesz usunąć wpis?',
