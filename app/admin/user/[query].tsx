@@ -140,7 +140,11 @@ const adminUserEdit = () => {
   const handleBan = () => {
     if (userData) {
       Alert.alert(
-        `Czy chcesz zablokować Użytkownika ${userData?.username}?`,
+        `${
+          userData.isBanned
+            ? `Czy checsz odblokować Użytkownika ${userData?.username}?`
+            : `Czy chcesz zablokować Użytkownika ${userData?.username}?`
+        }`,
         '',
         [
           {
