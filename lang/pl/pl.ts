@@ -70,27 +70,39 @@ export default {
       back: 'Wróć',
     },
   },
-  newPost: {
-    permissions: {
-      location: {
-        noPermission: 'Nie udzielono dostępu do lokalizacji',
+  post: {
+    new: {
+      permissions: {
+        location: {
+          noPermission: 'Nie udzielono dostępu do lokalizacji',
+        },
+        camera: {
+          alert: 'Potrzebna jest zgoda na dostęp do aparatu!',
+          button: 'Przyznaj dostęp',
+        },
       },
-      camera: {
-        alert: 'Potrzebna jest zgoda na dostęp do aparatu!',
-        button: 'Przyznaj dostęp',
+      noPeak: 'W pobliżu nie ma szczytu',
+      buttons: {
+        back: 'Wróć',
+      },
+      alreadyVisited: 'Ten szczyt został już przez Ciebie zdobyty',
+      add: 'Dodaj wpis',
+      closest: 'Najbliższy szczyt:',
+      form: {
+        description: 'Opis',
+        cancel: 'Anuluj',
+        submit: 'Zapisz',
       },
     },
-    noPeak: 'W pobliżu nie ma szczytu',
-    buttons: {
-      back: 'Wróć',
-    },
-    alreadyVisited: 'Ten szczyt został już przez Ciebie zdobyty',
-    add: 'Dodaj wpis',
-    closest: 'Najbliższy szczyt:',
-    form: {
-      description: 'Opis',
-      cancel: 'Anuluj',
-      submit: 'Zapisz',
+    edit: {
+      alert: {
+        success: '',
+      },
+      form: {
+        title: 'Edytuj wpis:',
+        description: 'Opis',
+        submit: 'Zapisz',
+      },
     },
   },
   peaks: {
@@ -100,6 +112,10 @@ export default {
       Header: 'Szukasz',
       noResults: 'Takiego szczytu nie ma w Koronie Gór Świętokrzyskich',
       clear: 'Wyczyść',
+    },
+    single: {
+      title: 'Szczyt zdobyli:',
+      noUsers: 'Bądź pierwszy!',
     },
   },
   profile: {

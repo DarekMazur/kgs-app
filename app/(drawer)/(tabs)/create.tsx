@@ -79,7 +79,7 @@ const createScreen = () => {
       if (status !== 'granted') {
         Alert.alert(
           pl.alert.error,
-          pl.newPost.permissions.location.noPermission,
+          pl.post.new.permissions.location.noPermission,
         );
         return;
       }
@@ -179,10 +179,10 @@ const createScreen = () => {
   //   return (
   //     <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
   //       <Text className='text-2xl text-red text-center p-4'>
-  //         {pl.newPost.noPeak}
+  //         {pl.post.new.noPeak}
   //       </Text>
   //       <ButtonCustom
-  //         title={pl.newPost.buttons.back}
+  //         title={pl.post.new.buttons.back}
   //         handlePress={() => router.back()}
   //         containerStyles='w-[50%]'
   //       />
@@ -227,8 +227,8 @@ const createScreen = () => {
   if (!permission.granted) {
     return (
       <ErrorCustom
-        message={pl.newPost.permissions.camera.alert}
-        buttonTitle={pl.newPost.permissions.camera.button}
+        message={pl.post.new.permissions.camera.alert}
+        buttonTitle={pl.post.new.permissions.camera.button}
         handlePress={requestPermission}
       />
     );
@@ -237,8 +237,8 @@ const createScreen = () => {
   if (isDouble) {
     return (
       <ErrorCustom
-        message={pl.newPost.alreadyVisited}
-        buttonTitle={pl.newPost.buttons.back}
+        message={pl.post.new.alreadyVisited}
+        buttonTitle={pl.post.new.buttons.back}
         handlePress={() => router.back()}
       />
     );
@@ -263,17 +263,17 @@ const createScreen = () => {
         <View className='min-h-screen mx-6'>
           <View className='items-center justify-center mt-8'>
             <Text className='text-3xl text-secondary text-center'>
-              {pl.newPost.add}
+              {pl.post.new.add}
             </Text>
             <Text className='text-xl text-primary text-center mb-3'>
               {!loading && !isLoading
-                ? `${pl.newPost.closest} ${distances[0].name} (${distances[0].dist} km)`
+                ? `${pl.post.new.closest} ${distances[0].name} (${distances[0].dist} km)`
                 : null}
             </Text>
           </View>
           <InputCustom
-            placeholder={pl.newPost.form.description}
-            title={pl.newPost.form.description}
+            placeholder={pl.post.new.form.description}
+            title={pl.post.new.form.description}
             value={postData.notes ?? ''}
             hint='next'
             handleOnChange={(e: string) => {
@@ -298,12 +298,12 @@ const createScreen = () => {
           </TouchableOpacity>
           <View className='flex-row w-full justify-between'>
             <ButtonCustom
-              title={pl.newPost.form.cancel}
+              title={pl.post.new.form.cancel}
               handlePress={() => router.back()}
               containerStyles='bg-red w-[40%]'
             />
             <ButtonCustom
-              title={pl.newPost.form.submit}
+              title={pl.post.new.form.submit}
               handlePress={handleSave}
               isDisabled={!postData.photo || !postData.notes}
               containerStyles='w-[40%]'
