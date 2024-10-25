@@ -163,4 +163,8 @@ export default {
       dashboard: 'Panel',
     },
   },
+  terms: {
+    privacy: 'Polityka Prywatności',
+    main: 'Regulamin odznaki',
+  },
 };

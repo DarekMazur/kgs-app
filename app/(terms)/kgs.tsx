@@ -1,14 +1,16 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, ScrollView } from 'react-native';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { faker } from '@faker-js/faker';
 import { router } from 'expo-router';
 import ButtonCustom from '@/components/ButtonCustom';
+import { pl } from '@/lang';
 
 const kgsTerms = () => {
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full py-4 px-5'>
       <ScrollView className='gap-3.5'>
-        <Text className='text-primary text-2xl'>KGS Terms</Text>
+        <Text className='text-primary text-2xl'>{pl.terms.main}</Text>
         <Text className='text-primary'>
           {faker.lorem.paragraphs({ min: 2, max: 4 }, '\n')}
         </Text>
