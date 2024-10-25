@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { Image, Text, View } from 'react-native';
 import { ITabIconProps } from '@/lib/types';
 import { colors, icons } from '@/constants';
+import { pl } from '@/lang';
 
 const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
   return (
@@ -41,14 +42,14 @@ const DashboardLayout = () => {
       <Tabs.Screen
         name='dashboard'
         options={{
-          tabBarLabel: 'Panel',
-          title: 'Panel',
+          tabBarLabel: pl.admin.menu.home,
+          title: pl.admin.menu.home,
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.gear}
               color={color}
-              name='Panel'
+              name={pl.admin.menu.home}
               focused={focused}
             />
           ),
@@ -57,14 +58,14 @@ const DashboardLayout = () => {
       <Tabs.Screen
         name='posts'
         options={{
-          tabBarLabel: 'Wpisy',
-          title: 'Wpisy',
+          tabBarLabel: pl.admin.menu.posts,
+          title: pl.admin.menu.posts,
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.post}
               color={color}
-              name='Wpisy'
+              name={pl.admin.menu.posts}
               focused={focused}
             />
           ),
@@ -73,14 +74,14 @@ const DashboardLayout = () => {
       <Tabs.Screen
         name='users'
         options={{
-          tabBarLabel: 'Użytkownicy',
-          title: 'Użytkownicy',
+          tabBarLabel: pl.admin.menu.users,
+          title: pl.admin.menu.users,
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.defaultAvatar}
               color={color}
-              name='Użytkownicy'
+              name={pl.admin.menu.users}
               focused={focused}
             />
           ),
@@ -89,14 +90,14 @@ const DashboardLayout = () => {
       <Tabs.Screen
         name='team'
         options={{
-          tabBarLabel: 'Zespół',
-          title: 'Zespół',
+          tabBarLabel: pl.admin.menu.team,
+          title: pl.admin.menu.team,
           headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.appTeam}
               color={color}
-              name='Zespół'
+              name={pl.admin.menu.team}
               focused={focused}
             />
           ),

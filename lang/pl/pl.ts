@@ -183,4 +183,12 @@ export default {
     privacy: 'Polityka Prywatności',
     main: 'Regulamin odznaki',
   },
+  admin: {
+    menu: {
+      home: 'Panel',
+      posts: 'Wpisy',
+      users: 'Użytkownicy',
+      team: 'Zespół',
+    },
+  },
 };
