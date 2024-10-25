@@ -209,6 +209,22 @@ export default {
         empty: 'Brak wpisów...',
         back: 'Wróc',
       },
+      alert: {
+        hide: 'Czy chcesz ukryć wpis?',
+        removeSuspend: 'Czy chcesz zakończyć zawieszenie Użykownika',
+        removeBan: 'Czy checsz odblokować Użytkownika',
+        suspend: 'Czy chcesz zawiesić Użytkownika',
+        suspendTime: 'na jeden dzień?',
+        ban: 'Czy chcesz zablokować Użytkownika',
+      },
+      addedBy: 'dodany przez',
+      show: 'Pokaż post',
+      hide: 'Ukryj wpis',
+      addSuspension: 'Zawieś Użytkownika',
+      removeSuspension: 'Zdejmij zawieszenie',
+      addBan: 'Ban',
+      removeBan: 'Zdejmij bana',
+      back: 'Wróc',
     },
     user: {
       list: {
