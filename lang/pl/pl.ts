@@ -190,5 +190,6 @@ export default {
       users: 'Użytkownicy',
       team: 'Zespół',
     },
+    dashboard: {},
   },
 };

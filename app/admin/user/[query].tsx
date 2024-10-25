@@ -76,14 +76,14 @@ const adminUserEdit = () => {
   const handleSuspend = () => {
     if (
       !suspendValue &&
-      !constants.suspensionConditions(new Date(userData.suspensionTimeout))
+      !constants.suspensionConditions(userData?.suspensionTimeout)
     ) {
       Alert.alert('Błąd', 'Wybierz czas zawieszenia Użytkownika!');
       return false;
     }
     if (userData) {
       Alert.alert(
-        `${constants.suspensionConditions(new Date(userData.suspensionTimeout)) ? `Czy chcesz zakończyć zawieszenie Użykownika ${userData?.username}?` : `Czy chcesz zawiesić Użytkownika ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
+        `${constants.suspensionConditions(userData.suspensionTimeout) ? `Czy chcesz zakończyć zawieszenie Użykownika ${userData?.username}?` : `Czy chcesz zawiesić Użytkownika ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
         '',
         [
           {
@@ -97,17 +97,18 @@ const adminUserEdit = () => {
               try {
                 setIsLoading(true);
                 const timeout = new Date(
-                  Date.now() + constants.fullDayMilliseconds * suspendValue,
+                  Date.now() +
+                    constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
                 await editUser({
                   ...userData,
                   totalSuspensions: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? userData.totalSuspensions
                     : userData.totalSuspensions + 1,
                   suspensionTimeout: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? undefined
                     : timeout,
@@ -116,12 +117,12 @@ const adminUserEdit = () => {
                 setUserData({
                   ...userData,
                   totalSuspensions: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? userData.totalSuspensions
                     : userData.totalSuspensions + 1,
                   suspensionTimeout: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? undefined
                     : timeout,
@@ -185,8 +186,9 @@ const adminUserEdit = () => {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   const handleSaveRole = async () => {
-    if (constants.suspensionConditions(new Date(userData.suspensionTimeout))) {
+    if (constants.suspensionConditions(userData?.suspensionTimeout)) {
       return Alert.alert(
         'Użytkownik zablokowany',
         'Nie można zmienić roli zablokowanego Użytkownika',
@@ -251,7 +253,9 @@ const adminUserEdit = () => {
             <Text className='text-primary mb-3'>{`Zarejestrowany: ${formatDate(new Date(userData.registrationDate))}`}</Text>
             {constants.suspensionConditions(userData.suspensionTimeout) ? (
               <Text className='text-red mb-3'>
-                {`Konto zawieszone do ${formatDate(new Date(userData.suspensionTimeout))}`}
+                {userData.suspensionTimeout
+                  ? `Konto zawieszone do ${formatDate(userData.suspensionTimeout)}`
+                  : null}
               </Text>
             ) : null}
             <Text className='text-primary mb-3'>{`Łącznie ostrzeżeń (zawieszeń): ${userData.totalSuspensions}`}</Text>
@@ -299,9 +303,7 @@ const adminUserEdit = () => {
               isDisabled={
                 userData?.isBanned ||
                 (!suspendValue &&
-                  !constants.suspensionConditions(
-                    new Date(userData?.suspensionTimeout),
-                  ))
+                  !constants.suspensionConditions(userData?.suspensionTimeout))
               }
               icon={
                 constants.suspensionConditions(userData?.suspensionTimeout) ||
@@ -334,9 +336,7 @@ const adminUserEdit = () => {
               }}
               disabled={
                 userData?.isBanned ||
-                constants.suspensionConditions(
-                  new Date(userData?.suspensionTimeout),
-                )
+                constants.suspensionConditions(userData?.suspensionTimeout)
               }
             />
           </View>
