@@ -145,11 +145,17 @@ const adminUserEdit = () => {
                   ...userData,
                   suspensionTimeout: undefined,
                   isBanned: !userData.isBanned,
+                  role: (rolesData as IRoleTypes[]).filter(
+                    (role) => role.id === 3,
+                  )[0],
                 });
                 setUserData({
                   ...userData,
                   suspensionTimeout: undefined,
                   isBanned: !userData.isBanned,
+                  role: (rolesData as IRoleTypes[]).filter(
+                    (role) => role.id === 3,
+                  )[0],
                 });
                 setIsLoading(false);
               } catch (error) {

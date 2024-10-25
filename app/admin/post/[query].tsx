@@ -6,10 +6,11 @@ import useApi from '@/hooks/useApi';
 import {
   editPost,
   editUser,
+  getAllRoles,
   getSinglePost,
   getSingleUser,
 } from '@/lib/getDataFromApi';
-import { IPostsProps, IUserProps } from '@/lib/types';
+import { IPostsProps, IRoleTypes, IUserProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { constants, icons } from '@/constants';
@@ -20,6 +21,7 @@ const adminPostEdit = () => {
   const { query } = useLocalSearchParams();
   const { user } = useGlobalContext();
   const { data, loading } = useApi(() => getSinglePost(query as string));
+  const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
   const [postData, setPostData] = useState<IPostsProps | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -128,6 +130,9 @@ const adminPostEdit = () => {
                   ...singleUser[0],
                   suspensionTimeout: undefined,
                   isBanned: !singleUser[0].isBanned,
+                  role: (rolesData as IRoleTypes[]).filter(
+                    (role) => role.id === 3,
+                  )[0],
                 });
                 setPostData({
                   ...postData,
@@ -150,7 +155,7 @@ const adminPostEdit = () => {
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-5'>
-      <Loader isLoading={loading || isLoading} />
+      <Loader isLoading={loading || rolesLoading || isLoading} />
       {postData ? (
         <>
           <View>
