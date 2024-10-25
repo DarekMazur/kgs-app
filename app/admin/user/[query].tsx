@@ -98,15 +98,21 @@ const adminUserEdit = () => {
                 );
                 await editUser({
                   ...userData,
-                  isSuspended: !userData.isSuspended,
                   totalSuspensions: userData.totalSuspensions + 1,
-                  suspensionTimeout: timeout,
+                  suspensionTimeout: constants.suspensionConditions(
+                    userData.suspensionTimeout,
+                  )
+                    ? undefined
+                    : timeout,
                 });
                 setUserData({
                   ...userData,
-                  isSuspended: !userData.isSuspended,
                   totalSuspensions: userData.totalSuspensions + 1,
-                  suspensionTimeout: timeout,
+                  suspensionTimeout: constants.suspensionConditions(
+                    userData.suspensionTimeout,
+                  )
+                    ? undefined
+                    : timeout,
                 });
                 setIsLoading(false);
               } catch (error) {
@@ -137,13 +143,13 @@ const adminUserEdit = () => {
                 setIsLoading(true);
                 await editUser({
                   ...userData,
-                  isSuspended: false,
+                  suspensionTimeout: undefined,
                   isBanned: !userData.isBanned,
                 });
                 setUserData({
                   ...userData,
+                  suspensionTimeout: undefined,
                   isBanned: !userData.isBanned,
-                  isSuspended: false,
                 });
                 setIsLoading(false);
               } catch (error) {
@@ -216,7 +222,7 @@ const adminUserEdit = () => {
             <Text className='text-primary mb-3'>{`Zarejestrowany: ${formatDate(new Date(userData.registrationDate))}`}</Text>
             {constants.suspensionConditions(userData.suspensionTimeout) ? (
               <Text className='text-red mb-3'>
-                {`Konto zawieszone do ${formatDate(userData.suspensionTimeout)}`}
+                {`Konto zawieszone do ${formatDate(userData.suspensionTimeout as Date)}`}
               </Text>
             ) : null}
             <Text className='text-primary mb-3'>{`Łącznie ostrzeżeń (zawieszeń): ${userData.totalSuspensions}`}</Text>
@@ -259,13 +265,14 @@ const adminUserEdit = () => {
               containerStyles='my-3'
               isDisabled={userData?.isBanned || !suspendValue}
               icon={
-                userData?.isSuspended || userData?.isBanned
+                constants.suspensionConditions(userData?.suspensionTimeout) ||
+                userData?.isBanned
                   ? icons.suspended
                   : icons.suspendedActive
               }
               onPress={handleSuspend}
               title={
-                userData?.isSuspended
+                constants.suspensionConditions(userData?.suspensionTimeout)
                   ? 'Zdejmij zawieszenie'
                   : 'Zawieś Użytkownika'
               }

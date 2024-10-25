@@ -79,8 +79,9 @@ export const handlers = [
       avatar: '',
       description: '',
       posts: [],
-      isSuspended: false,
       isBanned: false,
+      suspensionTimeout: undefined,
+      totalSuspensions: 0,
       role: db.role.findFirst({
         where: {
           type: {
@@ -135,7 +136,6 @@ export const handlers = [
             lastName: updatedUser.lastName ?? oldData.lastName,
             avatar: updatedUser.avatar ?? oldData.avatar,
             description: updatedUser.description ?? oldData.description,
-            isSuspended: updatedUser.isSuspended ?? oldData.isSuspended,
             isBanned: updatedUser.isBanned ?? oldData.isBanned,
             totalSuspensions:
               updatedUser.totalSuspensions ?? oldData.totalSuspensions,
@@ -161,7 +161,6 @@ export const handlers = [
           },
           data: {
             author: {
-              isSuspended: updatedUser.isSuspended,
               isBanned: updatedUser.isBanned,
             },
           },

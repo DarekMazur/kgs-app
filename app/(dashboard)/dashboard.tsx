@@ -156,8 +156,9 @@ const dashboard = () => {
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-red font-mtblack'>
                 {
-                  (users as IUserProps[]).filter((user) => user.isSuspended)
-                    .length
+                  (users as IUserProps[]).filter((user) =>
+                    constants.suspensionConditions(user.suspensionTimeout),
+                  ).length
                 }
               </Text>
               <Text className='text-primary'>zawieszonych Użytkowników,</Text>

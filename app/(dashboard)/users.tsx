@@ -51,7 +51,11 @@ const usersPanel = () => {
       }
 
       if (formBox.isSuspended) {
-        setFilteredUsers(filteredUsers.filter((user) => user.isSuspended));
+        setFilteredUsers(
+          filteredUsers.filter((user) =>
+            constants.suspensionConditions(user.suspensionTimeout),
+          ),
+        );
       }
 
       if (formBox.isBanned) {
@@ -115,7 +119,7 @@ const usersPanel = () => {
                     >
                       {`${index + 1}. ${(item as IUserProps).username}`}
                     </Text>
-                    {item.isSuspended ? (
+                    {constants.suspensionConditions(item.suspensionTimeout) ? (
                       <Image
                         source={icons.suspended}
                         className='w-5 h-5'

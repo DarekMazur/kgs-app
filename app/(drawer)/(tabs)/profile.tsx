@@ -1,6 +1,5 @@
 import {
   View,
-  TouchableOpacity,
   Image,
   FlatList,
   Alert,

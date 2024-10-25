@@ -9,7 +9,7 @@ import {
   getSinglePost,
   getSingleUser,
 } from '@/lib/getDataFromApi';
-import { IPostsProps } from '@/lib/types';
+import { IPostsProps, IUserProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { constants, icons } from '@/constants';
@@ -77,12 +77,17 @@ const adminPostEdit = () => {
                 );
 
                 setIsLoading(true);
-                const singleUser = await getSingleUser(postData.author.id);
+                const singleUser: IUserProps[] = await getSingleUser(
+                  postData.author.id,
+                );
                 await editUser({
                   ...singleUser[0],
-                  isSuspended: !singleUser[0].isSuspended,
-                  totalSuspensions: singleUser.totalSuspensions + 1,
-                  suspensionTimeout: timeout,
+                  totalSuspensions: singleUser[0].totalSuspensions + 1,
+                  suspensionTimeout: constants.suspensionConditions(
+                    singleUser[0].suspensionTimeout,
+                  )
+                    ? undefined
+                    : timeout,
                 });
                 setPostData({
                   ...postData,
@@ -121,7 +126,7 @@ const adminPostEdit = () => {
                 const singleUser = await getSingleUser(postData.author.id);
                 await editUser({
                   ...singleUser[0],
-                  isSuspended: false,
+                  suspensionTimeout: undefined,
                   isBanned: !singleUser[0].isBanned,
                 });
                 setPostData({

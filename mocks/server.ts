@@ -6,6 +6,7 @@ import * as Crypto from 'expo-crypto';
 import { handlers } from './handlers';
 import { db } from '@/mocks/db';
 import { IPeakProps } from '@/lib/types';
+import { constants } from '@/constants';
 
 export const server = setupServer(...handlers);
 
@@ -121,7 +122,9 @@ const updatePosts = () => {
           username: author?.username,
           firstName: author?.firstName,
           avatar: author?.avatar,
-          isSuspended: author?.isSuspended,
+          isSuspended: constants.suspensionConditions(
+            author?.suspensionTimeout,
+          ),
           isBanned: author?.isBanned,
           role: author?.role?.id ?? 3,
         },
