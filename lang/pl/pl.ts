@@ -117,4 +117,13 @@ export default {
       subtitle: 'Ruszaj na szlak!',
     },
   },
+  ranking: {
+    header: 'Korona Gór Śwętokrzyskich',
+    subheader: 'Zdobywcy Odznaki',
+    info: 'Zdobyto:',
+    empty: {
+      message: 'Jeszcze nikomu nie udało się zdobyć wszystkich szczytów.',
+      subtitle: 'Wyrusz na szlak i bądź pierwszy!',
+    },
+  },
 };
