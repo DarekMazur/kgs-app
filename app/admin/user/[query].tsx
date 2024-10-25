@@ -83,7 +83,7 @@ const adminUserEdit = () => {
     }
     if (userData) {
       Alert.alert(
-        `Czy chcesz zawiesić Użytkownika ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`,
+        `${constants.suspensionConditions(new Date(userData.suspensionTimeout)) ? `Czy chcesz zakończyć zawieszenie Użykownika ${userData?.username}?` : `Czy chcesz zawiesić Użytkownika ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
         '',
         [
           {
@@ -161,6 +161,7 @@ const adminUserEdit = () => {
                     (role) => role.id === 3,
                   )[0],
                 });
+                setValue('user');
                 setUserData({
                   ...userData,
                   suspensionTimeout: undefined,
@@ -181,6 +182,12 @@ const adminUserEdit = () => {
   };
 
   const handleSaveRole = async () => {
+    if (constants.suspensionConditions(new Date(userData.suspensionTimeout))) {
+      return Alert.alert(
+        'Użytkownik zablokowany',
+        'Nie można zmienić roli zablokowanego Użytkownika',
+      );
+    }
     if (userData) {
       try {
         setIsLoading(true);
@@ -269,6 +276,7 @@ const adminUserEdit = () => {
           setOpen={setOpen}
           setValue={setValue}
           setItems={setItems}
+          disabled={userData?.isBanned}
         />
         <ButtonCustom
           title='Zapisz nową rolę'
