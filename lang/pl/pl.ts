@@ -184,6 +184,7 @@ export default {
     main: 'Regulamin odznaki',
   },
   admin: {
+    closePanel: 'Zamknij panel',
     menu: {
       home: 'Panel',
       posts: 'Wpisy',
@@ -191,5 +192,20 @@ export default {
       team: 'Zespół',
     },
     dashboard: {},
+    post: {
+      list: {},
+    },
+    user: {
+      list: {},
+    },
+    team: {
+      title: 'Zespół',
+      filters: {
+        admin: 'Administratorzy',
+        mod: 'Moderatorzy',
+      },
+      admin: 'Administratorzy',
+      mod: 'Moderatorzy',
+    },
   },
 };

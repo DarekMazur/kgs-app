@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import { ITeamFilterProps, IUserProps } from '@/lib/types';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
+import { pl } from '@/lang';
 
 const usersPanel = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
@@ -23,11 +24,11 @@ const usersPanel = () => {
   const filters = [
     {
       title: 'showAdmin',
-      description: 'Administratorzy',
+      description: pl.admin.team.filters.admin,
     },
     {
       title: 'showMods',
-      description: 'Moderatorzy',
+      description: pl.admin.team.filters.mod,
     },
   ];
 
@@ -40,7 +41,9 @@ const usersPanel = () => {
       <Loader isLoading={usersLoading} />
       <ScrollView ref={ref}>
         <ScreenHeader>
-          <Text className='text-red text-3xl font-mtblack'>Zespół</Text>
+          <Text className='text-red text-3xl font-mtblack'>
+            {pl.admin.team.title}
+          </Text>
         </ScreenHeader>
         <TouchableOpacity
           className='flex-row flex-wrap items-center gap-2.5 mb-8'
@@ -51,7 +54,9 @@ const usersPanel = () => {
             className='w-6 h-6'
             resizeMode='contain'
           />
-          <Text className='text-primary font-mtblack'>Zamknij panel</Text>
+          <Text className='text-primary font-mtblack'>
+            {pl.admin.closePanel}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           className='items-end justify-end mb-8'
@@ -65,7 +70,7 @@ const usersPanel = () => {
         </TouchableOpacity>
         {formBox.showAdmin && (
           <Text className='text-green text-2xl font-mtblack'>
-            Administratorzy
+            {pl.admin.team.admin}
           </Text>
         )}
         {!usersLoading && users && formBox.showAdmin
@@ -91,7 +96,7 @@ const usersPanel = () => {
           : null}
         {formBox.showMods && (
           <Text className='text-green text-2xl font-mtblack mt-5'>
-            Moderatorzy
+            {pl.admin.team.mod}
           </Text>
         )}
         {!usersLoading && users && formBox.showMods
