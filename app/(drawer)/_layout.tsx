@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { View, Image, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
-import { colors, icons } from '@/constants';
+import { colors, constants, icons } from '@/constants';
 
 const DrawerLayout = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -53,21 +53,23 @@ const DrawerLayout = () => {
             />
           )}
         />
-        <DrawerItem
-          label='Dodaj wpis'
-          onPress={() => router.push('/(drawer)/(tabs)/create')}
-          labelStyle={{
-            color: colors.primary.default,
-            fontSize: 18,
-          }}
-          icon={() => (
-            <Image
-              source={icons.add}
-              className='w-6 h-6'
-              resizeMode='contain'
-            />
-          )}
-        />
+        {constants.suspensionConditions(user.suspensionTimeout) ? null : (
+          <DrawerItem
+            label='Dodaj wpis'
+            onPress={() => router.push('/(drawer)/(tabs)/create')}
+            labelStyle={{
+              color: colors.primary.default,
+              fontSize: 18,
+            }}
+            icon={() => (
+              <Image
+                source={icons.add}
+                className='w-6 h-6'
+                resizeMode='contain'
+              />
+            )}
+          />
+        )}
         <View className='mt-5'>
           <DrawerItem
             label='Wyloguj'

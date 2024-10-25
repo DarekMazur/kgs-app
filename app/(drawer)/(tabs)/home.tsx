@@ -14,6 +14,7 @@ import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
 import ScreenHeader from '@/components/ScreenHeader';
 import Header from '@/components/Header';
+import { constants } from '@/constants';
 
 const greetings = (user: IUserProps) => {
   if (user.firstName || user.lastName) {
@@ -105,6 +106,11 @@ export const home = () => {
             <View className='flex my-6 px-4 space-y-6'>
               <ScreenHeader>
                 <View>
+                  {constants.suspensionConditions(user.suspensionTimeout) ? (
+                    <Text className='text-red text-2xl font-extrabold'>
+                      Twoje konto jest zawieszone!
+                    </Text>
+                  ) : null}
                   <Text className='text-xl text-primary'>
                     Cześć,{'\n'}
                     <Text className='text-3xl text-red font-mtsemibold'>

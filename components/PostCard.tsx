@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { router } from 'expo-router';
 import { useRoute } from '@react-navigation/core';
 import { formatDate } from '@/lib/helpers';
-import { icons } from '@/constants';
+import { constants, icons } from '@/constants';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import IconButton from '@/components/IconButton';
 
@@ -93,7 +93,7 @@ const PostCard: FC<IPostCardProps> = ({
         ) : null}
         {date ? <Text className='italic'>{formatDate(date)}</Text> : null}
       </View>
-      {isAuthor ? (
+      {isAuthor && !constants.suspensionConditions(user.suspensionTimeout) ? (
         <View className='px-5 mt-5 flex-row justify-end'>
           <IconButton
             icon={icons.edit}

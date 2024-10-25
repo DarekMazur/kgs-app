@@ -53,8 +53,9 @@ export interface IUserProps extends IRegisterProps {
   description?: string;
   role: IRoleTypes;
   posts?: IPostsProps[];
-  isSuspended: boolean;
   isBanned: boolean;
+  suspensionTimeout: Date | undefined;
+  totalSuspensions: number;
 }
 
 export interface ITabIconProps {

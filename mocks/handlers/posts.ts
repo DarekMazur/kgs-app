@@ -2,6 +2,7 @@
 import { http, HttpResponse } from 'msw';
 import { db } from '@/mocks/db';
 import { IPostsProps } from '@/lib/types';
+import { constants } from '@/constants';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
@@ -50,7 +51,7 @@ export const handlers = [
         username: user.username,
         firstName: user.firstName,
         avatar: user.avatar,
-        isSuspended: user.isSuspended,
+        isSuspended: constants.suspensionConditions(user.suspensionTimeout),
         isBanned: user.isBanned,
       },
       notes: newPost.notes,

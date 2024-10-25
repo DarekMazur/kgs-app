@@ -7,8 +7,9 @@ export const initNewUser: IUserProps = {
   email: null,
   password: null,
   registrationDate: 0,
-  isSuspended: false,
   isBanned: false,
+  suspensionTimeout: undefined,
+  totalSuspensions: 0,
   role: { id: 3, name: 'User', type: 'user' },
 };
 

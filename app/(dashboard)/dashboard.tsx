@@ -6,7 +6,7 @@ import { getAllPosts, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { IPostsProps, IUserProps } from '@/lib/types';
-import { icons } from '@/constants';
+import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
 import IconButton from '@/components/IconButton';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -69,7 +69,7 @@ const dashboard = () => {
                   (users as IUserProps[]).filter(
                     (user) =>
                       Date.now() - user.registrationDate! <
-                      1000 * 60 * 60 * 24 * 7,
+                      constants.fullDayMilliseconds * 7,
                   ).length
                 }
               </Text>
@@ -107,7 +107,7 @@ const dashboard = () => {
                   (posts as IPostsProps[]).filter(
                     (post) =>
                       Date.now() - new Date(post.createdAt).getTime() <
-                      1000 * 60 * 60 * 24 * 7,
+                      constants.fullDayMilliseconds * 7,
                   ).length
                 }
               </Text>
@@ -156,8 +156,9 @@ const dashboard = () => {
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-red font-mtblack'>
                 {
-                  (users as IUserProps[]).filter((user) => user.isSuspended)
-                    .length
+                  (users as IUserProps[]).filter((user) =>
+                    constants.suspensionConditions(user.suspensionTimeout),
+                  ).length
                 }
               </Text>
               <Text className='text-primary'>zawieszonych Użytkowników,</Text>

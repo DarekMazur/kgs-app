@@ -6,6 +6,7 @@ import * as Crypto from 'expo-crypto';
 import { handlers } from './handlers';
 import { db } from '@/mocks/db';
 import { IPeakProps } from '@/lib/types';
+import { constants } from '@/constants';
 
 export const server = setupServer(...handlers);
 
@@ -39,6 +40,7 @@ const createUsers = () => {
     password: '123',
     username: 'TestUser',
     registrationDate: demoUserRegistrationTime,
+    suspensionTimeout: undefined,
   });
   db.user.create({
     id: demoAdminId,
@@ -46,6 +48,7 @@ const createUsers = () => {
     password: '123',
     username: 'TestAdmin',
     registrationDate: demoAdminRegistrationTime,
+    suspensionTimeout: undefined,
   });
   db.user.create({
     id: demoModId,
@@ -53,9 +56,11 @@ const createUsers = () => {
     password: '123',
     username: 'TestModerator',
     registrationDate: demoModRegistrationTime,
+    suspensionTimeout: undefined,
   });
   for (let i = 0; i < faker.number.int({ min: 55, max: 70 }); i += 1) {
     db.user.create({
+      suspensionTimeout: undefined,
       registrationDate:
         faker.number.int({ min: 0, max: 3 }) === 0
           ? faker.date.recent().getTime()
@@ -117,7 +122,9 @@ const updatePosts = () => {
           username: author?.username,
           firstName: author?.firstName,
           avatar: author?.avatar,
-          isSuspended: author?.isSuspended,
+          isSuspended: constants.suspensionConditions(
+            author?.suspensionTimeout,
+          ),
           isBanned: author?.isBanned,
           role: author?.role?.id ?? 3,
         },
@@ -146,6 +153,7 @@ const updateUsers = () => {
         },
       },
       data: {
+        suspensionTimeout: undefined,
         role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         posts: postsList || [],
       },
@@ -166,6 +174,7 @@ const updateDemoUser = async () => {
       },
       data: {
         password: hashedPassword,
+        suspensionTimeout: undefined,
         role: db.role.findFirst({
           where: {
             id: {
@@ -188,6 +197,7 @@ const updateDemoUser = async () => {
       },
       data: {
         password: hashedPassword,
+        suspensionTimeout: undefined,
         role: db.role.findFirst({
           where: {
             id: {
@@ -209,6 +219,7 @@ const updateDemoUser = async () => {
         },
       },
       data: {
+        suspensionTimeout: undefined,
         password: hashedPassword,
         role: db.role.findFirst({
           where: {
@@ -246,6 +257,7 @@ const createDemoUsersWithAllPeaks = async () => {
     username: demoUserUsername,
     firstName: demoUserFirstName,
     avatar: demoUserAvatar,
+    suspensionTimeout: undefined,
   });
 
   for (let i = 0; i < peaks.length; i += 1) {
@@ -272,6 +284,7 @@ const createDemoUsersWithAllPeaks = async () => {
       faker.number.int({ min: 0, max: 3 }) === 0
         ? faker.date.recent().getTime()
         : faker.date.past().getTime(),
+    suspensionTimeout: undefined,
     posts: db.post.findMany({
       where: {
         author: {
@@ -285,9 +298,11 @@ const createDemoUsersWithAllPeaks = async () => {
 };
 
 const updateUsersWithNoRole = () => {
-  const users = db.user.getAll().filter((user) => user.role === undefined);
+  const usersWithNoRole = db.user
+    .getAll()
+    .filter((user) => user.role === undefined);
 
-  users.forEach((user) => {
+  usersWithNoRole.forEach((user) => {
     db.user.update({
       where: {
         id: {
@@ -295,6 +310,7 @@ const updateUsersWithNoRole = () => {
         },
       },
       data: {
+        suspensionTimeout: undefined,
         role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     });

@@ -6,13 +6,14 @@ import useApi from '@/hooks/useApi';
 import {
   editPost,
   editUser,
+  getAllRoles,
   getSinglePost,
   getSingleUser,
 } from '@/lib/getDataFromApi';
-import { IPostsProps } from '@/lib/types';
+import { IPostsProps, IRoleTypes, IUserProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
-import { icons } from '@/constants';
+import { constants, icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 
@@ -20,6 +21,7 @@ const adminPostEdit = () => {
   const { query } = useLocalSearchParams();
   const { user } = useGlobalContext();
   const { data, loading } = useApi(() => getSinglePost(query as string));
+  const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
   const [postData, setPostData] = useState<IPostsProps | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -60,7 +62,7 @@ const adminPostEdit = () => {
   const handleSuspend = () => {
     if (postData && user.role.id === 1) {
       Alert.alert(
-        `Czy chcesz zawiesić Użytkownika ${postData?.author.username}?`,
+        `Czy chcesz zawiesić Użytkownika ${postData?.author.username} na jeden dzień?`,
         '',
         [
           {
@@ -72,11 +74,22 @@ const adminPostEdit = () => {
             text: 'OK',
             onPress: async () => {
               try {
+                const timeout = new Date(
+                  Date.now() + constants.fullDayMilliseconds,
+                );
+
                 setIsLoading(true);
-                const singleUser = await getSingleUser(postData.author.id);
+                const singleUser: IUserProps[] = await getSingleUser(
+                  postData.author.id,
+                );
                 await editUser({
                   ...singleUser[0],
-                  isSuspended: !singleUser[0].isSuspended,
+                  totalSuspensions: singleUser[0].totalSuspensions + 1,
+                  suspensionTimeout: constants.suspensionConditions(
+                    singleUser[0].suspensionTimeout,
+                  )
+                    ? undefined
+                    : timeout,
                 });
                 setPostData({
                   ...postData,
@@ -115,8 +128,11 @@ const adminPostEdit = () => {
                 const singleUser = await getSingleUser(postData.author.id);
                 await editUser({
                   ...singleUser[0],
-                  isSuspended: false,
+                  suspensionTimeout: undefined,
                   isBanned: !singleUser[0].isBanned,
+                  role: (rolesData as IRoleTypes[]).filter(
+                    (role) => role.id === 3,
+                  )[0],
                 });
                 setPostData({
                   ...postData,
@@ -139,7 +155,7 @@ const adminPostEdit = () => {
 
   return (
     <SafeAreaView className='bg-primaryBG h-full w-full p-5'>
-      <Loader isLoading={loading || isLoading} />
+      <Loader isLoading={loading || rolesLoading || isLoading} />
       {postData ? (
         <>
           <View>

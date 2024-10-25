@@ -1,6 +1,5 @@
 import {
   View,
-  TouchableOpacity,
   Image,
   FlatList,
   Alert,
@@ -12,7 +11,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { icons } from '@/constants';
+import { constants, icons } from '@/constants';
 import { percentage } from '@/lib/helpers';
 import PostCard from '@/components/PostCard';
 import InfoBox from '@/components/InfoBox';
@@ -114,6 +113,12 @@ const profileScreen = () => {
                   resizeMode='cover'
                 />
               </View>
+
+              {constants.suspensionConditions(user.suspensionTimeout) ? (
+                <Text className='text-red text-2xl font-extrabold'>
+                  Twoje konto jest zawieszone!
+                </Text>
+              ) : null}
 
               <InfoBox
                 title={`${user.firstName} ${user.lastName} (${user.username})`}
