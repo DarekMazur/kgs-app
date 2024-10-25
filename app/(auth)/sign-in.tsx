@@ -9,6 +9,7 @@ import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { ISignInProps } from '@/lib/types';
 import { logIn } from '@/lib/getDataFromApi';
+import { pl } from '../lang';
 
 const initUser: ISignInProps = {
   email: null,
@@ -46,10 +47,10 @@ const signIn = () => {
 
         router.replace('/home');
       } catch (err) {
-        Alert.alert('Błąd...', (err as Error).message);
+        Alert.alert(pl.alert.error, (err as Error).message);
       }
     } else {
-      Alert.alert('Uwaga!', 'Podaj dane logowania!');
+      Alert.alert(pl.alert.alert, pl.sing.in.alert.missingData);
     }
   };
 
@@ -66,13 +67,13 @@ const signIn = () => {
           </View>
 
           <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
-            Zdobywaj szczyty Korony Gór Świętokrzyskich
+            {pl.sing.in.header}
           </Text>
 
           <View className='my-2 pb-4 relative'>
             <InputCustom
-              placeholder='Email'
-              title='Email'
+              placeholder={pl.sing.in.form.email}
+              title={pl.sing.in.form.email}
               value={loggedUser.email ?? ''}
               handleOnChange={(e: string) =>
                 setLoggedUser({ ...loggedUser, email: e })
@@ -82,9 +83,9 @@ const signIn = () => {
             />
 
             <InputCustom
-              placeholder='Hasło'
+              placeholder={pl.sing.in.form.password}
               value={loggedUser.password ?? ''}
-              title='Hasło'
+              title={pl.sing.in.form.password}
               handleOnChange={(e: string) =>
                 setLoggedUser({ ...loggedUser, password: e })
               }
@@ -93,7 +94,7 @@ const signIn = () => {
           </View>
 
           <ButtonCustom
-            title='Zaloguj się'
+            title={pl.sing.in.form.submit}
             handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
@@ -102,13 +103,13 @@ const signIn = () => {
 
           <View className='flex justify-center mt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pregular'>
-              Nie masz konta?
+              {pl.sign.in.noAccaout}
             </Text>
             <Link
               href='./sign-up'
               className='text-lg font-psemibold text-secondary'
             >
-              Zarejestruj się
+              {pl.sign.in.register}
             </Link>
           </View>
         </View>

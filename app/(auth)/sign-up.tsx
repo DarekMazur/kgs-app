@@ -16,6 +16,7 @@ import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 import { IRegisterProps } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
+import { pl } from '../lang';
 
 const signUp = () => {
   const { user } = useGlobalContext();
@@ -31,11 +32,11 @@ const signUp = () => {
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {
       if (!isChecked) {
-        Alert.alert('Błąd...', 'Musisz zatwierdzić politykę prywatności');
+        Alert.alert(pl.alert.error, pl.sing.up.alert.privacyConsent);
         return;
       }
       if (!schema.emailRegex.test(newUser.email)) {
-        Alert.alert('Błąd...', 'Niepoprawny format adresu email');
+        Alert.alert(pl.alert.error, pl.sign.up.alert.missingEmail);
         return;
       }
       try {
@@ -46,15 +47,15 @@ const signUp = () => {
         );
 
         if (registeredUser) {
-          Alert.alert('Sukces!', 'Zaloguj się na swoje konto');
+          Alert.alert(pl.alert.success, pl.alert.login);
 
           router.replace('/sign-in');
         }
       } catch (err) {
-        Alert.alert('Błąd...', (err as Error).message);
+        Alert.alert(pl.alert.error, (err as Error).message);
       }
     } else {
-      Alert.alert('Uwaga!', 'Podaj wymagane dane!');
+      Alert.alert(pl.alert.warning, pl.sign.up.alert.missingData);
     }
   };
 
@@ -71,14 +72,13 @@ const signUp = () => {
           </View>
 
           <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
-            Zarejestruj się i zacznij zdobywać szczyty Korony Gór
-            Świętokrzyskich już dziś!
+            {pl.sign.up.header}
           </Text>
 
           <View className='my-2 pb-4 relative'>
             <InputCustom
-              placeholder='Nazwa użytkownika'
-              title='Nazwa użytkownika'
+              placeholder={pl.sign.up.form.username}
+              title={pl.sign.up.form.username}
               value={newUser.username ?? ''}
               handleOnChange={(e: string) =>
                 setNewUser({ ...newUser, username: e })
@@ -87,8 +87,8 @@ const signUp = () => {
             />
 
             <InputCustom
-              placeholder='Email'
-              title='Email'
+              placeholder={pl.sign.up.form.email}
+              title={pl.sign.up.form.email}
               value={newUser.email ?? ''}
               handleOnChange={(e: string) =>
                 setNewUser({ ...newUser, email: e })
@@ -98,9 +98,9 @@ const signUp = () => {
             />
 
             <InputCustom
-              placeholder='Hasło'
+              placeholder={pl.sign.up.form.password}
               value={newUser.password ?? ''}
-              title='Hasło'
+              title={pl.sign.up.form.password}
               handleOnChange={(e: string) =>
                 setNewUser({ ...newUser, password: e })
               }
@@ -110,19 +110,23 @@ const signUp = () => {
             <View className='flex-row flex-wrap items-center gap-3.5 mt-4'>
               <Checkbox value={isChecked} onValueChange={setChecked} />
               <View className='flex-row flex-wrap gap-1.5'>
-                <Text className='text-primary'>Akceptuję</Text>
+                <Text className='text-primary'>
+                  {pl.sign.up.form.consent.header}
+                </Text>
                 <TouchableOpacity
                   className='mr-2'
                   onPress={() => router.push('/app-terms')}
                 >
-                  <Text className='text-secondary'>politykę prywatności</Text>
+                  <Text className='text-secondary'>
+                    {pl.sign.up.form.consent.privacyPolicy}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
 
           <ButtonCustom
-            title='Utwórz konto'
+            title={pl.sign.up.form.submit}
             handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
@@ -136,13 +140,13 @@ const signUp = () => {
 
           <View className='flex justify-center pt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pregular'>
-              Masz już konto?
+              {pl.sign.up.registered}
             </Text>
             <Link
               href='./sign-in'
               className='text-lg font-psemibold text-secondary'
             >
-              Zaloguj się
+              {pl.sign.up.login}
             </Link>
           </View>
         </View>
