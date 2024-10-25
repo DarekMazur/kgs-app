@@ -126,4 +126,21 @@ export default {
       subtitle: 'Wyrusz na szlak i bądź pierwszy!',
     },
   },
+  menu: {
+    tabs: {
+      home: 'Główna',
+      profile: 'Profil',
+      peaks: 'Szczyty',
+      ranking: 'Zdobywcy',
+      add: 'Nowy',
+    },
+    drawer: {
+      home: 'Główna',
+      add: 'Dodaj wpis',
+      logout: 'Wyloguj',
+      mainPolicy: 'Regulamin odznaki',
+      privacyPolicy: 'Polityka prywatności',
+      dashboard: 'Panel',
+    },
+  },
 };

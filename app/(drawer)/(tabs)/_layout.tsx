@@ -4,6 +4,7 @@ import { FC } from 'react';
 import { colors, constants, icons } from '@/constants';
 import { ITabIconProps } from '@/lib/types';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { pl } from '@/lang';
 
 const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
   return (
@@ -45,13 +46,13 @@ const TabLayout = () => {
       <Tabs.Screen
         name='home'
         options={{
-          tabBarLabel: 'Główna',
-          title: 'Główna',
+          tabBarLabel: pl.menu.tabs.home,
+          title: pl.menu.tabs.home,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.home}
               color={color}
-              name='Główna'
+              name={pl.menu.tabs.home}
               focused={focused}
             />
           ),
@@ -60,13 +61,13 @@ const TabLayout = () => {
       <Tabs.Screen
         name='profile'
         options={{
-          tabBarLabel: 'Profil',
-          title: 'Profil',
+          tabBarLabel: pl.menu.tabs.profile,
+          title: pl.menu.tabs.profile,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.profile}
               color={color}
-              name='Profil'
+              name={pl.menu.tabs.profile}
               focused={focused}
             />
           ),
@@ -75,13 +76,13 @@ const TabLayout = () => {
       <Tabs.Screen
         name='peaks'
         options={{
-          tabBarLabel: 'Szczyty',
-          title: 'Szczyty',
+          tabBarLabel: pl.menu.tabs.peaks,
+          title: pl.menu.tabs.peaks,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.mountain}
               color={color}
-              name='Szczyty'
+              name={pl.menu.tabs.peaks}
               focused={focused}
             />
           ),
@@ -90,13 +91,13 @@ const TabLayout = () => {
       <Tabs.Screen
         name='ranking'
         options={{
-          tabBarLabel: 'Zdobywcy',
-          title: 'Zdobywcy',
+          tabBarLabel: pl.menu.tabs.ranking,
+          title: pl.menu.tabs.ranking,
           tabBarIcon: ({ color, focused }) => (
             <TabIcon
               icon={icons.ranking}
               color={color}
-              name='Zdobywcy'
+              name={pl.menu.tabs.ranking}
               focused={focused}
             />
           ),
@@ -106,13 +107,13 @@ const TabLayout = () => {
         <Tabs.Screen
           name='create'
           options={{
-            tabBarLabel: 'Nowy',
-            title: 'Nowy',
+            tabBarLabel: pl.menu.tabs.add,
+            title: pl.menu.tabs.add,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.add}
                 color={color}
-                name='Nowy'
+                name={pl.menu.tabs.add}
                 focused={focused}
               />
             ),
