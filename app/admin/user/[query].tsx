@@ -281,6 +281,9 @@ const adminUserEdit = () => {
           setValue={setValue}
           setItems={setItems}
           disabled={userData?.isBanned}
+          disabledStyle={{
+            opacity: 0.5,
+          }}
         />
         <ButtonCustom
           title='Zapisz nową rolę'
@@ -326,6 +329,9 @@ const adminUserEdit = () => {
               setOpen={setSuspendOpen}
               setValue={setSuspendValue}
               setItems={setSuspendItems}
+              disabledStyle={{
+                opacity: 0.5,
+              }}
               disabled={
                 userData?.isBanned ||
                 constants.suspensionConditions(
