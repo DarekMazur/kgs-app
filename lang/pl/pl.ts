@@ -102,4 +102,19 @@ export default {
       clear: 'Wyczyść',
     },
   },
+  profile: {
+    alert: {
+      delete: {
+        message: 'Czy chcesz usunąć wpis?',
+        cancel: 'Anuluj',
+        confirm: 'OK',
+      },
+    },
+    suspended: 'Twoje konto jest zawieszone!',
+    visited: 'Zdobytych szczytów:',
+    empty: {
+      message: 'Brak zdobytych szczytów',
+      subtitle: 'Ruszaj na szlak!',
+    },
+  },
 };
