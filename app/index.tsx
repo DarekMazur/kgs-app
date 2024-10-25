@@ -9,6 +9,7 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import '@/mocks/msw.polyfills';
 import { server } from '@/mocks/server';
 import { currentUser } from '@/lib/getDataFromApi';
+import { pl } from '../lang';
 
 // eslint-disable-next-line no-undef
 if (__DEV__) {
@@ -17,7 +18,7 @@ if (__DEV__) {
 
 const Index = () => {
   const { setGlobalUser } = useGlobalContext();
-  const [isLoggin, setIsLoggin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
 
   const getData = async () => {
     try {
@@ -27,20 +28,17 @@ const Index = () => {
           const current = await currentUser(value as string);
           if (current) {
             if (current.isBanned) {
-              return Alert.alert(
-                'Nie można zalogować',
-                'Twoje konto zostało zablokowane',
-              );
+              return Alert.alert(pl.index.alert.error, pl.index.alert.blocked);
             }
             setGlobalUser(current);
-            setIsLoggin(true);
+            setIsLogin(true);
             router.push('/home');
             return true;
           }
 
           return false;
         } catch (err) {
-          Alert.alert('Error', (err as Error).message);
+          Alert.alert(pl.alert.error, (err as Error).message);
         }
       }
 
@@ -52,7 +50,7 @@ const Index = () => {
 
   useEffect(() => {
     getData();
-    if (isLoggin) {
+    if (isLogin) {
       router.replace('/home');
     }
   }, []);
@@ -73,17 +71,17 @@ const Index = () => {
 
           <View className='relative mt-5'>
             <Text className='text-3xl text-white font-bold text-center'>
-              Poznaj region{'\n'}i zachwyć się pięknem{' '}
-              <Text className='text-red'>Gór Świętokrzyskich</Text>
+              {pl.index.header.main}{' '}
+              <Text className='text-red'>{pl.index.header.sub}</Text>
             </Text>
           </View>
 
           <Text className='text-sm font-pregular text-gray-100 mt-7 text-center'>
-            Zdobywaj najwyższe szczyty w najstarszych polskich górach!
+            {pl.index.subheader}
           </Text>
 
           <ButtonCustom
-            title='Zaloguj się'
+            title={pl.index.login}
             handlePress={() => router.push('/sign-in')}
             containerStyles='w-full mt-7'
             textStyles='text-2xl'
