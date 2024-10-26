@@ -47,7 +47,8 @@ const rankingScreen = () => {
           renderItem={({ item }) => (
             <View className='mx-4'>
               <Text className='text-lg text-green flex-wrap mb-2'>
-                Zdobyto: {formatDate(new Date(item.posts![0].createdAt))}
+                {pl.ranking.info}{' '}
+                {formatDate(new Date(item.posts![0].createdAt))}
               </Text>
               <View className='flex-row gap-3.5 items-center justify-start'>
                 <Image
@@ -69,9 +70,11 @@ const rankingScreen = () => {
               <View className='flex justify-between items-start flex-row mb-6'>
                 <View>
                   <Text className='text-2xl text-secondary'>
-                    Korona Gór Śwętokrzyskich
+                    {pl.ranking.header}
                   </Text>
-                  <Text className='text-primary text-xl'>Zdobywcy Odznaki</Text>
+                  <Text className='text-primary text-xl'>
+                    {pl.ranking.subheader}
+                  </Text>
                 </View>
                 <View>
                   <Image
@@ -86,10 +89,10 @@ const rankingScreen = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Jeszcze nikomu nie udało się zdobyć wszystkich szczytów.
+                {pl.ranking.empty.message}
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Wyrusz na szlak i bądź pierwszy!
+                {pl.ranking.subtitle}
               </Text>
 
               <ButtonCustom

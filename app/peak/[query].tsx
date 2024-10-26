@@ -7,6 +7,7 @@ import { getAllPosts, getSinglePeak } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import { formatDate } from '@/lib/helpers';
 import { IPeakProps, IPostsProps } from '@/lib/types';
+import { pl } from '@/lang';
 
 interface IConquerorsType {
   id: string;
@@ -65,7 +66,9 @@ const peak = () => {
           <View>
             {hikers.length > 0 ? (
               <>
-                <Text className='text-secondary mb-2'>Szyt zdobyli</Text>
+                <Text className='text-secondary mb-2'>
+                  {pl.peaks.single.title}
+                </Text>
                 {hikers.map((hiker, index) => (
                   <Text key={hiker.id} className='py-1 text-primary'>
                     {index + 1}.{' '}
@@ -77,7 +80,7 @@ const peak = () => {
                 ))}
               </>
             ) : (
-              <Text className='text-primary'>Bądź pierwszy!</Text>
+              <Text className='text-primary'>{pl.peaks.single.noUsers}</Text>
             )}
           </View>
         </ScrollView>

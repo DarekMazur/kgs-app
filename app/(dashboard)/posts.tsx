@@ -20,6 +20,7 @@ import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
 import IconButton from '@/components/IconButton';
+import { pl } from '@/lang';
 
 const initFormBox = {
   isLatest: false,
@@ -39,19 +40,19 @@ const postsPanel = () => {
   const filters = [
     {
       title: 'isLatest',
-      description: 'Ostatnie posty',
+      description: pl.admin.post.list.filters.latest,
     },
     {
       title: 'isHidden',
-      description: 'Ukryte posty',
+      description: pl.admin.post.list.filters.hidden,
     },
     {
       title: 'isSuspended',
-      description: 'Wpisy zawieszonych użytkowników',
+      description: pl.admin.post.list.filters.fromSuspended,
     },
     {
       title: 'isBanned',
-      description: 'Wpisy zablokowanych użytkowników',
+      description: pl.admin.post.list.filters.fromBanned,
     },
   ];
 
@@ -164,15 +165,17 @@ const postsPanel = () => {
               </ScreenHeader>
               <View className='mb-5'>
                 <Text className='text-lg font-mtblack text-primary'>
-                  Legenda:
+                  {pl.admin.post.list.legend.title}
                 </Text>
                 <View className='flex-row flex-wrap gap-x-2.5'>
                   <Text className='text-orange-700 font-mtbold'>
-                    Administrator
+                    {pl.admin.post.list.legend.admin}
                   </Text>
-                  <Text className='text-orange-300 font-mtbold'>Moderator</Text>
+                  <Text className='text-orange-300 font-mtbold'>
+                    {pl.admin.post.list.legend.mod}
+                  </Text>
                   <Text className='text-red line-through font-mtbold'>
-                    Zablokowany
+                    {pl.admin.post.list.legend.banned}
                   </Text>
                 </View>
               </View>
@@ -185,7 +188,9 @@ const postsPanel = () => {
                   className='w-6 h-6'
                   resizeMode='contain'
                 />
-                <Text className='text-primary font-mtblack'>Zamknij panel</Text>
+                <Text className='text-primary font-mtblack'>
+                  {pl.admin.closePanel}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className='items-end justify-end mb-8'
@@ -202,11 +207,11 @@ const postsPanel = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Brak wpisów...
+                {pl.admin.post.list.empty}
               </Text>
 
               <ButtonCustom
-                title='Back to Explore'
+                title={pl.admin.post.list.back}
                 handlePress={() => router.push('/home')}
                 containerStyles='w-full my-5'
               />

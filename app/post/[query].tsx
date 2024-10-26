@@ -10,6 +10,7 @@ import View = Animated.View;
 import Loader from '@/components/Loader';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { IPostsProps } from '@/lib/types';
+import { pl } from '@/lang';
 
 const postEdit = () => {
   const { query } = useLocalSearchParams();
@@ -43,10 +44,10 @@ const postEdit = () => {
         ],
       });
 
-      Alert.alert('Nowy opis został zapisany', 'Odśwież, aby zobaczyć zmiany');
+      Alert.alert(pl.alert.success, pl.post.edit.alert.success);
       router.back();
     } catch (err) {
-      Alert.alert('Błąd...', (err as Error).message);
+      Alert.alert(pl.alert.error, (err as Error).message);
     }
   };
 
@@ -57,11 +58,11 @@ const postEdit = () => {
         <ScrollView className='m-4'>
           <View className='p-3'>
             <Text className='text-white text-center font-mtsemibold text-xl'>
-              Edytuj wpis: {(post[0] as IPostsProps).peak?.name}
+              {pl.post.edit.form.title} {(post[0] as IPostsProps).peak?.name}
             </Text>
             <InputCustom
-              placeholder='Opis'
-              title='Opis'
+              placeholder={pl.post.edit.form.description}
+              title={pl.post.edit.form.description}
               value={notes ?? ''}
               hint='next'
               handleOnChange={(e: string) => {
@@ -71,7 +72,7 @@ const postEdit = () => {
             />
           </View>
           <ButtonCustom
-            title='Zapisz'
+            title={pl.post.edit.form.submit}
             handlePress={handleSave}
             containerStyles='mt-7'
             isLoading={false}

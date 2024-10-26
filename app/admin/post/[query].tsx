@@ -16,6 +16,7 @@ import IconButton from '@/components/IconButton';
 import { constants, icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { pl } from '@/lang';
 
 const adminPostEdit = () => {
   const { query } = useLocalSearchParams();
@@ -33,14 +34,14 @@ const adminPostEdit = () => {
 
   const handleHide = () => {
     if (postData) {
-      Alert.alert('Czy chcesz ukryć wpis?', '', [
+      Alert.alert(pl.admin.post.alert.hide, '', [
         {
-          text: 'Anuluj',
+          text: pl.alert.cancel,
           onPress: () => {},
           style: 'cancel',
         },
         {
-          text: 'OK',
+          text: pl.alert.confirm,
           onPress: async () => {
             try {
               setIsLoading(true);
@@ -51,7 +52,7 @@ const adminPostEdit = () => {
               setPostData({ ...postData, isHidden: !postData.isHidden });
               setIsLoading(false);
             } catch (error) {
-              Alert.alert('Błąd...', (error as Error).message);
+              Alert.alert(pl.alert.error, (error as Error).message);
             }
           },
         },
@@ -62,16 +63,16 @@ const adminPostEdit = () => {
   const handleSuspend = () => {
     if (postData && user.role.id === 1) {
       Alert.alert(
-        `Czy chcesz zawiesić Użytkownika ${postData?.author.username} na jeden dzień?`,
+        `${postData?.author.isSuspended ? `${pl.admin.post.alert.removeSuspend}` : `${pl.admin.post.alert.suspend} ${postData?.author.username} ${pl.admin.post.alert.suspendTime}`}`,
         '',
         [
           {
-            text: 'Anuluj',
+            text: pl.alert.cancel,
             onPress: () => {},
             style: 'cancel',
           },
           {
-            text: 'OK',
+            text: pl.alert.confirm,
             onPress: async () => {
               try {
                 const timeout = new Date(
@@ -100,7 +101,7 @@ const adminPostEdit = () => {
                 });
                 setIsLoading(false);
               } catch (error) {
-                Alert.alert('Błąd...', (error as Error).message);
+                Alert.alert(pl.alert.error, (error as Error).message);
               }
             },
           },
@@ -112,16 +113,16 @@ const adminPostEdit = () => {
   const handleBan = () => {
     if (postData && user.role.id === 1) {
       Alert.alert(
-        `Czy chcesz zablokować Użytkownika ${postData?.author.username}?`,
+        `${postData.author.isBanned ? `${pl.admin.post.alert.removeBan}` : `${pl.admin.post.alert.ban} ${postData?.author.username}?`}`,
         '',
         [
           {
-            text: 'Anuluj',
+            text: pl.alert.cancel,
             onPress: () => {},
             style: 'cancel',
           },
           {
-            text: 'OK',
+            text: pl.alert.confirm,
             onPress: async () => {
               try {
                 setIsLoading(true);
@@ -144,7 +145,7 @@ const adminPostEdit = () => {
                 });
                 setIsLoading(false);
               } catch (error) {
-                Alert.alert('Błąd...', (error as Error).message);
+                Alert.alert(pl.alert.error, (error as Error).message);
               }
             },
           },
@@ -159,7 +160,7 @@ const adminPostEdit = () => {
       {postData ? (
         <>
           <View>
-            <Text className='text-primary text-xl font-mtblack'>{`${postData.peak?.name} dodany przez ${postData.author.username}`}</Text>
+            <Text className='text-primary text-xl font-mtblack'>{`${postData.peak?.name} ${pl.admin.post.addedBy} ${postData.author.username}`}</Text>
             <Image
               source={{ uri: postData.photo }}
               className='w-full h-[200px] my-2 rounded-lg'
@@ -179,7 +180,7 @@ const adminPostEdit = () => {
               : icons.hidden
           }
           onPress={handleHide}
-          title={postData?.isHidden ? 'Pokaż post' : 'Ukryj wpis'}
+          title={postData?.isHidden ? pl.admin.post.show : pl.admin.post.hide}
         />
         <IconButton
           containerStyles='my-3'
@@ -192,8 +193,8 @@ const adminPostEdit = () => {
           onPress={handleSuspend}
           title={
             postData?.author.isSuspended
-              ? 'Zdejmij zawieszenie'
-              : 'Zawieś Użytkownika'
+              ? pl.admin.post.removeSuspension
+              : pl.admin.post.addSuspension
           }
         />
         <IconButton
@@ -201,10 +202,14 @@ const adminPostEdit = () => {
           containerStyles='my-3'
           icon={postData?.author.isBanned ? icons.banned : icons.bannedActive}
           onPress={handleBan}
-          title={postData?.author.isBanned ? 'Zdejmij bana' : 'Ban'}
+          title={
+            postData?.author.isBanned
+              ? pl.admin.post.removeBan
+              : pl.admin.post.addBan
+          }
         />
       </View>
-      <ButtonCustom title='Wróć' handlePress={router.back} />
+      <ButtonCustom title={pl.admin.post.back} handlePress={router.back} />
     </SafeAreaView>
   );
 };

@@ -6,6 +6,7 @@ import { View, Image, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 import { colors, constants, icons } from '@/constants';
+import { pl } from '@/lang';
 
 const DrawerLayout = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -39,7 +40,7 @@ const DrawerLayout = () => {
           </Text>
         </View>
         <DrawerItem
-          label='Główna'
+          label={pl.manu.drawer.home}
           onPress={() => router.push('/(drawer)/(tabs)')}
           labelStyle={{
             color: colors.primary.default,
@@ -55,7 +56,7 @@ const DrawerLayout = () => {
         />
         {constants.suspensionConditions(user.suspensionTimeout) ? null : (
           <DrawerItem
-            label='Dodaj wpis'
+            label={pl.manu.drawer.add}
             onPress={() => router.push('/(drawer)/(tabs)/create')}
             labelStyle={{
               color: colors.primary.default,
@@ -72,7 +73,7 @@ const DrawerLayout = () => {
         )}
         <View className='mt-5'>
           <DrawerItem
-            label='Wyloguj'
+            label={pl.manu.drawer.logout}
             onPress={handleLogout}
             labelStyle={{
               color: colors.primary.default,
@@ -89,7 +90,7 @@ const DrawerLayout = () => {
         </View>
         <View className='mt-8'>
           <DrawerItem
-            label='Regulamin odznaki'
+            label={pl.manu.drawer.mainPolicy}
             onPress={() => {
               router.replace('/kgs');
             }}
@@ -106,7 +107,7 @@ const DrawerLayout = () => {
             )}
           />
           <DrawerItem
-            label='Polityka prywatności'
+            label={pl.manu.drawer.privacyPolicy}
             onPress={() => {
               router.replace('/app-terms');
             }}
@@ -126,7 +127,7 @@ const DrawerLayout = () => {
         {user.role!.id < 3 ? (
           <View className='mt-8'>
             <DrawerItem
-              label='Panel'
+              label={pl.manu.drawer.dashboard}
               onPress={() => {
                 router.replace('/dashboard');
               }}

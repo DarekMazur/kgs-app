@@ -15,7 +15,7 @@ import * as Location from 'expo-location';
 import { LocationObject } from 'expo-location';
 import { useScrollToTop } from '@react-navigation/native';
 import ButtonCustom from '@/components/ButtonCustom';
-import { icons, images } from '@/constants';
+import { constants, icons, images } from '@/constants';
 import { createPost, getAllPeaks, getSinglePeak } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import { useGlobalContext } from '@/context/GlobalProvider';
@@ -27,6 +27,7 @@ import { IPeakProps, IPostsProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { pl } from '@/lang';
 
 const initialPostData = {
   id: '',
@@ -76,7 +77,10 @@ const createScreen = () => {
     (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Błąd...', 'Permission to access location was denied');
+        Alert.alert(
+          pl.alert.error,
+          pl.post.new.permissions.location.noPermission,
+        );
         return;
       }
 
@@ -120,7 +124,7 @@ const createScreen = () => {
             username: user.username as string,
             firstName: user.firstName as string,
             avatar: user.avatar as string,
-            isSuspended: user.isSuspended as boolean,
+            isSuspended: constants.suspensionConditions(user.suspensionTimeout),
             isBanned: user.isBanned as boolean,
             role: user.role.id as number,
           },
@@ -175,10 +179,10 @@ const createScreen = () => {
   //   return (
   //     <SafeAreaView className='bg-primaryBG text-primary w-full h-full items-center justify-center'>
   //       <Text className='text-2xl text-red text-center p-4'>
-  //         No peaks close enough!
+  //         {pl.post.new.noPeak}
   //       </Text>
   //       <ButtonCustom
-  //         title='Go back'
+  //         title={pl.post.new.buttons.back}
   //         handlePress={() => router.back()}
   //         containerStyles='w-[50%]'
   //       />
@@ -223,8 +227,8 @@ const createScreen = () => {
   if (!permission.granted) {
     return (
       <ErrorCustom
-        message='We need your permission to show the camera'
-        buttonTitle='Grant permission'
+        message={pl.post.new.permissions.camera.alert}
+        buttonTitle={pl.post.new.permissions.camera.button}
         handlePress={requestPermission}
       />
     );
@@ -233,8 +237,8 @@ const createScreen = () => {
   if (isDouble) {
     return (
       <ErrorCustom
-        message='You was here already...'
-        buttonTitle='Go back'
+        message={pl.post.new.alreadyVisited}
+        buttonTitle={pl.post.new.buttons.back}
         handlePress={() => router.back()}
       />
     );
@@ -259,17 +263,17 @@ const createScreen = () => {
         <View className='min-h-screen mx-6'>
           <View className='items-center justify-center mt-8'>
             <Text className='text-3xl text-secondary text-center'>
-              Dodaj wpis
+              {pl.post.new.add}
             </Text>
             <Text className='text-xl text-primary text-center mb-3'>
               {!loading && !isLoading
-                ? `Najbliższy szczyt: ${distances[0].name} (${distances[0].dist} km)`
+                ? `${pl.post.new.closest} ${distances[0].name} (${distances[0].dist} km)`
                 : null}
             </Text>
           </View>
           <InputCustom
-            placeholder='Opis'
-            title='Opis'
+            placeholder={pl.post.new.form.description}
+            title={pl.post.new.form.description}
             value={postData.notes ?? ''}
             hint='next'
             handleOnChange={(e: string) => {
@@ -294,12 +298,12 @@ const createScreen = () => {
           </TouchableOpacity>
           <View className='flex-row w-full justify-between'>
             <ButtonCustom
-              title='Anuluj'
+              title={pl.post.new.form.cancel}
               handlePress={() => router.back()}
               containerStyles='bg-red w-[40%]'
             />
             <ButtonCustom
-              title='Zapisz'
+              title={pl.post.new.form.submit}
               handlePress={handleSave}
               isDisabled={!postData.photo || !postData.notes}
               containerStyles='w-[40%]'

@@ -22,18 +22,19 @@ import { icons, constants } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '@/lib/helpers';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { pl } from '@/lang';
 
 const suspendTime = [
   {
-    label: 'Doba',
+    label: pl.admin.user.dropdown.day,
     value: 1,
   },
   {
-    label: 'Tydzień',
+    label: pl.admin.user.dropdown.week,
     value: 7,
   },
   {
-    label: 'Miesiąc',
+    label: pl.admin.user.dropdown.month,
     value: 30,
   },
 ];
@@ -76,38 +77,39 @@ const adminUserEdit = () => {
   const handleSuspend = () => {
     if (
       !suspendValue &&
-      !constants.suspensionConditions(new Date(userData.suspensionTimeout))
+      !constants.suspensionConditions(userData?.suspensionTimeout)
     ) {
-      Alert.alert('Błąd', 'Wybierz czas zawieszenia Użytkownika!');
+      Alert.alert(pl.alert.error, pl.admin.user.alert.errorSuspend);
       return false;
     }
     if (userData) {
       Alert.alert(
-        `${constants.suspensionConditions(new Date(userData.suspensionTimeout)) ? `Czy chcesz zakończyć zawieszenie Użykownika ${userData?.username}?` : `Czy chcesz zawiesić Użytkownika ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
+        `${constants.suspensionConditions(userData.suspensionTimeout) ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
         '',
         [
           {
-            text: 'Anuluj',
+            text: pl.admin.user.alert.cancel,
             onPress: () => {},
             style: 'cancel',
           },
           {
-            text: 'OK',
+            text: pl.admin.user.alert.confirm,
             onPress: async () => {
               try {
                 setIsLoading(true);
                 const timeout = new Date(
-                  Date.now() + constants.fullDayMilliseconds * suspendValue,
+                  Date.now() +
+                    constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
                 await editUser({
                   ...userData,
                   totalSuspensions: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? userData.totalSuspensions
                     : userData.totalSuspensions + 1,
                   suspensionTimeout: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? undefined
                     : timeout,
@@ -116,19 +118,19 @@ const adminUserEdit = () => {
                 setUserData({
                   ...userData,
                   totalSuspensions: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? userData.totalSuspensions
                     : userData.totalSuspensions + 1,
                   suspensionTimeout: constants.suspensionConditions(
-                    new Date(userData.suspensionTimeout),
+                    userData.suspensionTimeout,
                   )
                     ? undefined
                     : timeout,
                 });
                 setIsLoading(false);
               } catch (error) {
-                Alert.alert('Błąd...', (error as Error).message);
+                Alert.alert(pl.alert.error, (error as Error).message);
               }
             },
           },
@@ -142,18 +144,18 @@ const adminUserEdit = () => {
       Alert.alert(
         `${
           userData.isBanned
-            ? `Czy checsz odblokować Użytkownika ${userData?.username}?`
-            : `Czy chcesz zablokować Użytkownika ${userData?.username}?`
+            ? `${pl.admin.user.alert.removeBan} ${userData?.username}?`
+            : `${pl.admin.user.alert.ban} ${userData?.username}?`
         }`,
         '',
         [
           {
-            text: 'Anuluj',
+            text: pl.admin.user.alert.cancel,
             onPress: () => {},
             style: 'cancel',
           },
           {
-            text: 'OK',
+            text: pl.admin.user.alert.confirm,
             onPress: async () => {
               try {
                 setIsLoading(true);
@@ -176,7 +178,7 @@ const adminUserEdit = () => {
                 });
                 setIsLoading(false);
               } catch (error) {
-                Alert.alert('Błąd...', (error as Error).message);
+                Alert.alert(pl.alert.error, (error as Error).message);
               }
             },
           },
@@ -185,11 +187,12 @@ const adminUserEdit = () => {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   const handleSaveRole = async () => {
-    if (constants.suspensionConditions(new Date(userData.suspensionTimeout))) {
+    if (constants.suspensionConditions(userData?.suspensionTimeout)) {
       return Alert.alert(
-        'Użytkownik zablokowany',
-        'Nie można zmienić roli zablokowanego Użytkownika',
+        pl.admin.user.alert.alreadyBlocked,
+        pl.admin.user.alert.roleUpdateError,
       );
     }
     if (userData) {
@@ -209,16 +212,16 @@ const adminUserEdit = () => {
         });
         setIsLoading(false);
       } catch (error) {
-        Alert.alert('Błąd...', (error as Error).message);
+        Alert.alert(pl.alert.error, (error as Error).message);
       }
     }
   };
 
   useEffect(() => {
     if (user.role.id !== 1) {
-      Alert.alert('Uwaga', 'nie masz dostępu do tej części aplikacji!', [
+      Alert.alert(pl.alert.warning, pl.admin.user.alert.accessDenied, [
         {
-          text: 'OK',
+          text: pl.alert.confirm,
           onPress: () => {
             router.replace('/home');
           },
@@ -238,7 +241,7 @@ const adminUserEdit = () => {
               <Text className='text-primary'>{userData.role?.name}</Text>
               {userData.isBanned ? (
                 <Text className='text-red text-xl font-mtblack mb-3'>
-                  Konto zablokowane
+                  {pl.admin.user.banned}
                 </Text>
               ) : null}
               <Image
@@ -248,13 +251,15 @@ const adminUserEdit = () => {
               />
             </View>
             <Text className='text-primary mb-3'>{userData.description}</Text>
-            <Text className='text-primary mb-3'>{`Zarejestrowany: ${formatDate(new Date(userData.registrationDate))}`}</Text>
+            <Text className='text-primary mb-3'>{`${pl.admin.user.registered} ${formatDate(new Date(userData.registrationDate))}`}</Text>
             {constants.suspensionConditions(userData.suspensionTimeout) ? (
               <Text className='text-red mb-3'>
-                {`Konto zawieszone do ${formatDate(new Date(userData.suspensionTimeout))}`}
+                {userData.suspensionTimeout
+                  ? `${pl.admin.user.suspend} ${formatDate(userData.suspensionTimeout)}`
+                  : null}
               </Text>
             ) : null}
-            <Text className='text-primary mb-3'>{`Łącznie ostrzeżeń (zawieszeń): ${userData.totalSuspensions}`}</Text>
+            <Text className='text-primary mb-3'>{`${pl.admin.user.totalSuspended} ${userData.totalSuspensions}`}</Text>
             {userData.posts?.map((post) => (
               <TouchableOpacity
                 key={post.id}
@@ -281,9 +286,12 @@ const adminUserEdit = () => {
           setValue={setValue}
           setItems={setItems}
           disabled={userData?.isBanned}
+          disabledStyle={{
+            opacity: 0.5,
+          }}
         />
         <ButtonCustom
-          title='Zapisz nową rolę'
+          title={pl.admin.user.roleSave}
           handlePress={handleSaveRole}
           textStyles='text-sm'
           containerStyles='min-h-[40px] w-[200px] my-3 bg-blue-600'
@@ -296,9 +304,7 @@ const adminUserEdit = () => {
               isDisabled={
                 userData?.isBanned ||
                 (!suspendValue &&
-                  !constants.suspensionConditions(
-                    new Date(userData?.suspensionTimeout),
-                  ))
+                  !constants.suspensionConditions(userData?.suspensionTimeout))
               }
               icon={
                 constants.suspensionConditions(userData?.suspensionTimeout) ||
@@ -309,8 +315,8 @@ const adminUserEdit = () => {
               onPress={handleSuspend}
               title={
                 constants.suspensionConditions(userData?.suspensionTimeout)
-                  ? 'Zdejmij zawieszenie'
-                  : 'Zawieś Użytkownika'
+                  ? pl.admin.user.removeSuspension
+                  : pl.admin.user.addSuspension
               }
             />
             <DropDownPicker
@@ -319,18 +325,19 @@ const adminUserEdit = () => {
                 showsVerticalScrollIndicator: false,
                 scrollEnabled: false,
               }}
-              placeholder='Czas zawieszenia'
+              placeholder={pl.admin.user.suspensionTime}
               open={suspendOpen}
               value={suspendValue}
               items={suspendItems}
               setOpen={setSuspendOpen}
               setValue={setSuspendValue}
               setItems={setSuspendItems}
+              disabledStyle={{
+                opacity: 0.5,
+              }}
               disabled={
                 userData?.isBanned ||
-                constants.suspensionConditions(
-                  new Date(userData?.suspensionTimeout),
-                )
+                constants.suspensionConditions(userData?.suspensionTimeout)
               }
             />
           </View>
@@ -338,11 +345,15 @@ const adminUserEdit = () => {
             containerStyles='my-3'
             icon={userData?.isBanned ? icons.banned : icons.bannedActive}
             onPress={handleBan}
-            title={userData?.isBanned ? 'Zdejmij bana' : 'Ban'}
+            title={
+              userData?.isBanned
+                ? pl.admin.user.removeBan
+                : pl.admin.user.addBan
+            }
           />
         </View>
         <ButtonCustom
-          title='Wróć'
+          title={pl.admin.user.back}
           handlePress={router.back}
           containerStyles='my-3 z-10'
         />

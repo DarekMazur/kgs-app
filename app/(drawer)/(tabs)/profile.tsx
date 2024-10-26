@@ -11,7 +11,8 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { constants, icons } from '@/constants';
+import { constants } from '@/constants';
+import { pl } from '@/lang';
 import { percentage } from '@/lib/helpers';
 import PostCard from '@/components/PostCard';
 import InfoBox from '@/components/InfoBox';
@@ -55,19 +56,19 @@ const profileScreen = () => {
   );
 
   const handleDelete = (id: string) => {
-    Alert.alert('Czy chcesz usunąć wpis?', '', [
+    Alert.alert(pl.profile.alert.delete.message, '', [
       {
-        text: 'Anuluj',
+        text: pl.profile.alert.delete.cancel,
         onPress: () => {},
         style: 'cancel',
       },
       {
-        text: 'OK',
+        text: pl.profile.alert.delete.confirm,
         onPress: async () => {
           try {
             await deletePost(id).then(onRefresh);
           } catch (error) {
-            Alert.alert('Błąd...', (error as Error).message);
+            Alert.alert(pl.alert.error, (error as Error).message);
           }
         },
       },
@@ -116,7 +117,7 @@ const profileScreen = () => {
 
               {constants.suspensionConditions(user.suspensionTimeout) ? (
                 <Text className='text-red text-2xl font-extrabold'>
-                  Twoje konto jest zawieszone!
+                  {pl.profile.suspended}
                 </Text>
               ) : null}
 
@@ -127,7 +128,7 @@ const profileScreen = () => {
               />
 
               <InfoBox
-                title='Zdobytych szczytów:'
+                title={pl.profile.visited}
                 subtitle={`${
                   (posts as IPostsProps[]).filter(
                     (post) => post.author.id === user.id,
@@ -146,10 +147,10 @@ const profileScreen = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-sm font-mtmedium text-gray-100'>
-                Brak zdobytych szczytów
+                {pl.profile.empty.message}
               </Text>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Ruszaj na szlak!
+                {pl.profile.empty.subtitle}
               </Text>
 
               <ButtonCustom

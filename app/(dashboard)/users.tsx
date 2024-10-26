@@ -13,6 +13,7 @@ import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
 import IconButton from '@/components/IconButton';
+import { pl } from '@/lang';
 
 const initFormBox = {
   isInTeam: true,
@@ -80,19 +81,19 @@ const usersPanel = () => {
   const filters = [
     {
       title: 'isInTeam',
-      description: 'Zespół',
+      description: pl.admin.user.list.filters.team,
     },
     {
       title: 'isLatest',
-      description: 'Najnowsi Użytkownicy',
+      description: pl.admin.user.list.filters.latest,
     },
     {
       title: 'isSuspended',
-      description: 'Zawieszeni',
+      description: pl.admin.user.list.filters.suspended,
     },
     {
       title: 'isBanned',
-      description: 'Zablokowani',
+      description: pl.admin.user.list.filters.banned,
     },
   ];
 
@@ -148,7 +149,7 @@ const usersPanel = () => {
             <>
               <ScreenHeader>
                 <Text className='text-red text-3xl font-mtblack'>
-                  Użytkownicy
+                  {pl.admin.user.list.title}
                 </Text>
               </ScreenHeader>
               <TouchableOpacity
@@ -160,7 +161,9 @@ const usersPanel = () => {
                   className='w-6 h-6'
                   resizeMode='contain'
                 />
-                <Text className='text-primary font-mtblack'>Zamknij panel</Text>
+                <Text className='text-primary font-mtblack'>
+                  {pl.admin.closePanel}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className='items-end justify-end mb-8'
@@ -177,7 +180,7 @@ const usersPanel = () => {
           ListEmptyComponent={() => (
             <View className='flex justify-center items-center px-4'>
               <Text className='text-xl text-center font-mtsemibold text-primary mt-2'>
-                Brak użytkowników...
+                {pl.admin.user.list.empty}
               </Text>
 
               <ButtonCustom

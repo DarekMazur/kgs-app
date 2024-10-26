@@ -18,6 +18,7 @@ import ButtonCustom from '@/components/ButtonCustom';
 import { icons } from '@/constants';
 import { editUser, getSingleUser } from '@/lib/getDataFromApi';
 import Footer from '@/components/Footer';
+import { pl } from '@/lang';
 
 const profileEdit = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -39,7 +40,7 @@ const profileEdit = () => {
       });
     } else {
       setTimeout(() => {
-        Alert.alert('Anulowano');
+        Alert.alert(pl.profile.edit.alert.cancel);
       }, 100);
     }
   };
@@ -52,12 +53,12 @@ const profileEdit = () => {
       });
       const updatedUser = await getSingleUser(user.id as string);
       setGlobalUser(updatedUser[0]);
-      Alert.alert('Sukces!', 'Dane zaktualizowano poprawnie');
+      Alert.alert(pl.alert.success, pl.profile.edit.alert.update.success);
       router.push('/profile');
     } catch (err) {
       Alert.alert(
-        'Błąd...',
-        `nie udało się zaktualizować: ${(err as Error).message}`,
+        pl.alert.error,
+        `${pl.profile.edit.alert.update.error} ${(err as Error).message}`,
       );
     }
   };
@@ -67,16 +68,6 @@ const profileEdit = () => {
       <ScrollView className='m-4'>
         <View className='h-full'>
           <View className='justify-center items-center mt-6 mb-12 px-4'>
-            <TouchableOpacity
-              onPress={() => router.push('/menu')}
-              className='flex w-full items-end mb-10'
-            >
-              <Image
-                source={icons.bars}
-                resizeMode='contain'
-                className='w-6 h-6'
-              />
-            </TouchableOpacity>
             <View className='w-16 h-16 border border-green rounded-lg flex justify-center items-center'>
               <Image
                 source={{ uri: user?.avatar }}
@@ -92,12 +83,12 @@ const profileEdit = () => {
             />
           </View>
           <Text className='text-white text-center font-mtsemibold text-lg'>
-            Edytuj informacje
+            {pl.profile.edit.form.title}
           </Text>
           <View className='w-full my-2 pb-4'>
             <InputCustom
-              placeholder='Nazwa użytkownika'
-              title='Nazwa użytkownika'
+              placeholder={pl.profile.edit.form.username}
+              title={pl.profile.edit.form.username}
               value={editedUser.username ?? ''}
               hint='next'
               handleOnChange={(e: string) =>
@@ -106,8 +97,8 @@ const profileEdit = () => {
             />
 
             <InputCustom
-              placeholder='Email'
-              title='Email'
+              placeholder={pl.profile.edit.form.email}
+              title={pl.profile.edit.form.email}
               mode='email'
               isReadOnly
               value={editedUser.email ?? ''}
@@ -118,9 +109,9 @@ const profileEdit = () => {
             />
 
             <InputCustom
-              placeholder='Hasło'
+              placeholder={pl.profile.edit.form.password}
               value={editedUser.password ?? ''}
-              title='Hasło'
+              title={pl.profile.edit.form.password}
               hint='next'
               handleOnChange={(e: string) =>
                 setEditedUser({ ...editedUser, password: e })
@@ -131,7 +122,7 @@ const profileEdit = () => {
 
             <View className='mt-7 space-y-2'>
               <Text className='text-base text-gray-100 font-pmedium'>
-                Zdjęcie
+                {pl.profile.edit.form.avatar}
               </Text>
 
               <TouchableOpacity onPress={openPicker}>
@@ -149,8 +140,8 @@ const profileEdit = () => {
             </View>
 
             <InputCustom
-              placeholder='Imię'
-              title='Imię'
+              placeholder={pl.profile.edit.form.name}
+              title={pl.profile.edit.form.name}
               value={editedUser.firstName ?? ''}
               hint='next'
               handleOnChange={(e: string) =>
@@ -159,8 +150,8 @@ const profileEdit = () => {
             />
 
             <InputCustom
-              placeholder='Nazwisko'
-              title='Nazwisko'
+              placeholder={pl.profile.edit.form.lastName}
+              title={pl.profile.edit.form.lastName}
               value={editedUser.lastName ?? ''}
               hint='next'
               handleOnChange={(e: string) =>
@@ -169,8 +160,8 @@ const profileEdit = () => {
             />
 
             <InputCustom
-              placeholder='Opis'
-              title='Opis'
+              placeholder={pl.profile.edit.form.description}
+              title={pl.profile.edit.form.description}
               value={editedUser.description ?? ''}
               handleOnChange={(e: string) =>
                 setEditedUser({ ...editedUser, description: e })
@@ -180,7 +171,7 @@ const profileEdit = () => {
           </View>
 
           <ButtonCustom
-            title='Zapisz'
+            title={pl.profile.edit.form.submit}
             handlePress={handleSave}
             containerStyles='mt-7'
             isLoading={false}
