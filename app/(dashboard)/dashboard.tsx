@@ -10,6 +10,7 @@ import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
 import IconButton from '@/components/IconButton';
 import ScreenHeader from '@/components/ScreenHeader';
+import { pl } from '@/lang';
 
 const dashboard = () => {
   const {
@@ -44,26 +45,30 @@ const dashboard = () => {
       <ScrollView>
         <ScreenHeader>
           <View>
-            <Text className='text-red text-3xl font-mtblack'>Panel główny</Text>
+            <Text className='text-red text-3xl font-mtblack'>
+              {pl.admin.dashboard.title}
+            </Text>
           </View>
         </ScreenHeader>
         <IconButton
           icon={icons.logout}
           iconStyle='h-6 w-6'
           onPress={() => router.push('/home')}
-          title='Zamknij panel'
+          title={pl.admin.closePanel}
           color='primary'
         />
         {!usersLoading && users ? (
           <>
             <View className='flex-wrap flex-row gap-1.5'>
               <Text className='text-green font-mtblack'>
-                {users ? users.length : 'brak'}
+                {users ? users.length : pl.admin.dashboard.noUsers}
               </Text>
               <Text className='text-primary'>
-                zarejestrowanych Użytkowników,
+                {pl.admin.dashboard.registered}
               </Text>
-              <Text className='text-primary'>w tym</Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.includes}
+              </Text>
               <Text className='text-green font-mtblack'>
                 {
                   (users as IUserProps[]).filter(
@@ -73,10 +78,14 @@ const dashboard = () => {
                   ).length
                 }
               </Text>
-              <Text className='text-primary'>w ostatnich 7 dniach.</Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.lastDays}
+              </Text>
             </View>
             <View className='flex-wrap flex-row gap-1.5 mt-3'>
-              <Text className='text-primary'>Najnowyszy Użytkownik: </Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.latestUser}{' '}
+              </Text>
               <TouchableOpacity onPress={() => {}}>
                 <Text className='text-secondary font-mtblack'>
                   {
@@ -90,7 +99,7 @@ const dashboard = () => {
             <IconButton
               icon={icons.defaultAvatar}
               onPress={() => {}}
-              title='Zobacz wszystkich'
+              title={pl.admin.dashboard.button.showAll}
             />
           </>
         ) : null}
@@ -100,8 +109,10 @@ const dashboard = () => {
               <Text className='text-green font-mtblack'>
                 {posts ? posts.length : 'brak'}
               </Text>
-              <Text className='text-primary'>postów,</Text>
-              <Text className='text-primary'>w tym</Text>
+              <Text className='text-primary'>{pl.admin.dashboard.posts}</Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.includes}
+              </Text>
               <Text className='text-green font-mtblack'>
                 {
                   (posts as IPostsProps[]).filter(
@@ -111,10 +122,14 @@ const dashboard = () => {
                   ).length
                 }
               </Text>
-              <Text className='text-primary'>w ostatnich 7 dniach.</Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.lastDays}
+              </Text>
             </View>
             <View className='flex-wrap flex-row gap-1.5 mt-3'>
-              <Text className='text-primary'>Najnowyszy wpis: </Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.latestPost}
+              </Text>
               <TouchableOpacity onPress={() => {}}>
                 <Text className='text-secondary font-mtblack'>
                   {
@@ -124,7 +139,7 @@ const dashboard = () => {
                         new Date(a.createdAt).getTime(),
                     )[0].peak!.name
                   }{' '}
-                  dodany przez{' '}
+                  {pl.admin.dashboard.addedBy}{' '}
                   {
                     (posts as IPostsProps[]).sort(
                       (a, b) =>
@@ -142,12 +157,12 @@ const dashboard = () => {
                     .length
                 }
               </Text>
-              <Text className='text-primary'>wpisów ukrytych.</Text>
+              <Text className='text-primary'>{pl.admin.dashboard.hidden}</Text>
             </View>
             <IconButton
               icon={icons.post}
               onPress={() => router.push('/posts')}
-              title='Zobacz wszystkie'
+              title={pl.admin.dashboard.button.showAll}
             />
           </>
         ) : null}
@@ -161,7 +176,9 @@ const dashboard = () => {
                   ).length
                 }
               </Text>
-              <Text className='text-primary'>zawieszonych Użytkowników,</Text>
+              <Text className='text-primary'>
+                {pl.admin.dashboard.suspended}
+              </Text>
             </View>
             <IconButton
               icon={icons.suspended}
@@ -172,7 +189,7 @@ const dashboard = () => {
               <Text className='text-red font-mtblack'>
                 {(users as IUserProps[]).filter((user) => user.isBanned).length}
               </Text>
-              <Text className='text-primary'>zablokowanych Użytkowników,</Text>
+              <Text className='text-primary'>{pl.admin.dashboard.banned}</Text>
             </View>
             <IconButton
               icon={icons.banned}
@@ -186,7 +203,7 @@ const dashboard = () => {
           <>
             <View className='flex-wrap flex-row gap-1.5'>
               <Text className='text-2xl text-green w-full text-center mb-3'>
-                Administracja
+                {pl.admin.dashboard.team}
               </Text>
               <Text className='text-green font-mtblack'>
                 {
@@ -194,19 +211,19 @@ const dashboard = () => {
                     .length
                 }
               </Text>
-              <Text className='text-primary'>Administratorów oraz</Text>
+              <Text className='text-primary'>{pl.admin.team.admin}</Text>
               <Text className='text-green font-mtblack'>
                 {
                   (users as IUserProps[]).filter((user) => user.role?.id === 2)
                     .length
                 }
               </Text>
-              <Text className='text-primary'>Moderatorów</Text>
+              <Text className='text-primary'>{pl.admin.dashboard.mod}</Text>
             </View>
             <IconButton
               icon={icons.appTeam}
               onPress={() => {}}
-              title='Zobacz wszystkich'
+              title={pl.admin.dashboard.button.showAll}
             />
           </>
         ) : null}

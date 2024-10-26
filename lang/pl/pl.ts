@@ -191,7 +191,26 @@ export default {
       users: 'Użytkownicy',
       team: 'Zespół',
     },
-    dashboard: {},
+    dashboard: {
+      title: 'Panel główny',
+      noUsers: 'brak',
+      registered: 'zarejestrowanych Uźytkowników,',
+      includes: 'w tym',
+      lastDays: 'w ostatnich 7 dniach.',
+      latestUser: 'Najnowszy Użytkownik:',
+      posts: 'postów,',
+      latestPost: 'Najnowszy wpis:',
+      addedBy: 'dodany przez',
+      hidden: 'wpisów ukrytych.',
+      suspended: 'zawieszonych Użytkowników,',
+      banned: 'zablokowanych Użytkowników,',
+      team: 'Administracja',
+      admin: 'Administratorów oraz',
+      mod: 'Moderatorów',
+      button: {
+        showAll: 'Zobacz wszystko',
+      },
+    },
     post: {
       list: {
         filters: {
