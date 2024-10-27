@@ -72,7 +72,7 @@ const signIn = () => {
             />
           </View>
 
-          <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
+          <Text className='text-2xl font-mtsemibold text-white mt-10'>
             {pl.sign.in.header}
           </Text>
 
