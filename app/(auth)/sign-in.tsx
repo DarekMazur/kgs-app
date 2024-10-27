@@ -35,6 +35,7 @@ const signIn = () => {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   const handleSubmit = async () => {
     if (loggedUser.email && loggedUser.password) {
       try {
@@ -42,6 +43,11 @@ const signIn = () => {
           loggedUser.email.toLowerCase(),
           loggedUser.password,
         );
+
+        if (!currentUser.isConfirmed) {
+          return null;
+        }
+
         storeData(process.env.EXPO_PUBLIC_JWT as string);
         setGlobalUser(currentUser);
 

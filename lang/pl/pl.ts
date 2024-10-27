@@ -42,6 +42,14 @@ export default {
       registered: 'Masz już konto?',
       login: 'Zaloguj się',
     },
+    confirm: {
+      title: 'Konto nieaktywne',
+      message:
+        'Sprawdź podany przy rejestracji adres email i kliknij w link aktywacyjny.',
+      spam: 'Jeśli nie widzisz wiadomości, sprawdź w spamie.',
+      resend: 'Uzyskaj nowy kod aktywacyjny',
+      back: 'Wróc',
+    },
   },
   index: {
     header: {

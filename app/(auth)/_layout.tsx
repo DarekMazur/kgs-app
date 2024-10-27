@@ -15,6 +15,12 @@ const AuthLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name='co-confirmation'
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };
