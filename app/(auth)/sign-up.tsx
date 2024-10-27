@@ -32,7 +32,7 @@ const signUp = () => {
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {
       if (!isChecked) {
-        Alert.alert(pl.alert.error, pl.sing.up.alert.privacyConsent);
+        Alert.alert(pl.alert.error, pl.sign.up.alert.privacyConsent);
         return;
       }
       if (!schema.emailRegex.test(newUser.email)) {

@@ -7,7 +7,7 @@ export default {
     cancel: 'Anuluj',
     login: 'Zaloguj się na swoje konto',
   },
-  sing: {
+  sign: {
     in: {
       alert: {
         missingData: 'Podaj dane logowania!',
