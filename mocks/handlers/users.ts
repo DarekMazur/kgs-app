@@ -82,6 +82,7 @@ export const handlers = [
       isBanned: false,
       suspensionTimeout: undefined,
       totalSuspensions: 0,
+      isConfirmed: false,
       role: db.role.findFirst({
         where: {
           type: {
@@ -141,6 +142,7 @@ export const handlers = [
               updatedUser.totalSuspensions ?? oldData.totalSuspensions,
             suspensionTimeout:
               updatedUser.suspensionTimeout ?? oldData.suspensionTimeout,
+            isConfirmed: updatedUser.isConfirmed ?? oldData.isConfirmed,
             role: db.role.findFirst({
               where: {
                 id: {

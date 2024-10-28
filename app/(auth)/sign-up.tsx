@@ -16,7 +16,7 @@ import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 import { IRegisterProps } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
-import { pl } from '../lang';
+import { pl } from '@/lang';
 
 const signUp = () => {
   const { user } = useGlobalContext();
