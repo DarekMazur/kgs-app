@@ -59,6 +59,13 @@ export const handlers = [
     },
   ),
 
+  http.post(
+    `${process.env.EXPO_PUBLIC_API_URL}/users/activate-send/`,
+    async ({ request }) => {
+      return HttpResponse.json(request, { status: 201 });
+    },
+  ),
+
   http.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, async ({ request }) => {
     const newUser = (await request.json()) as IRegisterProps;
     const createdTime = Date.now();
