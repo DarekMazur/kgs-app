@@ -98,7 +98,72 @@ export const handlers = [
   }),
 
   http.put(
-    `${process.env.EXPO_PUBLIC_API_URL}/users/:postId`,
+    `${process.env.EXPO_PUBLIC_API_URL}/users/activate/:token`,
+    async ({ params }) => {
+      const isTokenExpired = (token: string) => {
+        const arrayToken = token.split('.');
+        const tokenPayload = JSON.parse(atob(arrayToken[1]));
+        return Math.floor(new Date().getTime() / 1000) >= tokenPayload?.sub;
+      };
+
+      const { token } = params;
+
+      if (token) {
+        const arrayToken = (token as string).split('.');
+
+        const tokenPayload = JSON.parse(atob(arrayToken[1]));
+
+        if (isTokenExpired(token as string)) {
+          return new HttpResponse(null, { status: 401 });
+        }
+
+        const user = db.user.findFirst({
+          where: {
+            id: {
+              equals: tokenPayload.id as string,
+            },
+          },
+        });
+
+        if (user) {
+          db.user.update({
+            where: {
+              id: {
+                equals: user.id as string,
+              },
+            },
+            data: {
+              username: user.username as string,
+              password: user.password,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              avatar: user.avatar,
+              description: user.description,
+              isBanned: user.isBanned,
+              totalSuspensions: user.totalSuspensions,
+              suspensionTimeout: user.suspensionTimeout,
+              isConfirmed: true,
+              role: db.role.findFirst({
+                where: {
+                  id: {
+                    equals: user.role?.id,
+                  },
+                },
+              })!,
+            },
+          });
+
+          return HttpResponse.json(user, { status: 200 });
+        }
+        return new HttpResponse(null, { status: 401 });
+      }
+
+      return new HttpResponse(null, { status: 404 });
+    },
+  ),
+
+  http.put(
+    `${process.env.EXPO_PUBLIC_API_URL}/users/:userId`,
     // eslint-disable-next-line consistent-return
     async ({ request }) => {
       const updatedUser = (await request.json()) as IUserProps;
