@@ -346,7 +346,7 @@ const adminUserEdit = () => {
               icon={
                 userData?.isActive ? icons.suspended : icons.suspendedActive
               }
-              onPress={handleSuspend}
+              onPress={handleActive}
               title={
                 userData?.isActive
                   ? pl.admin.user.inactivate
