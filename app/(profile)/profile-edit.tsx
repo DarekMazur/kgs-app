@@ -45,6 +45,13 @@ const profileEdit = () => {
     }
   };
 
+  const handleRemoveAvatar = () => {
+    setEditedUser({
+      ...editedUser,
+      avatar: null,
+    });
+  };
+
   const handleSave = async () => {
     try {
       await editUser({
@@ -70,7 +77,9 @@ const profileEdit = () => {
           <View className='justify-center items-center mt-6 mb-12 px-4'>
             <View className='w-16 h-16 border border-green rounded-lg flex justify-center items-center'>
               <Image
-                source={{ uri: user?.avatar }}
+                source={
+                  user?.avatar ? { uri: user?.avatar } : icons.defaultAvatar
+                }
                 className='w-[90%] h-[90%] rounded-lg'
                 resizeMode='cover'
               />
@@ -127,16 +136,25 @@ const profileEdit = () => {
 
               <TouchableOpacity onPress={openPicker}>
                 <View className='w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center'>
-                  <View className='w-14 h-14 border border-dashed border-secondary-100 flex justify-center items-center'>
+                  <View className='w-20 h-20 border border-dashed border-secondary-100 flex justify-center items-center'>
                     <Image
-                      source={icons.upload}
-                      resizeMode='contain'
+                      source={
+                        editedUser.avatar
+                          ? { uri: editedUser.avatar }
+                          : icons.upload
+                      }
+                      resizeMode='cover'
                       alt='upload'
-                      className='w-1/2 h-1/2'
+                      className='w-full h-full'
                     />
                   </View>
                 </View>
               </TouchableOpacity>
+              <ButtonCustom
+                title={pl.profile.edit.form.removeAvatar}
+                handlePress={handleRemoveAvatar}
+                isLoading={false}
+              />
             </View>
 
             <InputCustom

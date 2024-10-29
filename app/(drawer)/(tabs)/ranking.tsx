@@ -12,6 +12,7 @@ import { formatDate } from '../../../lib/helpers';
 import { IPostsProps, IUserProps } from '@/lib/types';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { pl } from '@/lang';
 
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);

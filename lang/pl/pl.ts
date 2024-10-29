@@ -151,6 +151,7 @@ export default {
         lastName: 'Nazwisko',
         description: 'Opis',
         submit: 'Zapisz',
+        removeAvatar: 'Usuń avatar',
       },
     },
     alert: {
@@ -187,6 +188,7 @@ export default {
     drawer: {
       home: 'Główna',
       add: 'Dodaj wpis',
+      profile: 'Edytuj profil',
       logout: 'Wyloguj',
       mainPolicy: 'Regulamin odznaki',
       privacyPolicy: 'Polityka prywatności',

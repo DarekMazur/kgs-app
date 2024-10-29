@@ -1,6 +1,7 @@
 import { Image, View, TouchableOpacity } from 'react-native';
 import { useNavigation } from 'expo-router';
 import { useGlobalContext } from '@/context/GlobalProvider';
+import { icons } from '@/constants';
 
 const Header = () => {
   const { user } = useGlobalContext();
@@ -16,7 +17,7 @@ const Header = () => {
         }}
       >
         <Image
-          source={{ uri: user.avatar }}
+          source={user.avatar ? { uri: user.avatar } : icons.defaultAvatar}
           className='w-[50px] h-[50px] rounded-full'
           resizeMode='cover'
         />

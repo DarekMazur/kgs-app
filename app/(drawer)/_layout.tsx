@@ -40,8 +40,8 @@ const DrawerLayout = () => {
           </Text>
         </View>
         <DrawerItem
-          label={pl.manu.drawer.home}
-          onPress={() => router.push('/(drawer)/(tabs)')}
+          label={pl.menu.drawer.home}
+          onPress={() => router.push('/home')}
           labelStyle={{
             color: colors.primary.default,
             fontSize: 18,
@@ -56,7 +56,7 @@ const DrawerLayout = () => {
         />
         {constants.suspensionConditions(user.suspensionTimeout) ? null : (
           <DrawerItem
-            label={pl.manu.drawer.add}
+            label={pl.menu.drawer.add}
             onPress={() => router.push('/(drawer)/(tabs)/create')}
             labelStyle={{
               color: colors.primary.default,
@@ -71,9 +71,24 @@ const DrawerLayout = () => {
             )}
           />
         )}
+        <DrawerItem
+          label={pl.menu.drawer.profile}
+          onPress={() => router.push('/(profile)/profile-edit')}
+          labelStyle={{
+            color: colors.primary.default,
+            fontSize: 18,
+          }}
+          icon={() => (
+            <Image
+              source={icons.profile}
+              className='w-6 h-6'
+              resizeMode='contain'
+            />
+          )}
+        />
         <View className='mt-5'>
           <DrawerItem
-            label={pl.manu.drawer.logout}
+            label={pl.menu.drawer.logout}
             onPress={handleLogout}
             labelStyle={{
               color: colors.primary.default,
@@ -90,7 +105,7 @@ const DrawerLayout = () => {
         </View>
         <View className='mt-8'>
           <DrawerItem
-            label={pl.manu.drawer.mainPolicy}
+            label={pl.menu.drawer.mainPolicy}
             onPress={() => {
               router.replace('/kgs');
             }}
@@ -107,7 +122,7 @@ const DrawerLayout = () => {
             )}
           />
           <DrawerItem
-            label={pl.manu.drawer.privacyPolicy}
+            label={pl.menu.drawer.privacyPolicy}
             onPress={() => {
               router.replace('/app-terms');
             }}
@@ -127,7 +142,7 @@ const DrawerLayout = () => {
         {user.role!.id < 3 ? (
           <View className='mt-8'>
             <DrawerItem
-              label={pl.manu.drawer.dashboard}
+              label={pl.menu.drawer.dashboard}
               onPress={() => {
                 router.replace('/dashboard');
               }}
