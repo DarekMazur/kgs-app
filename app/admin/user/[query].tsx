@@ -73,6 +73,46 @@ const adminUserEdit = () => {
     }
   }, [data]);
 
+  const handleActive = () => {
+    if (userData) {
+      Alert.alert(
+        `${
+          userData.isActive
+            ? `${pl.admin.user.alert.inactivateUser} ${userData?.username}?`
+            : `${pl.admin.user.alert.activateUser} ${userData?.username}?`
+        }`,
+        '',
+        [
+          {
+            text: pl.admin.user.alert.cancel,
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: pl.admin.user.alert.confirm,
+            onPress: async () => {
+              try {
+                setIsLoading(true);
+                await editUser({
+                  ...userData,
+                  isActive: !userData.isActive,
+                });
+                setValue('user');
+                setUserData({
+                  ...userData,
+                  isActive: !userData.isActive,
+                });
+                setIsLoading(false);
+              } catch (error) {
+                Alert.alert(pl.alert.error, (error as Error).message);
+              }
+            },
+          },
+        ],
+      );
+    }
+  };
+
   // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
     if (
@@ -300,6 +340,19 @@ const adminUserEdit = () => {
         />
         <View className='my-3 z-20'>
           <View className='mb-3 z-20'>
+            <IconButton
+              containerStyles='my-3'
+              isDisabled={userData?.isBanned}
+              icon={
+                userData?.isActive ? icons.suspended : icons.suspendedActive
+              }
+              onPress={handleSuspend}
+              title={
+                userData?.isActive
+                  ? pl.admin.user.inactivate
+                  : pl.admin.user.activate
+              }
+            />
             <IconButton
               containerStyles='my-3'
               isDisabled={

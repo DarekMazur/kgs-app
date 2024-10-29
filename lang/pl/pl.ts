@@ -277,6 +277,8 @@ export default {
       },
       alert: {
         errorSuspend: 'Wybierz czas zawieszenia Użytkownika!',
+        activateUser: 'Czy chcesz aktywować konto Użykownika',
+        inactivateUser: 'Czy chcesz dezaktywować konto Użykownika',
         removeSuspend: 'Czy chcesz zakończyć zawieszenie Użykownika',
         removeBan: 'Czy checsz odblokować Użytkownika',
         suspend: 'Czy chcesz zawiesić Użytkownika',
@@ -296,6 +298,8 @@ export default {
         inactive: 'nieaktywny',
       },
       totalSuspended: 'Łącznie ostrzeżeń (zawieszeń):',
+      activate: 'Aktywuj',
+      inactivate: 'Dezaktywuj',
       roleSave: 'Zapisz nową rolę',
       addSuspension: 'Zawieś Użytkownika',
       removeSuspension: 'Zdejmij zawieszenie',
