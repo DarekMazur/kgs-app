@@ -41,7 +41,7 @@ const DrawerLayout = () => {
         </View>
         <DrawerItem
           label={pl.menu.drawer.home}
-          onPress={() => router.push('/(drawer)/(tabs)')}
+          onPress={() => router.push('/home')}
           labelStyle={{
             color: colors.primary.default,
             fontSize: 18,

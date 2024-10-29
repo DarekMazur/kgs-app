@@ -11,7 +11,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { constants } from '@/constants';
+import { constants, icons } from '@/constants';
 import { pl } from '@/lang';
 import { percentage } from '@/lib/helpers';
 import PostCard from '@/components/PostCard';
@@ -109,7 +109,9 @@ const profileScreen = () => {
             <View className='w-full flex justify-center items-center mt-6 mb-12 px-4'>
               <View className='w-16 h-16 border border-green rounded-lg flex justify-center items-center'>
                 <Image
-                  source={{ uri: user?.avatar }}
+                  source={
+                    user?.avatar ? { uri: user?.avatar } : icons.defaultAvatar
+                  }
                   className='w-[90%] h-[90%] rounded-lg'
                   resizeMode='cover'
                 />

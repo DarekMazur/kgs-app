@@ -77,7 +77,9 @@ const profileEdit = () => {
           <View className='justify-center items-center mt-6 mb-12 px-4'>
             <View className='w-16 h-16 border border-green rounded-lg flex justify-center items-center'>
               <Image
-                source={{ uri: user?.avatar }}
+                source={
+                  user?.avatar ? { uri: user?.avatar } : icons.defaultAvatar
+                }
                 className='w-[90%] h-[90%] rounded-lg'
                 resizeMode='cover'
               />

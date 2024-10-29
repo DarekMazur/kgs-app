@@ -210,7 +210,7 @@ export const handlers = [
             avatar:
               updatedUser.avatar === null
                 ? undefined
-                : (updatedAvatar ?? oldData.avatar),
+                : (updatedUser.avatar ?? oldData.avatar),
             description: updatedUser.description ?? oldData.description,
             isBanned: updatedUser.isBanned ?? oldData.isBanned,
             totalSuspensions:
