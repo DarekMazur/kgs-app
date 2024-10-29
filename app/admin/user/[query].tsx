@@ -77,7 +77,7 @@ const adminUserEdit = () => {
     if (userData) {
       Alert.alert(
         `${
-          userData.isActive
+          userData.isConfirmed
             ? `${pl.admin.user.alert.inactivateUser} ${userData?.username}?`
             : `${pl.admin.user.alert.activateUser} ${userData?.username}?`
         }`,
@@ -95,12 +95,11 @@ const adminUserEdit = () => {
                 setIsLoading(true);
                 await editUser({
                   ...userData,
-                  isActive: !userData.isActive,
+                  isConfirmed: !userData.isConfirmed,
                 });
-                setValue('user');
                 setUserData({
                   ...userData,
-                  isActive: !userData.isActive,
+                  isConfirmed: !userData.isConfirmed,
                 });
                 setIsLoading(false);
               } catch (error) {
@@ -344,11 +343,11 @@ const adminUserEdit = () => {
               containerStyles='my-3'
               isDisabled={userData?.isBanned}
               icon={
-                userData?.isActive ? icons.suspended : icons.suspendedActive
+                userData?.isConfirmed ? icons.suspended : icons.suspendedActive
               }
               onPress={handleActive}
               title={
-                userData?.isActive
+                userData?.isConfirmed
                   ? pl.admin.user.inactivate
                   : pl.admin.user.activate
               }
