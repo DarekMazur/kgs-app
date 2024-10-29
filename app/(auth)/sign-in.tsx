@@ -45,6 +45,7 @@ const signIn = () => {
         );
 
         if (!currentUser.isConfirmed) {
+          router.replace('/no-confirmation');
           return null;
         }
 
