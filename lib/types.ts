@@ -48,7 +48,7 @@ export interface IUserProps extends IRegisterProps {
   id: string | null;
   firstName?: string;
   lastName?: string;
-  avatar?: string;
+  avatar?: string | null;
   registrationDate: number;
   description?: string;
   role: IRoleTypes;

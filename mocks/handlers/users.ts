@@ -207,7 +207,10 @@ export const handlers = [
             password: updatedUser.password ? hashedPassword : oldData.password,
             firstName: updatedUser.firstName ?? oldData.firstName,
             lastName: updatedUser.lastName ?? oldData.lastName,
-            avatar: updatedUser.avatar ?? oldData.avatar,
+            avatar:
+              updatedUser.avatar === null
+                ? undefined
+                : (updatedAvatar ?? oldData.avatar),
             description: updatedUser.description ?? oldData.description,
             isBanned: updatedUser.isBanned ?? oldData.isBanned,
             totalSuspensions:

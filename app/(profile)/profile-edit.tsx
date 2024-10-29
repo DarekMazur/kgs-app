@@ -48,7 +48,7 @@ const profileEdit = () => {
   const handleRemoveAvatar = () => {
     setEditedUser({
       ...editedUser,
-      avatar: undefined,
+      avatar: null,
     });
   };
 
