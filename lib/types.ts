@@ -6,6 +6,14 @@ export interface IRoleTypes {
   type: string;
 }
 
+export interface IMessageTypes {
+  id: number;
+  priority: number;
+  message: string;
+  sendTime: Date;
+  openedTime: Date | null;
+}
+
 export interface ISignInProps {
   email: string | null;
   password: string | null;
@@ -57,6 +65,7 @@ export interface IUserProps extends IRegisterProps {
   suspensionTimeout: Date | undefined;
   totalSuspensions: number;
   isConfirmed: boolean;
+  messages: IMessageTypes[];
 }
 
 export interface ITabIconProps {
