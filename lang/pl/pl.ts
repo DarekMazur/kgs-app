@@ -50,6 +50,11 @@ export default {
       resend: 'Uzyskaj nowy kod aktywacyjny',
       back: 'Wróc',
     },
+    landing: {
+      title: 'Konto utworzone!',
+      message:
+        'Na adres email, podany przy rejestracji otrzymasz wiadomość z linkiem aktywacyjnym. Jeśli nie zobaczysz jej w ciągu najbliższych kilkunastu minut sprawdź folder span w swojej poczcie.',
+    },
   },
   index: {
     header: {
