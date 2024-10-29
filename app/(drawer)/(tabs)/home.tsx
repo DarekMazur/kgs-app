@@ -15,6 +15,7 @@ import Footer from '@/components/Footer';
 import ScreenHeader from '@/components/ScreenHeader';
 import Header from '@/components/Header';
 import { constants } from '@/constants';
+import { pl } from '@/lang';
 
 const greetings = (user: IUserProps) => {
   if (user.firstName || user.lastName) {
