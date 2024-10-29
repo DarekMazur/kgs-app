@@ -259,6 +259,7 @@ const adminUserEdit = () => {
                   : null}
               </Text>
             ) : null}
+            <Text className='text-primary mb-3'>{`${pl.admin.user.active.title} ${userData.isConfirmed ? pl.admin.user.active.active : pl.admin.user.active.inactive}`}</Text>
             <Text className='text-primary mb-3'>{`${pl.admin.user.totalSuspended} ${userData.totalSuspensions}`}</Text>
             {userData.posts?.map((post) => (
               <TouchableOpacity

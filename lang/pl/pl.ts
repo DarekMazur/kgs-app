@@ -290,6 +290,11 @@ export default {
       banned: 'Konto zablokowane',
       registered: 'Zarejestrowany:',
       suspend: 'Konto zawieszone do',
+      active: {
+        title: 'Użytkownik',
+        active: `aktywny`,
+        inactive: 'nieaktywny',
+      },
       totalSuspended: 'Łącznie ostrzeżeń (zawieszeń):',
       roleSave: 'Zapisz nową rolę',
       addSuspension: 'Zawieś Użytkownika',
