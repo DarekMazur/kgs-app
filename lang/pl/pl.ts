@@ -7,7 +7,7 @@ export default {
     cancel: 'Anuluj',
     login: 'Zaloguj się na swoje konto',
   },
-  sing: {
+  sign: {
     in: {
       alert: {
         missingData: 'Podaj dane logowania!',
@@ -41,6 +41,19 @@ export default {
       },
       registered: 'Masz już konto?',
       login: 'Zaloguj się',
+    },
+    confirm: {
+      title: 'Konto nieaktywne',
+      message:
+        'Sprawdź podany przy rejestracji adres email i kliknij w link aktywacyjny.',
+      spam: 'Jeśli nie widzisz wiadomości, sprawdź w spamie.',
+      resend: 'Uzyskaj nowy kod aktywacyjny',
+      back: 'Wróc',
+    },
+    landing: {
+      title: 'Konto utworzone!',
+      message:
+        'Na adres email, podany przy rejestracji otrzymasz wiadomość z linkiem aktywacyjnym. Jeśli nie zobaczysz jej w ciągu najbliższych kilkunastu minut sprawdź folder span w swojej poczcie.',
     },
   },
   index: {

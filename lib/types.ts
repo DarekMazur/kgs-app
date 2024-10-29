@@ -56,6 +56,7 @@ export interface IUserProps extends IRegisterProps {
   isBanned: boolean;
   suspensionTimeout: Date | undefined;
   totalSuspensions: number;
+  isConfirmed: boolean;
 }
 
 export interface ITabIconProps {

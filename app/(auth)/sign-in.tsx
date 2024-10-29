@@ -9,7 +9,7 @@ import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { ISignInProps } from '@/lib/types';
 import { logIn } from '@/lib/getDataFromApi';
-import { pl } from '../lang';
+import { pl } from '@/lang';
 
 const initUser: ISignInProps = {
   email: null,
@@ -35,6 +35,7 @@ const signIn = () => {
     }
   };
 
+  // eslint-disable-next-line consistent-return
   const handleSubmit = async () => {
     if (loggedUser.email && loggedUser.password) {
       try {
@@ -42,6 +43,11 @@ const signIn = () => {
           loggedUser.email.toLowerCase(),
           loggedUser.password,
         );
+
+        if (!currentUser.isConfirmed) {
+          return null;
+        }
+
         storeData(process.env.EXPO_PUBLIC_JWT as string);
         setGlobalUser(currentUser);
 
@@ -50,7 +56,7 @@ const signIn = () => {
         Alert.alert(pl.alert.error, (err as Error).message);
       }
     } else {
-      Alert.alert(pl.alert.alert, pl.sing.in.alert.missingData);
+      Alert.alert(pl.alert.warning, pl.sign.in.alert.missingData);
     }
   };
 
@@ -66,14 +72,14 @@ const signIn = () => {
             />
           </View>
 
-          <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
-            {pl.sing.in.header}
+          <Text className='text-2xl font-mtsemibold text-white mt-10'>
+            {pl.sign.in.header}
           </Text>
 
           <View className='my-2 pb-4 relative'>
             <InputCustom
-              placeholder={pl.sing.in.form.email}
-              title={pl.sing.in.form.email}
+              placeholder={pl.sign.in.form.email}
+              title={pl.sign.in.form.email}
               value={loggedUser.email ?? ''}
               handleOnChange={(e: string) =>
                 setLoggedUser({ ...loggedUser, email: e })
@@ -83,9 +89,9 @@ const signIn = () => {
             />
 
             <InputCustom
-              placeholder={pl.sing.in.form.password}
+              placeholder={pl.sign.in.form.password}
               value={loggedUser.password ?? ''}
-              title={pl.sing.in.form.password}
+              title={pl.sign.in.form.password}
               handleOnChange={(e: string) =>
                 setLoggedUser({ ...loggedUser, password: e })
               }
@@ -94,7 +100,7 @@ const signIn = () => {
           </View>
 
           <ButtonCustom
-            title={pl.sing.in.form.submit}
+            title={pl.sign.in.form.submit}
             handlePress={handleSubmit}
             containerStyles='mt-7'
             isLoading={false}
@@ -103,7 +109,7 @@ const signIn = () => {
 
           <View className='flex justify-center mt-5 flex-row gap-2'>
             <Text className='text-lg text-gray-100 font-pregular'>
-              {pl.sign.in.noAccaout}
+              {pl.sign.in.noAccount}
             </Text>
             <Link
               href='./sign-up'

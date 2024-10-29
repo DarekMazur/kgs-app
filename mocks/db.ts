@@ -53,6 +53,7 @@ export const db = factory({
     isBanned: () => faker.datatype.boolean({ probability: 0 }),
     suspensionTimeout: () => faker.date.future(),
     totalSuspensions: () => 0,
+    isConfirmed: () => faker.datatype.boolean({ probability: 0 }),
     posts: manyOf('post'),
     role: oneOf('role'),
   },

@@ -16,7 +16,7 @@ import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 import { IRegisterProps } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
-import { pl } from '../lang';
+import { pl } from '@/lang';
 
 const signUp = () => {
   const { user } = useGlobalContext();
@@ -32,7 +32,7 @@ const signUp = () => {
   const handleSubmit = async () => {
     if (newUser.username && newUser.email && newUser.password) {
       if (!isChecked) {
-        Alert.alert(pl.alert.error, pl.sing.up.alert.privacyConsent);
+        Alert.alert(pl.alert.error, pl.sign.up.alert.privacyConsent);
         return;
       }
       if (!schema.emailRegex.test(newUser.email)) {
@@ -71,7 +71,7 @@ const signUp = () => {
             />
           </View>
 
-          <Text className='text-2xl font-semibold text-white mt-10 font-psemibold'>
+          <Text className='text-2xl text-white mt-10 font-mtemibold'>
             {pl.sign.up.header}
           </Text>
 

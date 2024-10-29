@@ -57,6 +57,7 @@ const createUsers = () => {
     username: 'TestModerator',
     registrationDate: demoModRegistrationTime,
     suspensionTimeout: undefined,
+    isConfirmed: faker.datatype.boolean({ probability: 0.8 }),
   });
   for (let i = 0; i < faker.number.int({ min: 55, max: 70 }); i += 1) {
     db.user.create({
@@ -175,6 +176,7 @@ const updateDemoUser = async () => {
       data: {
         password: hashedPassword,
         suspensionTimeout: undefined,
+        isConfirmed: true,
         role: db.role.findFirst({
           where: {
             id: {
@@ -198,6 +200,7 @@ const updateDemoUser = async () => {
       data: {
         password: hashedPassword,
         suspensionTimeout: undefined,
+        isConfirmed: true,
         role: db.role.findFirst({
           where: {
             id: {
@@ -221,6 +224,7 @@ const updateDemoUser = async () => {
       data: {
         suspensionTimeout: undefined,
         password: hashedPassword,
+        isConfirmed: true,
         role: db.role.findFirst({
           where: {
             id: {
@@ -258,6 +262,7 @@ const createDemoUsersWithAllPeaks = async () => {
     firstName: demoUserFirstName,
     avatar: demoUserAvatar,
     suspensionTimeout: undefined,
+    isConfirmed: true,
   });
 
   for (let i = 0; i < peaks.length; i += 1) {
@@ -285,6 +290,7 @@ const createDemoUsersWithAllPeaks = async () => {
         ? faker.date.recent().getTime()
         : faker.date.past().getTime(),
     suspensionTimeout: undefined,
+    isConfirmed: true,
     posts: db.post.findMany({
       where: {
         author: {
@@ -310,6 +316,7 @@ const updateUsersWithNoRole = () => {
         },
       },
       data: {
+        isConfirmed: true,
         suspensionTimeout: undefined,
         role: roles[faker.number.int({ min: 0, max: roles.length - 1 })] as any, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
