@@ -14,6 +14,7 @@ import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
 import IconButton from '@/components/IconButton';
 import { pl } from '@/lang';
+import inactiveDefault from '@/assets/icons/inactiveDefault.png';
 
 const initFormBox = {
   isInTeam: true,
@@ -120,9 +121,16 @@ const usersPanel = () => {
                     >
                       {`${index + 1}. ${(item as IUserProps).username}`}
                     </Text>
-                    {constants.suspensionConditions(item.suspensionTimeout) ? (
+                    {constants.suspensionConditions(item.suspensionTimeout) ||
+                    !item.isConfirmed ? (
                       <Image
                         source={icons.suspended}
+                        className='w-5 h-5'
+                        resizeMode='contain'
+                      />
+                    ) : !item.isConfirmed ? (
+                      <Image
+                        source={icons.inactiveDefault}
                         className='w-5 h-5'
                         resizeMode='contain'
                       />

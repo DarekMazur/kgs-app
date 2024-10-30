@@ -16,7 +16,7 @@ const AuthLayout = () => {
         }}
       />
       <Stack.Screen
-        name='co-confirmation'
+        name='no-confirmation'
         options={{
           headerShown: false,
         }}

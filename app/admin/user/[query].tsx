@@ -77,7 +77,7 @@ const adminUserEdit = () => {
     if (userData) {
       Alert.alert(
         `${
-          userData.isActive
+          userData.isConfirmed
             ? `${pl.admin.user.alert.inactivateUser} ${userData?.username}?`
             : `${pl.admin.user.alert.activateUser} ${userData?.username}?`
         }`,
@@ -95,12 +95,11 @@ const adminUserEdit = () => {
                 setIsLoading(true);
                 await editUser({
                   ...userData,
-                  isActive: !userData.isActive,
+                  isConfirmed: !userData.isConfirmed,
                 });
-                setValue('user');
                 setUserData({
                   ...userData,
-                  isActive: !userData.isActive,
+                  isConfirmed: !userData.isConfirmed,
                 });
                 setIsLoading(false);
               } catch (error) {
@@ -285,12 +284,16 @@ const adminUserEdit = () => {
                 </Text>
               ) : null}
               <Image
-                source={{ uri: userData.avatar }}
+                source={
+                  userData.avatar
+                    ? { uri: userData.avatar }
+                    : icons.defaultAvatar
+                }
                 className='w-[200px] h-[200px] my-4 rounded-lg self-center'
                 resizeMode='cover'
               />
             </View>
-            <Text className='text-primary mb-3'>{userData.description}</Text>
+            <Text className='text-primary mb-7'>{userData.description}</Text>
             <Text className='text-primary mb-3'>{`${pl.admin.user.registered} ${formatDate(new Date(userData.registrationDate))}`}</Text>
             {constants.suspensionConditions(userData.suspensionTimeout) ? (
               <Text className='text-red mb-3'>
@@ -299,7 +302,9 @@ const adminUserEdit = () => {
                   : null}
               </Text>
             ) : null}
-            <Text className='text-primary mb-3'>{`${pl.admin.user.active.title} ${userData.isConfirmed ? pl.admin.user.active.active : pl.admin.user.active.inactive}`}</Text>
+            <Text
+              className={`text-${userData.isConfirmed ? 'primary' : 'red'} mb-3`}
+            >{`${pl.admin.user.active.title} ${userData.isConfirmed ? pl.admin.user.active.active : pl.admin.user.active.inactive}`}</Text>
             <Text className='text-primary mb-3'>{`${pl.admin.user.totalSuspended} ${userData.totalSuspensions}`}</Text>
             {userData.posts?.map((post) => (
               <TouchableOpacity
@@ -343,12 +348,10 @@ const adminUserEdit = () => {
             <IconButton
               containerStyles='my-3'
               isDisabled={userData?.isBanned}
-              icon={
-                userData?.isActive ? icons.suspended : icons.suspendedActive
-              }
-              onPress={handleSuspend}
+              icon={userData?.isConfirmed ? icons.inactive : icons.active}
+              onPress={handleActive}
               title={
-                userData?.isActive
+                userData?.isConfirmed
                   ? pl.admin.user.inactivate
                   : pl.admin.user.activate
               }
