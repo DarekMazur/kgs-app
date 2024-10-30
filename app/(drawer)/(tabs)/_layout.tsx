@@ -28,6 +28,8 @@ const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
 const TabLayout = () => {
   const { user } = useGlobalContext();
 
+  const unreadMessages = user.messages.filter((message) => !message.openedTime);
+
   return (
     <Tabs
       screenOptions={{
@@ -91,7 +93,8 @@ const TabLayout = () => {
       <Tabs.Screen
         name='messages'
         options={{
-          tabBarBadge: user.messages ? user.messages.length : 0,
+          tabBarBadge:
+            unreadMessages.length > 0 ? unreadMessages.length : undefined,
           tabBarLabel: pl.menu.tabs.messages,
           title: pl.menu.tabs.messages,
           tabBarIcon: ({ color, focused }) => (
