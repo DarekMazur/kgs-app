@@ -11,6 +11,8 @@ export const initNewUser: IUserProps = {
   suspensionTimeout: undefined,
   totalSuspensions: 0,
   role: { id: 3, name: 'User', type: 'user' },
+  isConfirmed: false,
+  messages: [],
 };
 
 const initialContext = {

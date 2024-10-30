@@ -7,8 +7,9 @@ export interface IRoleTypes {
 }
 
 export interface IMessageTypes {
-  id: number;
+  id: string;
   priority: number;
+  header: string;
   message: string;
   sendTime: Date;
   openedTime: Date | null;

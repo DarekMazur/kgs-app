@@ -180,15 +180,15 @@ export default {
   menu: {
     tabs: {
       home: 'Główna',
-      profile: 'Profil',
       peaks: 'Szczyty',
       ranking: 'Zdobywcy',
       add: 'Nowy',
+      messages: 'Poczta',
     },
     drawer: {
-      home: 'Główna',
+      profile: 'Profil',
       add: 'Dodaj wpis',
-      profile: 'Edytuj profil',
+      profileEdit: 'Edytuj profil',
       logout: 'Wyloguj',
       mainPolicy: 'Regulamin odznaki',
       privacyPolicy: 'Polityka prywatności',

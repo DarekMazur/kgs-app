@@ -63,7 +63,7 @@ export const home = () => {
         style: 'cancel',
       },
       {
-        text: p.alert.confirm,
+        text: pl.alert.confirm,
         onPress: async () => {
           try {
             await deletePost(id).then(onRefresh);
