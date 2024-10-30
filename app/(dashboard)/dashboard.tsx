@@ -86,7 +86,17 @@ const dashboard = () => {
               <Text className='text-primary'>
                 {pl.admin.dashboard.latestUser}{' '}
               </Text>
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity
+                onPress={() =>
+                  router.push(
+                    `/admin/user/${
+                      (users as IUserProps[]).sort(
+                        (a, b) => b.registrationDate! - a.registrationDate!,
+                      )[0].id
+                    }`,
+                  )
+                }
+              >
                 <Text className='text-secondary font-mtblack'>
                   {
                     (users as IUserProps[]).sort(
@@ -98,7 +108,7 @@ const dashboard = () => {
             </View>
             <IconButton
               icon={icons.defaultAvatar}
-              onPress={() => {}}
+              onPress={() => router.push('/users')}
               title={pl.admin.dashboard.button.showAll}
             />
           </>
@@ -130,25 +140,23 @@ const dashboard = () => {
               <Text className='text-primary'>
                 {pl.admin.dashboard.latestPost}
               </Text>
-              <TouchableOpacity onPress={() => {}}>
-                <Text className='text-secondary font-mtblack'>
-                  {
-                    (posts as IPostsProps[]).sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime(),
-                    )[0].peak!.name
-                  }{' '}
-                  {pl.admin.dashboard.addedBy}{' '}
-                  {
-                    (posts as IPostsProps[]).sort(
-                      (a, b) =>
-                        new Date(b.createdAt).getTime() -
-                        new Date(a.createdAt).getTime(),
-                    )[0].author.username
-                  }
-                </Text>
-              </TouchableOpacity>
+              <Text className='text-secondary font-mtblack'>
+                {
+                  (posts as IPostsProps[]).sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime(),
+                  )[0].peak!.name
+                }{' '}
+                {pl.admin.dashboard.addedBy}{' '}
+                {
+                  (posts as IPostsProps[]).sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() -
+                      new Date(a.createdAt).getTime(),
+                  )[0].author.username
+                }
+              </Text>
             </View>
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-red font-mtblack'>
@@ -168,7 +176,7 @@ const dashboard = () => {
         ) : null}
         {!usersLoading && users ? (
           <>
-            <View className='flex-wrap flex-row gap-1.5 mt-7'>
+            <View className='flex-wrap flex-row gap-1.5 mt-3'>
               <Text className='text-red font-mtblack'>
                 {
                   (users as IUserProps[]).filter((user) =>
@@ -180,12 +188,7 @@ const dashboard = () => {
                 {pl.admin.dashboard.suspended}
               </Text>
             </View>
-            <IconButton
-              icon={icons.suspended}
-              onPress={() => {}}
-              title='Zobacz wszystkich'
-            />
-            <View className='flex-wrap flex-row gap-1.5 mt-7'>
+            <View className='flex-wrap flex-row gap-1.5 mt-5'>
               <Text className='text-red font-mtblack'>
                 {(users as IUserProps[]).filter((user) => user.isBanned).length}
               </Text>
@@ -193,7 +196,7 @@ const dashboard = () => {
             </View>
             <IconButton
               icon={icons.banned}
-              onPress={() => {}}
+              onPress={() => router.push('/users')}
               title='Zobacz wszystkich'
             />
           </>
@@ -222,7 +225,7 @@ const dashboard = () => {
             </View>
             <IconButton
               icon={icons.appTeam}
-              onPress={() => {}}
+              onPress={() => router.push('/team')}
               title={pl.admin.dashboard.button.showAll}
             />
           </>

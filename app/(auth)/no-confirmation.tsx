@@ -6,9 +6,9 @@ import { pl } from '@/lang';
 
 const noConfirmation = () => {
   return (
-    <SafeAreaView className='bg-primaryBG h-full'>
+    <SafeAreaView className='bg-primaryBG h-full p-6'>
       <View>
-        <Text className='text-2xl font-mtsemibold text-white mt-5'>
+        <Text className='text-3xl font-mtsemibold text-secondary mt-5'>
           {pl.sign.confirm.title}
         </Text>
         <Text className='font-mtsemibold text-white mt-10'>
@@ -18,12 +18,16 @@ const noConfirmation = () => {
           {pl.sign.confirm.spam}
         </Text>
       </View>
-      <View>
-        <ButtonCustom title={pl.sign.confirm.resend} handlePress={() => {}} />
+      <View className='items-center'>
+        <ButtonCustom
+          title={pl.sign.confirm.resend}
+          handlePress={() => {}}
+          containerStyles='w-[80%] mt-8 p-2'
+        />
         <ButtonCustom
           title={pl.sign.confirm.back}
           handlePress={() => router.push('/sign-in')}
-          containerStyles='my-7'
+          containerStyles='w-[80%] my-7 bg-orange-600'
         />
       </View>
     </SafeAreaView>
