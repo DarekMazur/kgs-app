@@ -284,7 +284,11 @@ const adminUserEdit = () => {
                 </Text>
               ) : null}
               <Image
-                source={{ uri: userData.avatar }}
+                source={
+                  userData.avatar
+                    ? { uri: userData.avatar }
+                    : icons.defaultAvatar
+                }
                 className='w-[200px] h-[200px] my-4 rounded-lg self-center'
                 resizeMode='cover'
               />
