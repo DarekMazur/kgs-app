@@ -33,12 +33,12 @@ const IconButton: FC<IIconButtonProps> = ({
     >
       <Image
         source={icon}
-        className={`h-8 w-8 ${iconStyle}`}
+        className={`h-8 w-8 ${iconStyle} ${isDisabled ? 'opacity-30' : ''}`}
         resizeMode='contain'
       />
       {title ? (
         <Text
-          className={`text-${isDisabled ? 'gray-100' : (color ?? 'secondary')} font-mtblack`}
+          className={`text-${isDisabled ? 'gray-200' : (color ?? 'secondary')} font-mtblack`}
         >
           {title}
         </Text>
