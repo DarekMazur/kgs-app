@@ -31,7 +31,7 @@ const DrawerLayout = () => {
       <DrawerContentScrollView style={{ backgroundColor: colors.primaryBG }}>
         <View className='my-3 mb-6'>
           <Image
-            source={{ uri: user.avatar }}
+            source={user.avatar ? { uri: user.avatar } : icons.defaultAvatar}
             className='w-[130px] h-[130px] rounded-full self-center'
             resizeMode='cover'
           />
