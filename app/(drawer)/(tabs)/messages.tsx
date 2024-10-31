@@ -8,9 +8,10 @@ import Header from '@/components/Header';
 import { currentUser, editUser } from '@/lib/getDataFromApi';
 import { pl } from '@/lang';
 import { formatDate } from '@/lib/helpers';
+import { IMessageTypes, IUserProps } from '@/lib/types';
 
 const Messages = () => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<IUserProps | undefined>();
 
   const getData = async () => {
     try {
@@ -34,23 +35,25 @@ const Messages = () => {
     getData();
   }, []);
 
-  const messageAlert = async (message) => {
+  const messageAlert = async (message: IMessageTypes) => {
     Alert.alert(pl.alert.warning, message.message);
 
-    await editUser({
-      ...user,
-      messages: [
-        ...user.messages.filter((item) => item.id !== message.id),
-        {
-          id: message.id,
-          priority: message.priority,
-          header: message.header,
-          message: message.message,
-          sendTime: message.sendTime,
-          openedTime: new Date(Date.now()),
-        },
-      ],
-    });
+    if (user) {
+      await editUser({
+        ...user,
+        messages: [
+          ...user.messages.filter((item) => item.id !== message.id),
+          {
+            id: message.id,
+            priority: message.priority,
+            header: message.header,
+            message: message.message,
+            sendTime: message.sendTime,
+            openedTime: new Date(Date.now()),
+          },
+        ],
+      });
+    }
   };
 
   return (
