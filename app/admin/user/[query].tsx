@@ -41,7 +41,7 @@ const suspendTime = [
 ];
 
 const adminUserEdit = () => {
-  const { user } = useGlobalContext();
+  const { user, setGlobalUser } = useGlobalContext();
   const { query } = useLocalSearchParams();
   const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
   const { data, loading } = useApi(() => getSingleUser(query as string));
@@ -141,10 +141,10 @@ const adminUserEdit = () => {
                   Date.now() +
                     constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
-                await editUser({
+                const newUserData = {
                   ...user,
                   messages: [
-                    ...userData.messages,
+                    ...user.messages,
                     {
                       id: uuid.v4() as string,
                       priority: 3,
@@ -157,7 +157,9 @@ const adminUserEdit = () => {
                       openedTime: null,
                     },
                   ],
-                });
+                };
+                await editUser(newUserData);
+                setGlobalUser(newUserData);
                 await editUser({
                   ...userData,
                   messages: [
