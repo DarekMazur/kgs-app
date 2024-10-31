@@ -13,6 +13,7 @@ import DropDownPicker, {
   ItemType,
   ValueType,
 } from 'react-native-dropdown-picker';
+import uuid from 'react-native-uuid';
 import useApi from '@/hooks/useApi';
 import { editUser, getAllRoles, getSingleUser } from '@/lib/getDataFromApi';
 import { IRoleTypes, IUserProps } from '@/lib/types';
@@ -114,16 +115,16 @@ const adminUserEdit = () => {
 
   // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
-    if (
-      !suspendValue &&
-      !constants.suspensionConditions(userData?.suspensionTimeout)
-    ) {
+    const isSuspended = constants.suspensionConditions(
+      userData?.suspensionTimeout,
+    );
+    if (!suspendValue && !isSuspended) {
       Alert.alert(pl.alert.error, pl.admin.user.alert.errorSuspend);
       return false;
     }
     if (userData) {
       Alert.alert(
-        `${constants.suspensionConditions(userData.suspensionTimeout) ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
+        `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
         '',
         [
           {
@@ -141,7 +142,38 @@ const adminUserEdit = () => {
                     constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
                 await editUser({
+                  ...user,
+                  messages: [
+                    ...userData.messages,
+                    {
+                      id: uuid.v4() as string,
+                      priority: 3,
+                      header: isSuspended
+                        ? 'Zawieszenie konta anulowane'
+                        : 'Konto zostało zawieszone',
+                      message: `Konto Użytkownika ${userData.username} zostało ${isSuspended ? 'odwieszone' : 'zawieszone'}.
+                      ${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`,
+                      sendTime: new Date(Date.now()),
+                      openedTime: null,
+                    },
+                  ],
+                });
+                await editUser({
                   ...userData,
+                  messages: [
+                    ...userData.messages,
+                    {
+                      id: uuid.v4() as string,
+                      priority: 3,
+                      header: isSuspended
+                        ? 'Zawieszenie konta anulowane'
+                        : 'Konto zostało zawieszone',
+                      message: `Twoje konto zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} przez ${user.username}.
+                      ${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`,
+                      sendTime: new Date(Date.now()),
+                      openedTime: null,
+                    },
+                  ],
                   totalSuspensions: constants.suspensionConditions(
                     userData.suspensionTimeout,
                   )

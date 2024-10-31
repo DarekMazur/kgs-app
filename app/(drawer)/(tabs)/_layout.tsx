@@ -1,10 +1,12 @@
 import { Tabs } from 'expo-router';
-import { View, Image, Text } from 'react-native';
-import { FC } from 'react';
+import { View, Image, Text, Alert } from 'react-native';
+import { FC, useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors, constants, icons } from '@/constants';
-import { ITabIconProps } from '@/lib/types';
+import { ITabIconProps, IUserProps } from '@/lib/types';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { pl } from '@/lang';
+import { currentUser } from '@/lib/getDataFromApi';
 
 const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
   return (
@@ -27,8 +29,38 @@ const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
 
 const TabLayout = () => {
   const { user } = useGlobalContext();
+  const [liveUpdateUser, setLiveUpdateUser] = useState<IUserProps>();
+  const [unreadMessages, setUnreadMessages] = useState<number>(0);
 
-  const unreadMessages = user.messages.filter((message) => !message.openedTime);
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('jwt');
+      if (value !== null) {
+        try {
+          const current = await currentUser(value as string);
+          setLiveUpdateUser(current);
+          return false;
+        } catch (err) {
+          Alert.alert(pl.alert.error, (err as Error).message);
+        }
+      }
+      return false;
+    } catch (e) {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (liveUpdateUser) {
+      setUnreadMessages(
+        liveUpdateUser.messages.filter((message) => !message.openedTime).length,
+      );
+    }
+  }, [liveUpdateUser]);
 
   return (
     <Tabs
@@ -93,8 +125,7 @@ const TabLayout = () => {
       <Tabs.Screen
         name='messages'
         options={{
-          tabBarBadge:
-            unreadMessages.length > 0 ? unreadMessages.length : undefined,
+          tabBarBadge: unreadMessages > 0 ? unreadMessages : undefined,
           tabBarLabel: pl.menu.tabs.messages,
           title: pl.menu.tabs.messages,
           tabBarIcon: ({ color, focused }) => (
