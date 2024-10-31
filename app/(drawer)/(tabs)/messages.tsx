@@ -47,12 +47,12 @@ const Messages = () => {
           )}
           ListHeaderComponent={() => (
             <View>
-              <Text>Messages</Text>
+              <Text>{pl.messages.title}</Text>
             </View>
           )}
           ListEmptyComponent={() => (
             <View>
-              <Text>No messages</Text>
+              <Text>{pl.messages.empty}</Text>
             </View>
           )}
         />

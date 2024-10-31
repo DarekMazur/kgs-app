@@ -177,6 +177,11 @@ export default {
       subtitle: 'Wyrusz na szlak i bądź pierwszy!',
     },
   },
+  messages: {
+    title: 'Wiadomości',
+    unread: 'Nieprzeczytane',
+    empty: 'Brak wiadomości',
+  },
   menu: {
     tabs: {
       home: 'Główna',
