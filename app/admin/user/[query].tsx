@@ -147,7 +147,7 @@ const adminUserEdit = () => {
                     ...user.messages,
                     {
                       id: uuid.v4() as string,
-                      priority: 3,
+                      priority: 2,
                       header: isSuspended
                         ? 'Zawieszenie konta anulowane'
                         : 'Konto zostało zawieszone',

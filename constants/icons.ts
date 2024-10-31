@@ -39,6 +39,7 @@ import inactiveDefault from '../assets/icons/inactiveDefault.png';
 import active from '../assets/icons/active.png';
 import editUser from '../assets/icons/editUser.png';
 import envelope from '../assets/icons/envelope.png';
+import envelopeOpen from '../assets/icons/envelopeOpen.png';
 
 export default {
   home,
@@ -82,4 +83,5 @@ export default {
   inactiveDefault,
   editUser,
   envelope,
+  envelopeOpen,
 };
