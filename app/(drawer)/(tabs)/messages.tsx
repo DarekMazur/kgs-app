@@ -1,53 +1,67 @@
 import { View, Text, FlatList, Alert, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useState } from 'react';
 import Header from '@/components/Header';
-import { editUser } from '@/lib/getDataFromApi';
 import { pl } from '@/lang';
 import { IMessageTypes } from '@/lib/types';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
-import { formatDate } from '@/lib/helpers';
+import MessageModal from '@/components/MessageModal';
 
 const Messages = () => {
-  const { user, setGlobalUser } = useGlobalContext();
+  const { user } = useGlobalContext();
+  const [currentMessage, setCurrentMessage] = useState<
+    IMessageTypes | undefined
+  >();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const messageAlert = async (message: IMessageTypes) => {
-    const userUpdatedData = {
-      ...user,
-      messages: [
-        ...user.messages.filter((item) => item.id !== message.id),
-        {
-          id: message.id,
-          priority: message.priority,
-          header: message.header,
-          message: message.message,
-          sendTime: message.sendTime,
-          openedTime: new Date(Date.now()),
-        },
-      ],
-    };
-    Alert.alert(
-      `Wiadomość z ${'\n'}${formatDate(new Date(message.sendTime))}`,
-      message.message,
-    );
-
-    if (user) {
-      await editUser(userUpdatedData);
-      setGlobalUser(userUpdatedData);
-    }
-  };
+  // const messageAlert = async (message: IMessageTypes) => {
+  //   const userUpdatedData = {
+  //     ...user,
+  //     messages: [
+  //       ...user.messages.filter((item) => item.id !== message.id),
+  //       {
+  //         id: message.id,
+  //         priority: message.priority,
+  //         header: message.header,
+  //         message: message.message,
+  //         sendTime: message.sendTime,
+  //         openedTime: new Date(Date.now()),
+  //       },
+  //     ],
+  //   };
+  //   Alert.alert(
+  //     `Wiadomość z ${'\n'}${formatDate(new Date(message.sendTime))}`,
+  //     message.message,
+  //   );
+  //
+  //   if (user) {
+  //     await editUser(userUpdatedData);
+  //     setGlobalUser(userUpdatedData);
+  //   }
+  // };
 
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full px-4 py-2'>
       <Header />
+      {currentMessage ? (
+        <MessageModal
+          message={currentMessage}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      ) : null}
       {user ? (
         <FlatList
           data={user.messages}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => messageAlert(item)}
+              onPress={() => {
+                setCurrentMessage(item);
+                setIsModalOpen(true);
+              }}
               className='my-2 flex-row items-start gap-2'
             >
               <Image
