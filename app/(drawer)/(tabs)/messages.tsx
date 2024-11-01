@@ -7,6 +7,7 @@ import { pl } from '@/lang';
 import { IMessageTypes } from '@/lib/types';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
+import { formatDate } from '@/lib/helpers';
 
 const Messages = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -26,7 +27,10 @@ const Messages = () => {
         },
       ],
     };
-    Alert.alert(pl.alert.warning, message.message);
+    Alert.alert(
+      `Wiadomość z ${'\n'}${formatDate(new Date(message.sendTime))}`,
+      message.message,
+    );
 
     if (user) {
       await editUser(userUpdatedData);
@@ -44,15 +48,15 @@ const Messages = () => {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => messageAlert(item)}
-              className='my-2 flex-row items-center gap-2'
+              className='my-2 flex-row items-start gap-2'
             >
               <Image
                 source={item.openedTime ? icons.envelopeOpen : icons.envelope}
-                className='h-4 w-4'
+                className='pt-6 h-4 w-4'
                 resizeMode='contain'
               />
               <Text
-                className={`font-mtbold text-lg text-${item.priority === 1 ? 'red' : item.priority === 2 ? 'secondary' : 'primary'}`}
+                className={`flex-1 flex-wrap font-mtbold text-lg text-${item.priority === 1 ? 'red' : item.priority === 2 ? 'secondary' : 'primary'}`}
               >
                 {item.header}
               </Text>

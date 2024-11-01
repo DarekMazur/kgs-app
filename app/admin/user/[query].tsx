@@ -136,10 +136,10 @@ const adminUserEdit = () => {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
               try {
+                const now = Date.now();
                 setIsLoading(true);
                 const timeout = new Date(
-                  Date.now() +
-                    constants.fullDayMilliseconds * (suspendValue ?? 1),
+                  now + constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
                 const newUserData = {
                   ...user,
@@ -147,12 +147,11 @@ const adminUserEdit = () => {
                     ...user.messages,
                     {
                       id: uuid.v4() as string,
-                      priority: 2,
+                      priority: 3,
                       header: isSuspended
-                        ? 'Zawieszenie konta anulowane'
-                        : 'Konto zostało zawieszone',
-                      message: `Konto Użytkownika ${userData.username} zostało ${isSuspended ? 'odwieszone' : 'zawieszone'}.
-                      ${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`,
+                        ? `${userData.username} - zawieszenie anulowane`
+                        : `${userData.username} - zawieszenie konta`,
+                      message: `Konto Użytkownika ${userData.username} zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}Blokada zakończy się ${formatDate(timeout)}`}`,
                       sendTime: new Date(Date.now()),
                       openedTime: null,
                     },
