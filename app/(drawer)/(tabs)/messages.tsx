@@ -16,32 +16,6 @@ const Messages = () => {
   >();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  // const messageAlert = async (message: IMessageTypes) => {
-  //   const userUpdatedData = {
-  //     ...user,
-  //     messages: [
-  //       ...user.messages.filter((item) => item.id !== message.id),
-  //       {
-  //         id: message.id,
-  //         priority: message.priority,
-  //         header: message.header,
-  //         message: message.message,
-  //         sendTime: message.sendTime,
-  //         openedTime: new Date(Date.now()),
-  //       },
-  //     ],
-  //   };
-  //   Alert.alert(
-  //     `Wiadomość z ${'\n'}${formatDate(new Date(message.sendTime))}`,
-  //     message.message,
-  //   );
-  //
-  //   if (user) {
-  //     await editUser(userUpdatedData);
-  //     setGlobalUser(userUpdatedData);
-  //   }
-  // };
-
   return (
     <SafeAreaView className='bg-primaryBG text-primary h-full px-4 py-2'>
       <Header />
