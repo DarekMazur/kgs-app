@@ -167,12 +167,12 @@ const adminUserEdit = () => {
         ? pl.admin.user.message.removeSuspended
         : pl.admin.user.message.suspended;
 
-      const message = `${pl.admin.user.message.suspendMessageHeader} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${pl.admin.user.message.suspendMessageHeaderBy} ${user.username}. ${'\n'}${isSuspended ? null : `${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
+      const message = `${pl.admin.user.message.messageHeader} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}. ${'\n'}${isSuspended ? null : `${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
-      const confirmation = `${pl.admin.user.message.suspendMessageConfirmationHeader} ${userData.username} ${pl.admin.user.message.suspendMessageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
+      const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
       Alert.alert(
-        `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
+        `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} ${pl.admin.user.alert.suspendOn} ${suspendValue} ${suspendValue === 1 ? pl.admin.user.alert.suspendDaySingular : pl.admin.user.alert.suspendDayPlural}?`}`,
         '',
         [
           {
@@ -259,9 +259,9 @@ const adminUserEdit = () => {
                 : pl.admin.user.message;
               const banned;
 
-              const message = `Twoje konto zostało ${isBanned ? 'zablokowane' : 'odblokowane'} przez ${user.username}.`;
+              const message = `${pl.admin.user.message.messageHeader} ${isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
-              const confirmation = `Konto Użytkownika ${userData.username} zostało ${isBanend ? 'oblokowane' : 'zablokowane'} ${formatDate(new Date(now))}.`;
+              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isBanend ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(now))}.`;
 
               try {
                 setIsLoading(true);
@@ -321,9 +321,9 @@ const adminUserEdit = () => {
             ? pl.admin.user.message.promotion
             : pl.admin.user.message.degradation;
 
-        const message = `Twoja rola została zmieniona na ${newRole} przez ${user.username}.`;
+        const message = `${pl.admin.user.message.roleMessageHeader} ${newRole} ${pl.admin.user.message.mesageHeaderBy} ${user.username}.`;
 
-        const confirmation = `Rola Użytkownika ${userData.username} została zmeniona na ${newRole} ${formatDate(new Date(now))}.`;
+        const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole} ${formatDate(new Date(now))}.`;
 
         setIsLoading(true);
         await editUser({
