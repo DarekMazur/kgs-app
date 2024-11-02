@@ -74,6 +74,46 @@ const adminUserEdit = () => {
     }
   }, [data]);
 
+  const handleSendMessage = async (
+    action,
+    message,
+    confirmation,
+    username,
+    priority,
+  ) => {
+    const newMessage = {
+      id: uuid.v4() as string,
+      priority,
+      header: action,
+      message,
+      sendTime: new Date(Date.now()),
+      openedTime: null,
+    };
+    const confirmationMessage = {
+      id: uuid.v4() as string,
+      priority,
+      header: `${username} - ${action}`,
+      message: confirmation,
+      sendTime: new Date(Date.now()),
+      openedTime: null,
+    };
+
+    await editUser({
+      ...userData,
+      message: [...userData.messages, message],
+    });
+
+    await editUser({
+      ...user,
+      message: [...user.messages, confirmationMessage],
+    });
+
+    setGlobalUser({
+      ...user,
+      message: [...user.messages, confirmationMessage],
+    });
+  };
+
   const handleActive = () => {
     if (userData) {
       Alert.alert(
@@ -123,6 +163,14 @@ const adminUserEdit = () => {
       return false;
     }
     if (userData) {
+      const action = isSuspended
+        ? 'Zawieszenie anulowane'
+        : 'Zawieszenie konta';
+
+      const message = `Twoje konto zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} przez ${user.username}. ${'\n'}${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`;
+
+      const confirmation = `Konto Użytkownika ${userData.username} zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}Blokada zakończy się ${formatDate(timeout)}`}`;
+
       Alert.alert(
         `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
         '',
@@ -141,40 +189,8 @@ const adminUserEdit = () => {
                 const timeout = new Date(
                   now + constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
-                const newUserData = {
-                  ...user,
-                  messages: [
-                    ...user.messages,
-                    {
-                      id: uuid.v4() as string,
-                      priority: 3,
-                      header: isSuspended
-                        ? `${userData.username} - zawieszenie anulowane`
-                        : `${userData.username} - zawieszenie konta`,
-                      message: `Konto Użytkownika ${userData.username} zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}Blokada zakończy się ${formatDate(timeout)}`}`,
-                      sendTime: new Date(Date.now()),
-                      openedTime: null,
-                    },
-                  ],
-                };
-                await editUser(newUserData);
-                setGlobalUser(newUserData);
                 await editUser({
                   ...userData,
-                  messages: [
-                    ...userData.messages,
-                    {
-                      id: uuid.v4() as string,
-                      priority: 3,
-                      header: isSuspended
-                        ? 'Zawieszenie konta anulowane'
-                        : 'Konto zostało zawieszone',
-                      message: `Twoje konto zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} przez ${user.username}.
-                      ${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`,
-                      sendTime: new Date(Date.now()),
-                      openedTime: null,
-                    },
-                  ],
                   totalSuspensions: constants.suspensionConditions(
                     userData.suspensionTimeout,
                   )
@@ -186,6 +202,15 @@ const adminUserEdit = () => {
                     ? undefined
                     : timeout,
                 });
+
+                await handleSendMessage(
+                  action,
+                  message,
+                  confirmation,
+                  userData?.username,
+                  3,
+                );
+
                 setSuspendValue(null);
                 setUserData({
                   ...userData,
@@ -229,6 +254,14 @@ const adminUserEdit = () => {
           {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
+              const action = isBanned
+                ? 'Odblokowano konto'
+                : 'Konto zablokowane';
+
+              const message = `Twoje konto zostało ${isBanned ? 'zablokowane' : 'odblokowane'} przez ${user.username}.`;
+
+              const confirmation = `Konto Użytkownika ${userData.username} zostało ${isBanend ? 'oblokowane' : 'zablokowane'} ${formatDate(new Date(now))}.`;
+
               try {
                 setIsLoading(true);
                 await editUser({
@@ -240,6 +273,15 @@ const adminUserEdit = () => {
                   )[0],
                 });
                 setValue('user');
+
+                await handleSendMessage(
+                  action,
+                  message,
+                  confirmation,
+                  userData?.username,
+                  3,
+                );
+
                 setUserData({
                   ...userData,
                   suspensionTimeout: undefined,
@@ -269,6 +311,16 @@ const adminUserEdit = () => {
     }
     if (userData) {
       try {
+        const newRole = (rolesData as IRoleTypes[]).filter(
+          (role) => role.type === value,
+        )[0].name;
+
+        const action = userData.role.id > value ? 'Awans' : 'Degradacja';
+
+        const message = `Twoja rola została zmieniona na ${newRole} przez ${user.username}.`;
+
+        const confirmation = `Rola Użytkownika ${userData.username} została zmeniona na ${newRole} ${formatDate(new Date(now))}.`;
+
         setIsLoading(true);
         await editUser({
           ...userData,
@@ -276,6 +328,15 @@ const adminUserEdit = () => {
             (role) => role.type === value,
           )[0],
         });
+
+        await handleSendMessage(
+          action,
+          message,
+          confirmation,
+          userData?.username,
+          3,
+        );
+
         setUserData({
           ...userData,
           role: (rolesData as IRoleTypes[]).filter(
