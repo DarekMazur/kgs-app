@@ -164,8 +164,8 @@ const adminUserEdit = () => {
     }
     if (userData) {
       const action = isSuspended
-        ? 'Zawieszenie anulowane'
-        : 'Zawieszenie konta';
+        ? pl.admin.user.message.removeSuspended
+        : pl.admin.user.message.suspended;
 
       const message = `Twoje konto zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} przez ${user.username}. ${'\n'}${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`;
 
@@ -255,8 +255,9 @@ const adminUserEdit = () => {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
               const action = isBanned
-                ? 'Odblokowano konto'
-                : 'Konto zablokowane';
+                ? pl.admin.user.message.removeBan
+                : pl.admin.user.message;
+              const banned;
 
               const message = `Twoje konto zostało ${isBanned ? 'zablokowane' : 'odblokowane'} przez ${user.username}.`;
 
@@ -315,7 +316,10 @@ const adminUserEdit = () => {
           (role) => role.type === value,
         )[0].name;
 
-        const action = userData.role.id > value ? 'Awans' : 'Degradacja';
+        const action =
+          userData.role.id > value
+            ? pl.admin.user.message.promotion
+            : pl.admin.user.message.degradation;
 
         const message = `Twoja rola została zmieniona na ${newRole} przez ${user.username}.`;
 
