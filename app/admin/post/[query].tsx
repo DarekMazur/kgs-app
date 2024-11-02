@@ -61,7 +61,7 @@ const adminPostEdit = () => {
   };
 
   const handleSuspend = () => {
-    if (postData && user.role.id === 1) {
+    if (postData && user.role.id <= 1) {
       Alert.alert(
         `${postData?.author.isSuspended ? `${pl.admin.post.alert.removeSuspend}` : `${pl.admin.post.alert.suspend} ${postData?.author.username} ${pl.admin.post.alert.suspendTime}`}`,
         '',
@@ -111,7 +111,7 @@ const adminPostEdit = () => {
   };
 
   const handleBan = () => {
-    if (postData && user.role.id === 1) {
+    if (postData && user.role.id <= 1) {
       Alert.alert(
         `${postData.author.isBanned ? `${pl.admin.post.alert.removeBan}` : `${pl.admin.post.alert.ban} ${postData?.author.username}?`}`,
         '',

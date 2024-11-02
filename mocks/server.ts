@@ -22,6 +22,7 @@ const demoAdminId = faker.string.uuid();
 const demoModId = faker.string.uuid();
 
 const createRoles = () => {
+  db.role.create({ id: 0, name: 'Super Administrator', type: 'superAdmin' });
   db.role.create({ id: 1, name: 'Administrator', type: 'admin' });
   db.role.create({ id: 2, name: 'Moderator', type: 'mod' });
   db.role.create({ id: 3, name: 'User', type: 'user' });
