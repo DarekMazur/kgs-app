@@ -167,9 +167,9 @@ const adminUserEdit = () => {
         ? pl.admin.user.message.removeSuspended
         : pl.admin.user.message.suspended;
 
-      const message = `Twoje konto zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} przez ${user.username}. ${'\n'}${isSuspended ? null : `Blokada zakończy się ${formatDate(timeout)}`}`;
+      const message = `${pl.admin.user.message.suspendMessageHeader} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${pl.admin.user.message.suspendMessageHeaderBy} ${user.username}. ${'\n'}${isSuspended ? null : `${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
-      const confirmation = `Konto Użytkownika ${userData.username} zostało ${isSuspended ? 'odwieszone' : 'zawieszone'} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}Blokada zakończy się ${formatDate(timeout)}`}`;
+      const confirmation = `${pl.admin.user.message.suspendMessageConfirmationHeader} ${userData.username} ${pl.admin.user.message.suspendMessageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
       Alert.alert(
         `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
