@@ -26,7 +26,7 @@ const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
 };
 
 const TabLayout = () => {
-  const { user } = useGlobalContext();
+  const { user, unreadMessages } = useGlobalContext();
 
   return (
     <Tabs
@@ -59,21 +59,6 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name='profile'
-        options={{
-          tabBarLabel: pl.menu.tabs.profile,
-          title: pl.menu.tabs.profile,
-          tabBarIcon: ({ color, focused }) => (
-            <TabIcon
-              icon={icons.profile}
-              color={color}
-              name={pl.menu.tabs.profile}
-              focused={focused}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name='peaks'
         options={{
           tabBarLabel: pl.menu.tabs.peaks,
@@ -98,6 +83,23 @@ const TabLayout = () => {
               icon={icons.ranking}
               color={color}
               name={pl.menu.tabs.ranking}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name='messages'
+        options={{
+          tabBarBadge:
+            unreadMessages && unreadMessages > 0 ? unreadMessages : undefined,
+          tabBarLabel: pl.menu.tabs.messages,
+          title: pl.menu.tabs.messages,
+          tabBarIcon: ({ color, focused }) => (
+            <TabIcon
+              icon={icons.envelope}
+              color={color}
+              name={pl.menu.tabs.messages}
               focused={focused}
             />
           ),

@@ -218,6 +218,7 @@ export const handlers = [
             suspensionTimeout:
               updatedUser.suspensionTimeout ?? oldData.suspensionTimeout,
             isConfirmed: updatedUser.isConfirmed ?? oldData.isConfirmed,
+            messages: updatedUser.messages ?? oldData.messages,
             role: db.role.findFirst({
               where: {
                 id: {

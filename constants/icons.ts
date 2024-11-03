@@ -37,6 +37,9 @@ import bannedActive from '../assets/icons/bannedRed.png';
 import inactive from '../assets/icons/inactive.png';
 import inactiveDefault from '../assets/icons/inactiveDefault.png';
 import active from '../assets/icons/active.png';
+import editUser from '../assets/icons/editUser.png';
+import envelope from '../assets/icons/envelope.png';
+import envelopeOpen from '../assets/icons/envelopeOpen.png';
 
 export default {
   home,
@@ -78,4 +81,7 @@ export default {
   inactive,
   active,
   inactiveDefault,
+  editUser,
+  envelope,
+  envelopeOpen,
 };

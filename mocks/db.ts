@@ -54,6 +54,7 @@ export const db = factory({
     suspensionTimeout: () => faker.date.future(),
     totalSuspensions: () => 0,
     isConfirmed: () => faker.datatype.boolean({ probability: 0 }),
+    messages: () => [],
     posts: manyOf('post'),
     role: oneOf('role'),
   },

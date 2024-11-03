@@ -31,7 +31,7 @@ const DrawerLayout = () => {
       <DrawerContentScrollView style={{ backgroundColor: colors.primaryBG }}>
         <View className='my-3 mb-6'>
           <Image
-            source={{ uri: user.avatar }}
+            source={user.avatar ? { uri: user.avatar } : icons.defaultAvatar}
             className='w-[130px] h-[130px] rounded-full self-center'
             resizeMode='cover'
           />
@@ -40,15 +40,15 @@ const DrawerLayout = () => {
           </Text>
         </View>
         <DrawerItem
-          label={pl.menu.drawer.home}
-          onPress={() => router.push('/home')}
+          label={pl.menu.drawer.profile}
+          onPress={() => router.push('/profile')}
           labelStyle={{
             color: colors.primary.default,
             fontSize: 18,
           }}
           icon={() => (
             <Image
-              source={icons.home}
+              source={icons.profile}
               className='w-6 h-6'
               resizeMode='contain'
             />
@@ -72,7 +72,7 @@ const DrawerLayout = () => {
           />
         )}
         <DrawerItem
-          label={pl.menu.drawer.profile}
+          label={pl.menu.drawer.profileEdit}
           onPress={() => router.push('/(profile)/profile-edit')}
           labelStyle={{
             color: colors.primary.default,
@@ -80,7 +80,7 @@ const DrawerLayout = () => {
           }}
           icon={() => (
             <Image
-              source={icons.profile}
+              source={icons.editUser}
               className='w-6 h-6'
               resizeMode='contain'
             />

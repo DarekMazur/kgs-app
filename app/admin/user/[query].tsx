@@ -13,6 +13,7 @@ import DropDownPicker, {
   ItemType,
   ValueType,
 } from 'react-native-dropdown-picker';
+import uuid from 'react-native-uuid';
 import useApi from '@/hooks/useApi';
 import { editUser, getAllRoles, getSingleUser } from '@/lib/getDataFromApi';
 import { IRoleTypes, IUserProps } from '@/lib/types';
@@ -40,7 +41,7 @@ const suspendTime = [
 ];
 
 const adminUserEdit = () => {
-  const { user } = useGlobalContext();
+  const { user, setGlobalUser } = useGlobalContext();
   const { query } = useLocalSearchParams();
   const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
   const { data, loading } = useApi(() => getSingleUser(query as string));
@@ -53,6 +54,7 @@ const adminUserEdit = () => {
     useState<ItemType<ValueType>[]>(suspendTime);
   const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState<ItemType<ValueType>[]>([]);
+  const [superAdminsList, setSuperAdminsList] = useState<IUserProps[]>([]);
 
   useEffect(() => {
     if (rolesData) {
@@ -70,8 +72,49 @@ const adminUserEdit = () => {
     if (data) {
       setUserData((data as IUserProps[])[0]);
       setValue((data as IUserProps[])[0].role.type);
+      setSuperAdminsList(date.filter((user) => user.role.id === 0));
     }
   }, [data]);
+
+  const handleSendMessage = async (
+    action,
+    message,
+    confirmation,
+    username,
+    priority,
+  ) => {
+    const newMessage = {
+      id: uuid.v4() as string,
+      priority,
+      header: action,
+      message,
+      sendTime: new Date(Date.now()),
+      openedTime: null,
+    };
+    const confirmationMessage = {
+      id: uuid.v4() as string,
+      priority,
+      header: `${username} - ${action}`,
+      message: confirmation,
+      sendTime: new Date(Date.now()),
+      openedTime: null,
+    };
+
+    await editUser({
+      ...userData,
+      message: [...userData.messages, message],
+    });
+
+    await editUser({
+      ...user,
+      message: [...user.messages, confirmationMessage],
+    });
+
+    setGlobalUser({
+      ...user,
+      message: [...user.messages, confirmationMessage],
+    });
+  };
 
   const handleActive = () => {
     if (userData) {
@@ -114,16 +157,24 @@ const adminUserEdit = () => {
 
   // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
-    if (
-      !suspendValue &&
-      !constants.suspensionConditions(userData?.suspensionTimeout)
-    ) {
+    const isSuspended = constants.suspensionConditions(
+      userData?.suspensionTimeout,
+    );
+    if (!suspendValue && !isSuspended) {
       Alert.alert(pl.alert.error, pl.admin.user.alert.errorSuspend);
       return false;
     }
     if (userData) {
+      const action = isSuspended
+        ? pl.admin.user.message.removeSuspended
+        : pl.admin.user.message.suspended;
+
+      const message = `${pl.admin.user.message.messageHeader} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}. ${'\n'}${isSuspended ? null : `${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
+
+      const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
+
       Alert.alert(
-        `${constants.suspensionConditions(userData.suspensionTimeout) ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} na ${suspendValue} ${suspendValue === 1 ? 'dzień' : 'dni'}?`}`,
+        `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} ${pl.admin.user.alert.suspendOn} ${suspendValue} ${suspendValue === 1 ? pl.admin.user.alert.suspendDaySingular : pl.admin.user.alert.suspendDayPlural}?`}`,
         '',
         [
           {
@@ -135,10 +186,10 @@ const adminUserEdit = () => {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
               try {
+                const now = Date.now();
                 setIsLoading(true);
                 const timeout = new Date(
-                  Date.now() +
-                    constants.fullDayMilliseconds * (suspendValue ?? 1),
+                  now + constants.fullDayMilliseconds * (suspendValue ?? 1),
                 );
                 await editUser({
                   ...userData,
@@ -153,6 +204,15 @@ const adminUserEdit = () => {
                     ? undefined
                     : timeout,
                 });
+
+                await handleSendMessage(
+                  action,
+                  message,
+                  confirmation,
+                  userData?.username,
+                  3,
+                );
+
                 setSuspendValue(null);
                 setUserData({
                   ...userData,
@@ -196,6 +256,15 @@ const adminUserEdit = () => {
           {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
+              const action = isBanned
+                ? pl.admin.user.message.removeBan
+                : pl.admin.user.message;
+              const banned;
+
+              const message = `${pl.admin.user.message.messageHeader} ${isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
+
+              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isBanend ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(now))}.`;
+
               try {
                 setIsLoading(true);
                 await editUser({
@@ -207,6 +276,15 @@ const adminUserEdit = () => {
                   )[0],
                 });
                 setValue('user');
+
+                await handleSendMessage(
+                  action,
+                  message,
+                  confirmation,
+                  userData?.username,
+                  3,
+                );
+
                 setUserData({
                   ...userData,
                   suspensionTimeout: undefined,
@@ -236,6 +314,21 @@ const adminUserEdit = () => {
     }
     if (userData) {
       try {
+        const newRole = (rolesData as IRoleTypes[]).filter(
+          (role) => role.type === value,
+        )[0].name;
+
+        const action =
+          userData.role.id > value
+            ? pl.admin.user.message.promotion
+            : pl.admin.user.message.degradation;
+
+        const message = `${pl.admin.user.message.roleMessageHeader} ${newRole} ${pl.admin.user.message.mesageHeaderBy} ${user.username}.`;
+
+        const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole} ${formatDate(new Date(now))}.`;
+
+        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(now))} zmienił rolę konta ${userData.username} na ${newRole}`;
+
         setIsLoading(true);
         await editUser({
           ...userData,
@@ -243,6 +336,32 @@ const adminUserEdit = () => {
             (role) => role.type === value,
           )[0],
         });
+
+        await handleSendMessage(
+          action,
+          message,
+          confirmation,
+          userData?.username,
+          3,
+        );
+
+        superAdminList.forEach((admin) => {
+          await editUser({
+            ...admin,
+            messages: [
+              ...admin.messages,
+              {
+                id: uuid.v4() as string,
+                priority: 2,
+                header: `${userData.username} - ${action}`,
+                message: superAdminAlert,
+                sendTime: new Date(Date.now()),
+                openedTime: undefined,
+              },
+            ],
+          });
+        });
+
         setUserData({
           ...userData,
           role: (rolesData as IRoleTypes[]).filter(
