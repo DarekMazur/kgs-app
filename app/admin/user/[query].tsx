@@ -54,6 +54,7 @@ const adminUserEdit = () => {
     useState<ItemType<ValueType>[]>(suspendTime);
   const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState<ItemType<ValueType>[]>([]);
+  const [superAdminsList, setSuperAdminsList] = useState<IUserProps[]>([]);
 
   useEffect(() => {
     if (rolesData) {
@@ -71,6 +72,7 @@ const adminUserEdit = () => {
     if (data) {
       setUserData((data as IUserProps[])[0]);
       setValue((data as IUserProps[])[0].role.type);
+      setSuperAdminsList(date.filter((user) => user.role.id === 0));
     }
   }, [data]);
 
@@ -325,6 +327,8 @@ const adminUserEdit = () => {
 
         const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole} ${formatDate(new Date(now))}.`;
 
+        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(now))} zmienił rolę konta ${userData.username} na ${newRole}`;
+
         setIsLoading(true);
         await editUser({
           ...userData,
@@ -340,6 +344,23 @@ const adminUserEdit = () => {
           userData?.username,
           3,
         );
+
+        superAdminList.forEach((admin) => {
+          await editUser({
+            ...admin,
+            messages: [
+              ...admin.messages,
+              {
+                id: uuid.v4() as string,
+                priority: 2,
+                header: `${userData.username} - ${action}`,
+                message: superAdminAlert,
+                sendTime: new Date(Date.now()),
+                openedTime: undefined,
+              },
+            ],
+          });
+        });
 
         setUserData({
           ...userData,
