@@ -73,7 +73,7 @@ const adminUserEdit = () => {
       setUserData((data as IUserProps[])[0]);
       setValue((data as IUserProps[])[0].role.type);
       setSuperAdminsList(
-        data.filter((user) => (user as IUserProps).role.id === 0),
+        (data as IUserProps[]).filter((userItem) => userItem.role.id === 0),
       );
     }
   }, [data]);
@@ -159,6 +159,9 @@ const adminUserEdit = () => {
 
   // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
+    const timeout = new Date(
+      Date.now() + constants.fullDayMilliseconds * (suspendValue ?? 1),
+    );
     const isSuspended = constants.suspensionConditions(
       userData?.suspensionTimeout,
     );
@@ -264,7 +267,7 @@ const adminUserEdit = () => {
 
               const message = `${pl.admin.user.message.messageHeader} ${userData.isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
-              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${userData.isBanend ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(Date.now()))}.`;
+              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${userData.isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(Date.now()))}.`;
 
               try {
                 setIsLoading(true);
@@ -279,10 +282,10 @@ const adminUserEdit = () => {
                 setValue('user');
 
                 await handleSendMessage(
-                  action,
+                  action as string,
                   message,
                   confirmation,
-                  userData?.username,
+                  userData.username!,
                   3,
                 );
 
@@ -317,18 +320,18 @@ const adminUserEdit = () => {
       try {
         const newRole = (rolesData as IRoleTypes[]).filter(
           (role) => role.type === value,
-        )[0].name;
+        )[0];
 
         const action =
           userData.role.id > newRole.id
             ? pl.admin.user.message.promotion
             : pl.admin.user.message.degradation;
 
-        const message = `${pl.admin.user.message.roleMessageHeader} ${newRole} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
+        const message = `${pl.admin.user.message.roleMessageHeader} ${newRole.name} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
-        const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole} ${formatDate(new Date(now))}.`;
+        const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole.name} ${formatDate(new Date(Date.now()))}.`;
 
-        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(Date.now()))} zmienił rolę konta ${userData.username} na ${newRole}`;
+        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(Date.now()))} zmienił rolę konta ${userData.username} na ${newRole.name}`;
 
         setIsLoading(true);
         await editUser({
@@ -342,7 +345,7 @@ const adminUserEdit = () => {
           action,
           message,
           confirmation,
-          userData?.username,
+          userData.username!,
           3,
         );
 
