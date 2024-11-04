@@ -417,7 +417,7 @@ const adminUserEdit = () => {
             {constants.suspensionConditions(userData.suspensionTimeout) ? (
               <Text className='text-red mb-3'>
                 {userData.suspensionTimeout
-                  ? `${pl.admin.user.suspend} ${formatDate(userData.suspensionTimeout)}`
+                  ? `${pl.admin.user.suspend} ${formatDate(new Date(userData.suspensionTimeout))}`
                   : null}
               </Text>
             ) : null}
