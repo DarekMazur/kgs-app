@@ -72,16 +72,18 @@ const adminUserEdit = () => {
     if (data) {
       setUserData((data as IUserProps[])[0]);
       setValue((data as IUserProps[])[0].role.type);
-      setSuperAdminsList(date.filter((user) => user.role.id === 0));
+      setSuperAdminsList(
+        data.filter((user) => (user as IUserProps).role.id === 0),
+      );
     }
   }, [data]);
 
   const handleSendMessage = async (
-    action,
-    message,
-    confirmation,
-    username,
-    priority,
+    action: string,
+    message: string,
+    confirmation: string,
+    username: string,
+    priority: number,
   ) => {
     const newMessage = {
       id: uuid.v4() as string,
@@ -101,18 +103,18 @@ const adminUserEdit = () => {
     };
 
     await editUser({
-      ...userData,
-      message: [...userData.messages, message],
+      ...(userData as IUserProps),
+      messages: [...(userData as IUserProps).messages, newMessage],
     });
 
     await editUser({
       ...user,
-      message: [...user.messages, confirmationMessage],
+      messages: [...user.messages, confirmationMessage],
     });
 
     setGlobalUser({
       ...user,
-      message: [...user.messages, confirmationMessage],
+      messages: [...user.messages, confirmationMessage],
     });
   };
 
@@ -171,7 +173,7 @@ const adminUserEdit = () => {
 
       const message = `${pl.admin.user.message.messageHeader} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}. ${'\n'}${isSuspended ? null : `${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
-      const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
+      const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(Date.now()))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
       Alert.alert(
         `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} ${pl.admin.user.alert.suspendOn} ${suspendValue} ${suspendValue === 1 ? pl.admin.user.alert.suspendDaySingular : pl.admin.user.alert.suspendDayPlural}?`}`,
@@ -209,7 +211,7 @@ const adminUserEdit = () => {
                   action,
                   message,
                   confirmation,
-                  userData?.username,
+                  userData.username as string,
                   3,
                 );
 
@@ -256,14 +258,13 @@ const adminUserEdit = () => {
           {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
-              const action = isBanned
+              const action = userData.isBanned
                 ? pl.admin.user.message.removeBan
                 : pl.admin.user.message;
-              const banned;
 
-              const message = `${pl.admin.user.message.messageHeader} ${isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
+              const message = `${pl.admin.user.message.messageHeader} ${userData.isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
-              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isBanend ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(now))}.`;
+              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${userData.isBanend ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(Date.now()))}.`;
 
               try {
                 setIsLoading(true);
@@ -319,15 +320,15 @@ const adminUserEdit = () => {
         )[0].name;
 
         const action =
-          userData.role.id > value
+          userData.role.id > newRole.id
             ? pl.admin.user.message.promotion
             : pl.admin.user.message.degradation;
 
-        const message = `${pl.admin.user.message.roleMessageHeader} ${newRole} ${pl.admin.user.message.mesageHeaderBy} ${user.username}.`;
+        const message = `${pl.admin.user.message.roleMessageHeader} ${newRole} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
         const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole} ${formatDate(new Date(now))}.`;
 
-        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(now))} zmienił rolę konta ${userData.username} na ${newRole}`;
+        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(Date.now()))} zmienił rolę konta ${userData.username} na ${newRole}`;
 
         setIsLoading(true);
         await editUser({
@@ -345,7 +346,7 @@ const adminUserEdit = () => {
           3,
         );
 
-        superAdminList.forEach((admin) => {
+        superAdminsList.forEach(async (admin) => {
           await editUser({
             ...admin,
             messages: [
@@ -356,7 +357,7 @@ const adminUserEdit = () => {
                 header: `${userData.username} - ${action}`,
                 message: superAdminAlert,
                 sendTime: new Date(Date.now()),
-                openedTime: undefined,
+                openedTime: null,
               },
             ],
           });
