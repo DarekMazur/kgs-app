@@ -16,7 +16,7 @@ import DropDownPicker, {
 import uuid from 'react-native-uuid';
 import useApi from '@/hooks/useApi';
 import { editUser, getAllRoles, getSingleUser } from '@/lib/getDataFromApi';
-import { IRoleTypes, IUserProps } from '@/lib/types';
+import { IMessageTypes, IRoleTypes, IUserProps } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { icons, constants } from '@/constants';
@@ -159,8 +159,9 @@ const adminUserEdit = () => {
 
   // eslint-disable-next-line consistent-return
   const handleSuspend = () => {
+    const now = Date.now();
     const timeout = new Date(
-      Date.now() + constants.fullDayMilliseconds * (suspendValue ?? 1),
+      now + constants.fullDayMilliseconds * (suspendValue ?? 1),
     );
     const isSuspended = constants.suspensionConditions(
       userData?.suspensionTimeout,
@@ -176,7 +177,7 @@ const adminUserEdit = () => {
 
       const message = `${pl.admin.user.message.messageHeader} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}. ${'\n'}${isSuspended ? null : `${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
-      const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(Date.now()))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
+      const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${isSuspended ? pl.admin.user.message.removeSuspendedAction : pl.admin.user.message.suspendedAction} ${formatDate(new Date(now))}. ${isSuspended ? null : `${'\n'}${pl.admin.user.message.suspendedMessageTimeout} ${formatDate(timeout)}`}`;
 
       Alert.alert(
         `${isSuspended ? `${pl.admin.user.alert.removeSuspend} ${userData?.username}?` : `${pl.admin.user.alert.suspend} ${userData?.username} ${pl.admin.user.alert.suspendOn} ${suspendValue} ${suspendValue === 1 ? pl.admin.user.alert.suspendDaySingular : pl.admin.user.alert.suspendDayPlural}?`}`,
@@ -191,11 +192,7 @@ const adminUserEdit = () => {
             text: pl.admin.user.alert.confirm,
             onPress: async () => {
               try {
-                const now = Date.now();
                 setIsLoading(true);
-                const timeout = new Date(
-                  now + constants.fullDayMilliseconds * (suspendValue ?? 1),
-                );
                 await editUser({
                   ...userData,
                   totalSuspensions: constants.suspensionConditions(
@@ -245,6 +242,7 @@ const adminUserEdit = () => {
 
   const handleBan = () => {
     if (userData) {
+      const now = Date.now();
       Alert.alert(
         `${
           userData.isBanned
@@ -267,7 +265,7 @@ const adminUserEdit = () => {
 
               const message = `${pl.admin.user.message.messageHeader} ${userData.isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
-              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${userData.isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(Date.now()))}.`;
+              const confirmation = `${pl.admin.user.message.messageConfirmationHeader} ${userData.username} ${pl.admin.user.message.messageConfirmationHeaderAction} ${userData.isBanned ? pl.admin.user.message.removeBanAction : pl.admin.user.message.bannedAction} ${formatDate(new Date(now))}.`;
 
               try {
                 setIsLoading(true);
@@ -317,6 +315,7 @@ const adminUserEdit = () => {
       );
     }
     if (userData) {
+      const now = Date.now();
       try {
         const newRole = (rolesData as IRoleTypes[]).filter(
           (role) => role.type === value,
@@ -329,9 +328,9 @@ const adminUserEdit = () => {
 
         const message = `${pl.admin.user.message.roleMessageHeader} ${newRole.name} ${pl.admin.user.message.messageHeaderBy} ${user.username}.`;
 
-        const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole.name} ${formatDate(new Date(Date.now()))}.`;
+        const confirmation = `${pl.admin.user.message.roleConfirmationMessageHeader} ${userData.username} ${pl.admin.user.message.roleConfirmationMessageHeaderChanged} ${newRole.name} ${formatDate(new Date(now))}.`;
 
-        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(Date.now()))} zmienił rolę konta ${userData.username} na ${newRole.name}`;
+        const superAdminAlert = `Użytkownik ${user.username} ${formatDate(new Date(now))} zmienił rolę konta ${userData.username} na ${newRole.name}`;
 
         setIsLoading(true);
         await editUser({
@@ -349,7 +348,7 @@ const adminUserEdit = () => {
           3,
         );
 
-        superAdminsList.forEach(async (admin) => {
+        const superAdminUpdateMessages = async (admin: IUserProps) => {
           await editUser({
             ...admin,
             messages: [
@@ -359,12 +358,23 @@ const adminUserEdit = () => {
                 priority: 2,
                 header: `${userData.username} - ${action}`,
                 message: superAdminAlert,
-                sendTime: new Date(Date.now()),
+                sendTime: new Date(now),
                 openedTime: null,
               },
             ],
           });
-        });
+        };
+
+        const sentToSuperAdmins = async (superAdmins: IUserProps[]) => {
+          await Promise.all(
+            // eslint-disable-next-line array-callback-return
+            superAdminsList.map((admin) => {
+              superAdminUpdateMessages(admin);
+            }),
+          );
+        };
+
+        sentToSuperAdmins(superAdminsList);
 
         setUserData({
           ...userData,
