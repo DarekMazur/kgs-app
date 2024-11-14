@@ -39,6 +39,7 @@
         "react/require-default-props": "off",
         "react/jsx-no-constructed-context-values": "off",
         "react/no-unstable-nested-components": "off",
-        "no-nested-ternary": "off"
+        "no-nested-ternary": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }
