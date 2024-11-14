@@ -8,7 +8,7 @@ import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { icons } from '@/constants';
 import Footer from '@/components/Footer';
-import { ITeamFilterProps, IUserProps } from '@/lib/types';
+import { ITeamFilter, IPublicUser } from '@/lib/types';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
 import { pl } from '@/lang';
@@ -32,7 +32,7 @@ const usersPanel = () => {
     },
   ];
 
-  const setNewForm = (form: ITeamFilterProps) => {
+  const setNewForm = (form: ITeamFilter) => {
     return setFormBox(form);
   };
 
@@ -75,20 +75,20 @@ const usersPanel = () => {
         )}
         {!usersLoading && users && formBox.showAdmin
           ? users
-              .filter((user) => (user as IUserProps).role?.id === 1)
+              .filter((user) => (user as IPublicUser).role?.id === 1)
               .map((user, index) => (
                 <View className='w-full p-5 m-3 flex-row gap-x-4 border-b-2 border-primary'>
                   <Image
-                    source={{ uri: (user as IUserProps).avatar }}
+                    source={{ uri: (user as IPublicUser).avatar }}
                     className='w-14 h-14'
                     resizeMode='contain'
                   />
                   <View>
                     <Text className='text-primary text-lg'>
-                      {`${index + 1}. ${(user as IUserProps).username}`}
+                      {`${index + 1}. ${(user as IPublicUser).username}`}
                     </Text>
                     <Text className='text-primary my-2'>
-                      {`${(user as IUserProps).firstName} ${(user as IUserProps).lastName}`}
+                      {`${(user as IPublicUser).firstName} ${(user as IPublicUser).lastName}`}
                     </Text>
                   </View>
                 </View>
@@ -101,20 +101,20 @@ const usersPanel = () => {
         )}
         {!usersLoading && users && formBox.showMods
           ? users
-              .filter((user) => (user as IUserProps).role?.id === 2)
+              .filter((user) => (user as IPublicUser).role?.id === 2)
               .map((user, index) => (
                 <View className='w-full p-5 m-3 flex-row gap-x-4 border-b-2 border-primary'>
                   <Image
-                    source={{ uri: (user as IUserProps).avatar }}
+                    source={{ uri: (user as IPublicUser).avatar }}
                     className='w-14 h-14'
                     resizeMode='contain'
                   />
                   <View>
                     <Text className='text-primary text-lg'>
-                      {`${index + 1}. ${(user as IUserProps).username}`}
+                      {`${index + 1}. ${(user as IPublicUser).username}`}
                     </Text>
                     <Text className='text-primary my-2'>
-                      {`${(user as IUserProps).firstName} ${(user as IUserProps).lastName}`}
+                      {`${(user as IPublicUser).firstName} ${(user as IPublicUser).lastName}`}
                     </Text>
                   </View>
                 </View>
@@ -126,7 +126,7 @@ const usersPanel = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         form={formBox}
-        setNewForm={(form) => setNewForm(form as ITeamFilterProps)}
+        setNewForm={(form) => setNewForm(form as ITeamFilter)}
         filters={filters}
       />
     </SafeAreaView>

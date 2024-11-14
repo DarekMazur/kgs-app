@@ -1,6 +1,6 @@
 import { View, Text, Modal, Image } from 'react-native';
 import { useEffect, useState } from 'react';
-import { IMessageTypes } from '@/lib/types';
+import { IMessage } from '@/lib/types';
 import { icons } from '@/constants';
 import { formatDate } from '@/lib/helpers';
 import ButtonCustom from '@/components/ButtonCustom';
@@ -12,7 +12,7 @@ const MessageModal = ({
   isModalOpen,
   setIsModalOpen,
 }: {
-  message: IMessageTypes;
+  message: IMessage;
   isModalOpen: boolean;
   setIsModalOpen: (isOpen: boolean) => void;
 }) => {

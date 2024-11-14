@@ -6,15 +6,15 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { IUserProps } from '@/lib/types';
+import { IPublicUser } from '@/lib/types';
 
 interface IContext {
-  user: IUserProps;
-  setGlobalUser: (newUser: IUserProps) => void;
+  user: IPublicUser;
+  setGlobalUser: (newUser: IPublicUser) => void;
   unreadMessages: number | undefined;
 }
 
-export const initNewUser: IUserProps = {
+export const initNewUser: IPublicUser = {
   id: null,
   username: null,
   email: null,
@@ -30,7 +30,7 @@ export const initNewUser: IUserProps = {
 
 const initialContext: IContext = {
   user: initNewUser,
-  setGlobalUser: (newUser: IUserProps) => {},
+  setGlobalUser: (newUser: IPublicUser) => {},
   unreadMessages: undefined,
 };
 
@@ -38,7 +38,7 @@ const GlobalContext = createContext(initialContext);
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider: FC<{ children: ReactElement }> = ({ children }) => {
-  const [user, setUser] = useState<IUserProps>(initNewUser);
+  const [user, setUser] = useState<IPublicUser>(initNewUser);
   const [unreadMessages, setUnreadMessages] = useState<number | undefined>();
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const GlobalProvider: FC<{ children: ReactElement }> = ({ children }) => {
     }
   }, [user]);
 
-  const setGlobalUser = (newUser: IUserProps) => {
+  const setGlobalUser = (newUser: IPublicUser) => {
     setUser({ ...newUser });
   };
 

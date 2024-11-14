@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import { getAllPosts, getAllUsers } from '@/lib/getDataFromApi';
 import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
-import { IPostsProps, IUserProps } from '@/lib/types';
+import { IPublicPost, IPublicUser } from '@/lib/types';
 import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
 import IconButton from '@/components/IconButton';
@@ -71,7 +71,7 @@ const dashboard = () => {
               </Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (users as IUserProps[]).filter(
+                  (users as IPublicUser[]).filter(
                     (user) =>
                       Date.now() - user.registrationDate! <
                       constants.fullDayMilliseconds * 7,
@@ -90,7 +90,7 @@ const dashboard = () => {
                 onPress={() =>
                   router.push(
                     `/admin/user/${
-                      (users as IUserProps[]).sort(
+                      (users as IPublicUser[]).sort(
                         (a, b) => b.registrationDate! - a.registrationDate!,
                       )[0].id
                     }`,
@@ -99,7 +99,7 @@ const dashboard = () => {
               >
                 <Text className='text-secondary font-mtblack'>
                   {
-                    (users as IUserProps[]).sort(
+                    (users as IPublicUser[]).sort(
                       (a, b) => b.registrationDate! - a.registrationDate!,
                     )[0].username
                   }
@@ -125,7 +125,7 @@ const dashboard = () => {
               </Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (posts as IPostsProps[]).filter(
+                  (posts as IPublicPost[]).filter(
                     (post) =>
                       Date.now() - new Date(post.createdAt).getTime() <
                       constants.fullDayMilliseconds * 7,
@@ -142,7 +142,7 @@ const dashboard = () => {
               </Text>
               <Text className='text-secondary font-mtblack'>
                 {
-                  (posts as IPostsProps[]).sort(
+                  (posts as IPublicPost[]).sort(
                     (a, b) =>
                       new Date(b.createdAt).getTime() -
                       new Date(a.createdAt).getTime(),
@@ -150,7 +150,7 @@ const dashboard = () => {
                 }{' '}
                 {pl.admin.dashboard.addedBy}{' '}
                 {
-                  (posts as IPostsProps[]).sort(
+                  (posts as IPublicPost[]).sort(
                     (a, b) =>
                       new Date(b.createdAt).getTime() -
                       new Date(a.createdAt).getTime(),
@@ -161,7 +161,7 @@ const dashboard = () => {
             <View className='flex-wrap flex-row gap-1.5 mt-7'>
               <Text className='text-red font-mtblack'>
                 {
-                  (posts as IPostsProps[]).filter((post) => post.isHidden)
+                  (posts as IPublicPost[]).filter((post) => post.isHidden)
                     .length
                 }
               </Text>
@@ -179,7 +179,7 @@ const dashboard = () => {
             <View className='flex-wrap flex-row gap-1.5 mt-3'>
               <Text className='text-red font-mtblack'>
                 {
-                  (users as IUserProps[]).filter((user) =>
+                  (users as IPublicUser[]).filter((user) =>
                     constants.suspensionConditions(user.suspensionTimeout),
                   ).length
                 }
@@ -190,7 +190,10 @@ const dashboard = () => {
             </View>
             <View className='flex-wrap flex-row gap-1.5 mt-5'>
               <Text className='text-red font-mtblack'>
-                {(users as IUserProps[]).filter((user) => user.isBanned).length}
+                {
+                  (users as IPublicUser[]).filter((user) => user.isBanned)
+                    .length
+                }
               </Text>
               <Text className='text-primary'>{pl.admin.dashboard.banned}</Text>
             </View>
@@ -210,14 +213,14 @@ const dashboard = () => {
               </Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (users as IUserProps[]).filter((user) => user.role?.id === 1)
+                  (users as IPublicUser[]).filter((user) => user.role?.id === 1)
                     .length
                 }
               </Text>
               <Text className='text-primary'>{pl.admin.team.admin}</Text>
               <Text className='text-green font-mtblack'>
                 {
-                  (users as IUserProps[]).filter((user) => user.role?.id === 2)
+                  (users as IPublicUser[]).filter((user) => user.role?.id === 2)
                     .length
                 }
               </Text>

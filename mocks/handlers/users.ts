@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import uuid from 'react-native-uuid';
 import * as Crypto from 'expo-crypto';
 import { db } from '@/mocks/db';
-import { IRegisterProps, IUserProps } from '@/lib/types';
+import { IRegister, IPublicUser } from '@/lib/types';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, () => {
@@ -67,7 +67,7 @@ export const handlers = [
   ),
 
   http.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, async ({ request }) => {
-    const newUser = (await request.json()) as IRegisterProps;
+    const newUser = (await request.json()) as IRegister;
     const createdTime = Date.now();
 
     const hashedPassword = await Crypto.digestStringAsync(
@@ -173,7 +173,7 @@ export const handlers = [
     `${process.env.EXPO_PUBLIC_API_URL}/users/:userId`,
     // eslint-disable-next-line consistent-return
     async ({ request }) => {
-      const updatedUser = (await request.json()) as IUserProps;
+      const updatedUser = (await request.json()) as IPublicUser;
       const user = db.user.findFirst({
         where: {
           id: {

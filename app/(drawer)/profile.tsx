@@ -19,7 +19,7 @@ import InfoBox from '@/components/InfoBox';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPeaks, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
-import { IPeakProps, IPostsProps } from '@/lib/types';
+import { IPublicPeak, IPublicPost } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
@@ -82,14 +82,14 @@ const profileScreen = () => {
       {!loading && !peaksLoading ? (
         <FlatList
           ref={ref}
-          data={(posts as IPostsProps[]).filter(
+          data={(posts as IPublicPost[]).filter(
             (post) => post.author.id === user.id,
           )}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
-              peakId={(item.peak as IPeakProps).id}
+              peakId={(item.peak as IPublicPeak).id}
               author={
                 item.author.firstName.length > 0
                   ? item.author.firstName
@@ -97,7 +97,7 @@ const profileScreen = () => {
               }
               authorId={item.author.id}
               date={new Date(item.createdAt)}
-              title={(item.peak as IPeakProps).name}
+              title={(item.peak as IPublicPeak).name}
               notes={item.notes}
               photoUrl={item.photo}
               isAuthor
@@ -132,14 +132,14 @@ const profileScreen = () => {
               <InfoBox
                 title={pl.profile.visited}
                 subtitle={`${
-                  (posts as IPostsProps[]).filter(
+                  (posts as IPublicPost[]).filter(
                     (post) => post.author.id === user.id,
                   ).length || 0
                 } (${percentage(
-                  (posts as IPostsProps[]).filter(
+                  (posts as IPublicPost[]).filter(
                     (post) => post.author.id === user.id,
                   ).length,
-                  (peaks as IPostsProps[]).length,
+                  (peaks as IPublicPost[]).length,
                 )}%)`}
                 containerStyles='mt-5'
                 titleStyles='text-lg'

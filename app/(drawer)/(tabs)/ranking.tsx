@@ -9,7 +9,7 @@ import useApi from '@/hooks/useApi';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import { formatDate } from '../../../lib/helpers';
-import { IPostsProps, IUserProps } from '@/lib/types';
+import { IPublicPost, IPublicUser } from '@/lib/types';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { pl } from '@/lang';
@@ -17,7 +17,7 @@ import { pl } from '@/lang';
 const rankingScreen = () => {
   const { data: peaks, loading: peaksLoading } = useApi(getAllPeaks);
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
-  const [usersWithAllPeaks, setUsersWithAllPeaks] = useState<IUserProps[]>([]);
+  const [usersWithAllPeaks, setUsersWithAllPeaks] = useState<IPublicUser[]>([]);
   const ref = useRef(null);
 
   useScrollToTop(ref);
@@ -25,8 +25,8 @@ const rankingScreen = () => {
   useEffect(() => {
     if (users && peaks) {
       setUsersWithAllPeaks(
-        (users as IUserProps[]).filter(
-          (user) => (user.posts as IPostsProps[]).length === peaks.length,
+        (users as IPublicUser[]).filter(
+          (user) => (user.posts as IPublicPost[]).length === peaks.length,
         ),
       );
     }
@@ -41,8 +41,8 @@ const rankingScreen = () => {
           ref={ref}
           data={usersWithAllPeaks.sort(
             (a, b) =>
-              new Date((a.posts as IPostsProps[])[0].createdAt).getTime() -
-              new Date((b.posts as IPostsProps[])[0].createdAt).getTime(),
+              new Date((a.posts as IPublicPost[])[0].createdAt).getTime() -
+              new Date((b.posts as IPublicPost[])[0].createdAt).getTime(),
           )}
           keyExtractor={(item) => item.id as string}
           renderItem={({ item }) => (

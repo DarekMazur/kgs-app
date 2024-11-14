@@ -7,7 +7,7 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import ButtonCustom from '@/components/ButtonCustom';
 import PostCard from '@/components/PostCard';
 import Recent from '@/components/Recent';
-import { IPeakProps, IPostsProps, IUserProps } from '@/lib/types';
+import { IPublicPeak, IPublicPost, IPublicUser } from '@/lib/types';
 import useApi from '@/hooks/useApi';
 import { deletePost, getAllPosts } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
@@ -17,7 +17,7 @@ import Header from '@/components/Header';
 import { constants } from '@/constants';
 import { pl } from '@/lang';
 
-const greetings = (user: IUserProps) => {
+const greetings = (user: IPublicUser) => {
   if (user.firstName || user.lastName) {
     return `${user.firstName ? `${user.firstName} ` : null}${user.lastName}`;
   }
@@ -82,12 +82,12 @@ export const home = () => {
       {!loading ? (
         <FlatList
           ref={ref}
-          data={posts as IPostsProps[]}
+          data={posts as IPublicPost[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <PostCard
               id={item.id}
-              peakId={(item.peak as IPeakProps).id}
+              peakId={(item.peak as IPublicPeak).id}
               author={
                 item.author.firstName.length > 0
                   ? item.author.firstName
@@ -95,7 +95,7 @@ export const home = () => {
               }
               authorId={item.author.id}
               date={new Date(item.createdAt)}
-              title={(item.peak as IPeakProps).name}
+              title={(item.peak as IPublicPeak).name}
               notes={item.notes}
               photoUrl={item.photo}
               onPress={() => handleDelete(item.id)}
@@ -126,7 +126,7 @@ export const home = () => {
                   {pl.home.latest}
                 </Text>
                 <Recent
-                  recentPosts={(posts as IPostsProps[])
+                  recentPosts={(posts as IPublicPost[])
                     .filter((post) => post.author?.id === user.id)
                     .slice(0, 5)}
                 />

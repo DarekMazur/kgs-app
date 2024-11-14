@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
 import { db } from '@/mocks/db';
-import { IPostsProps } from '@/lib/types';
+import { IPublicPost } from '@/lib/types';
 import { constants } from '@/constants';
 
 export const handlers = [
@@ -32,7 +32,7 @@ export const handlers = [
   ),
 
   http.post(`${process.env.EXPO_PUBLIC_API_URL}/posts`, async ({ request }) => {
-    const newPost = (await request.json()) as IPostsProps;
+    const newPost = (await request.json()) as IPublicPost;
     const createdTime = new Date(Date.now());
 
     const user = db.user.findFirst({
@@ -85,7 +85,7 @@ export const handlers = [
     `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
     // eslint-disable-next-line consistent-return
     async ({ request }) => {
-      const updatedPost = (await request.json()) as IPostsProps;
+      const updatedPost = (await request.json()) as IPublicPost;
 
       if (updatedPost) {
         db.post.update({

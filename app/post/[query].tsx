@@ -9,7 +9,7 @@ import ButtonCustom from '@/components/ButtonCustom';
 import View = Animated.View;
 import Loader from '@/components/Loader';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { IPostsProps } from '@/lib/types';
+import { IPublicPost } from '@/lib/types';
 import { pl } from '@/lang';
 
 const postEdit = () => {
@@ -20,14 +20,14 @@ const postEdit = () => {
 
   useEffect(() => {
     if (post) {
-      setNotes((post[0] as IPostsProps).notes);
+      setNotes((post[0] as IPublicPost).notes);
     }
   }, [post]);
 
   const handleSave = async () => {
     try {
       await editPost({
-        ...(post as IPostsProps[])[0],
+        ...(post as IPublicPost[])[0],
         notes,
         createdAt: new Date(Date.now()),
         photo: '',
@@ -37,10 +37,10 @@ const postEdit = () => {
       setGlobalUser({
         ...user,
         posts: [
-          ...(user.posts as IPostsProps[]).filter(
-            (userPost) => userPost.id !== (post as IPostsProps[])[0].id,
+          ...(user.posts as IPublicPost[]).filter(
+            (userPost) => userPost.id !== (post as IPublicPost[])[0].id,
           ),
-          (post as IPostsProps[])[0] as IPostsProps,
+          (post as IPublicPost[])[0] as IPublicPost,
         ],
       });
 
@@ -58,7 +58,7 @@ const postEdit = () => {
         <ScrollView className='m-4'>
           <View className='p-3'>
             <Text className='text-white text-center font-mtsemibold text-xl'>
-              {pl.post.edit.form.title} {(post[0] as IPostsProps).peak?.name}
+              {pl.post.edit.form.title} {(post[0] as IPublicPost).peak?.name}
             </Text>
             <InputCustom
               placeholder={pl.post.edit.form.description}

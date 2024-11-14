@@ -15,7 +15,7 @@ import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
-import { IPostFiltersProps, IPostsProps } from '@/lib/types';
+import { IPostFilters, IPublicPost } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -31,7 +31,7 @@ const initFormBox = {
 
 const postsPanel = () => {
   const { data: posts, loading: postsLoading, reFetch } = useApi(getAllPosts);
-  const [filteredPosts, setFilteredPosts] = useState<IPostsProps[] | null>();
+  const [filteredPosts, setFilteredPosts] = useState<IPublicPost[] | null>();
   const [formBox, setFormBox] = useState(initFormBox);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -75,14 +75,14 @@ const postsPanel = () => {
   );
 
   useEffect(() => {
-    setFilteredPosts(posts as IPostsProps[]);
+    setFilteredPosts(posts as IPublicPost[]);
   }, [posts]);
 
   useEffect(() => {
     if (filteredPosts) {
       if (formBox.isLatest) {
         setFilteredPosts(
-          (posts as IPostsProps[]).filter(
+          (posts as IPublicPost[]).filter(
             (post) =>
               Date.now() - new Date(post.createdAt).getTime() <
               constants.fullDayMilliseconds * 7,
@@ -110,12 +110,12 @@ const postsPanel = () => {
         !formBox.isSuspended &&
         !formBox.isBanned
       ) {
-        setFilteredPosts(posts as IPostsProps[]);
+        setFilteredPosts(posts as IPublicPost[]);
       }
     }
   }, [formBox]);
 
-  const setNewForm = (form: IPostFiltersProps) => {
+  const setNewForm = (form: IPostFilters) => {
     return setFormBox(form);
   };
 
@@ -125,7 +125,7 @@ const postsPanel = () => {
       {!postsLoading && filteredPosts ? (
         <FlatList
           ref={ref}
-          data={filteredPosts as IPostsProps[]}
+          data={filteredPosts as IPublicPost[]}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <View className='text-primary text-xl border-primary border-2 rounded-xl p-2 my-2'>
@@ -133,7 +133,7 @@ const postsPanel = () => {
                 <Text
                   className={`${item.author.isBanned ? 'text-red' : item.author.role === 1 ? 'text-orange-700' : item.author.role === 2 ? 'text-orange-300' : 'text-primary'} ${item.author.isBanned ? 'line-through' : ''} font-mtbold`}
                 >
-                  {(item as IPostsProps).author.username}
+                  {(item as IPublicPost).author.username}
                 </Text>
                 {item.isHidden || item.author.isSuspended ? (
                   <Image
@@ -148,7 +148,7 @@ const postsPanel = () => {
                 ) : null}
               </View>
               <Text className='text-primary'>
-                {(item as IPostsProps).notes}
+                {(item as IPublicPost).notes}
               </Text>
               <IconButton
                 icon={icons.editLight}
@@ -227,7 +227,7 @@ const postsPanel = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         form={formBox}
-        setNewForm={(form) => setNewForm(form as IPostFiltersProps)}
+        setNewForm={(form) => setNewForm(form as IPostFilters)}
         filters={filters}
       />
     </SafeAreaView>

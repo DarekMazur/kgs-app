@@ -4,16 +4,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState } from 'react';
 import Header from '@/components/Header';
 import { pl } from '@/lang';
-import { IMessageTypes } from '@/lib/types';
+import { IMessage } from '@/lib/types';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { icons } from '@/constants';
 import MessageModal from '@/components/MessageModal';
 
 const Messages = () => {
   const { user } = useGlobalContext();
-  const [currentMessage, setCurrentMessage] = useState<
-    IMessageTypes | undefined
-  >();
+  const [currentMessage, setCurrentMessage] = useState<IMessage | undefined>();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (

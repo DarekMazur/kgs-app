@@ -16,7 +16,7 @@ import DropDownPicker, {
 import uuid from 'react-native-uuid';
 import useApi from '@/hooks/useApi';
 import { editUser, getAllRoles, getSingleUser } from '@/lib/getDataFromApi';
-import { IMessageTypes, IRoleTypes, IUserProps } from '@/lib/types';
+import { IMessage, IRole, IPublicUser } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { icons, constants } from '@/constants';
@@ -45,7 +45,7 @@ const adminUserEdit = () => {
   const { query } = useLocalSearchParams();
   const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
   const { data, loading } = useApi(() => getSingleUser(query as string));
-  const [userData, setUserData] = useState<IUserProps | undefined>();
+  const [userData, setUserData] = useState<IPublicUser | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
   const [suspendOpen, setSuspendOpen] = useState(false);
@@ -54,13 +54,13 @@ const adminUserEdit = () => {
     useState<ItemType<ValueType>[]>(suspendTime);
   const [value, setValue] = useState<string | null>(null);
   const [items, setItems] = useState<ItemType<ValueType>[]>([]);
-  const [superAdminsList, setSuperAdminsList] = useState<IUserProps[]>([]);
+  const [superAdminsList, setSuperAdminsList] = useState<IPublicUser[]>([]);
 
   useEffect(() => {
     if (rolesData) {
       const rolesList: ItemType<ValueType>[] = [];
 
-      (rolesData as IRoleTypes[]).forEach((role) => {
+      (rolesData as IRole[]).forEach((role) => {
         rolesList.push({ label: role.name, value: role.type });
 
         setItems(rolesList);
@@ -70,10 +70,10 @@ const adminUserEdit = () => {
 
   useEffect(() => {
     if (data) {
-      setUserData((data as IUserProps[])[0]);
-      setValue((data as IUserProps[])[0].role.type);
+      setUserData((data as IPublicUser[])[0]);
+      setValue((data as IPublicUser[])[0].role.type);
       setSuperAdminsList(
-        (data as IUserProps[]).filter((userItem) => userItem.role.id === 0),
+        (data as IPublicUser[]).filter((userItem) => userItem.role.id === 0),
       );
     }
   }, [data]);
@@ -103,8 +103,8 @@ const adminUserEdit = () => {
     };
 
     await editUser({
-      ...(userData as IUserProps),
-      messages: [...(userData as IUserProps).messages, newMessage],
+      ...(userData as IPublicUser),
+      messages: [...(userData as IPublicUser).messages, newMessage],
     });
 
     await editUser({
@@ -273,7 +273,7 @@ const adminUserEdit = () => {
                   ...userData,
                   suspensionTimeout: undefined,
                   isBanned: !userData.isBanned,
-                  role: (rolesData as IRoleTypes[]).filter(
+                  role: (rolesData as IRole[]).filter(
                     (role) => role.id === 3,
                   )[0],
                 });
@@ -291,7 +291,7 @@ const adminUserEdit = () => {
                   ...userData,
                   suspensionTimeout: undefined,
                   isBanned: !userData.isBanned,
-                  role: (rolesData as IRoleTypes[]).filter(
+                  role: (rolesData as IRole[]).filter(
                     (role) => role.id === 3,
                   )[0],
                 });
@@ -317,7 +317,7 @@ const adminUserEdit = () => {
     if (userData) {
       const now = Date.now();
       try {
-        const newRole = (rolesData as IRoleTypes[]).filter(
+        const newRole = (rolesData as IRole[]).filter(
           (role) => role.type === value,
         )[0];
 
@@ -335,9 +335,7 @@ const adminUserEdit = () => {
         setIsLoading(true);
         await editUser({
           ...userData,
-          role: (rolesData as IRoleTypes[]).filter(
-            (role) => role.type === value,
-          )[0],
+          role: (rolesData as IRole[]).filter((role) => role.type === value)[0],
         });
 
         await handleSendMessage(
@@ -348,7 +346,7 @@ const adminUserEdit = () => {
           3,
         );
 
-        const superAdminUpdateMessages = async (admin: IUserProps) => {
+        const superAdminUpdateMessages = async (admin: IPublicUser) => {
           await editUser({
             ...admin,
             messages: [
@@ -365,7 +363,7 @@ const adminUserEdit = () => {
           });
         };
 
-        const sentToSuperAdmins = async (superAdmins: IUserProps[]) => {
+        const sentToSuperAdmins = async (superAdmins: IPublicUser[]) => {
           await Promise.all(
             // eslint-disable-next-line array-callback-return
             superAdminsList.map((admin) => {
@@ -378,9 +376,7 @@ const adminUserEdit = () => {
 
         setUserData({
           ...userData,
-          role: (rolesData as IRoleTypes[]).filter(
-            (role) => role.type === value,
-          )[0],
+          role: (rolesData as IRole[]).filter((role) => role.type === value)[0],
         });
         setIsLoading(false);
       } catch (error) {

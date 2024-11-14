@@ -10,7 +10,7 @@ import {
   getSinglePost,
   getSingleUser,
 } from '@/lib/getDataFromApi';
-import { IPostsProps, IRoleTypes, IUserProps } from '@/lib/types';
+import { IPublicPost, IRole, IPublicUser } from '@/lib/types';
 import Loader from '@/components/Loader';
 import IconButton from '@/components/IconButton';
 import { constants, icons } from '@/constants';
@@ -23,12 +23,12 @@ const adminPostEdit = () => {
   const { user } = useGlobalContext();
   const { data, loading } = useApi(() => getSinglePost(query as string));
   const { data: rolesData, loading: rolesLoading } = useApi(getAllRoles);
-  const [postData, setPostData] = useState<IPostsProps | undefined>();
+  const [postData, setPostData] = useState<IPublicPost | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (data) {
-      setPostData((data as IPostsProps[])[0]);
+      setPostData((data as IPublicPost[])[0]);
     }
   }, [data]);
 
@@ -80,7 +80,7 @@ const adminPostEdit = () => {
                 );
 
                 setIsLoading(true);
-                const singleUser: IUserProps[] = await getSingleUser(
+                const singleUser: IPublicUser[] = await getSingleUser(
                   postData.author.id,
                 );
                 await editUser({
@@ -131,7 +131,7 @@ const adminPostEdit = () => {
                   ...singleUser[0],
                   suspensionTimeout: undefined,
                   isBanned: !singleUser[0].isBanned,
-                  role: (rolesData as IRoleTypes[]).filter(
+                  role: (rolesData as IRole[]).filter(
                     (role) => role.id === 3,
                   )[0],
                 });

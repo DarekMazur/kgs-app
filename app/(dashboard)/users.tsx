@@ -8,7 +8,7 @@ import useApi from '@/hooks/useApi';
 import Loader from '@/components/Loader';
 import { icons, constants } from '@/constants';
 import Footer from '@/components/Footer';
-import { IUserProps, IUsersFiltersProps } from '@/lib/types';
+import { IPublicUser, IUsersFilters } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
 import Filters from '@/components/Filters';
 import ScreenHeader from '@/components/ScreenHeader';
@@ -26,21 +26,21 @@ const initFormBox = {
 const usersPanel = () => {
   const { data: users, loading: usersLoading } = useApi(getAllUsers);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [filteredUsers, setFilteredUsers] = useState<IUserProps[] | null>();
+  const [filteredUsers, setFilteredUsers] = useState<IPublicUser[] | null>();
   const [formBox, setFormBox] = useState(initFormBox);
   const ref = useRef(null);
 
   useScrollToTop(ref);
 
   useEffect(() => {
-    setFilteredUsers(users as IUserProps[]);
+    setFilteredUsers(users as IPublicUser[]);
   }, [users]);
 
   useEffect(() => {
     if (filteredUsers) {
       if (formBox.isLatest) {
         setFilteredUsers(
-          (users as IUserProps[]).filter(
+          (users as IPublicUser[]).filter(
             (user) =>
               Date.now() - new Date(user.registrationDate).getTime() <
               constants.fullDayMilliseconds * 7,
@@ -70,12 +70,12 @@ const usersPanel = () => {
         !formBox.isSuspended &&
         !formBox.isBanned
       ) {
-        setFilteredUsers(users as IUserProps[]);
+        setFilteredUsers(users as IPublicUser[]);
       }
     }
   }, [formBox]);
 
-  const setNewForm = (form: IUsersFiltersProps) => {
+  const setNewForm = (form: IUsersFilters) => {
     return setFormBox(form);
   };
 
@@ -104,13 +104,13 @@ const usersPanel = () => {
       {!usersLoading && filteredUsers ? (
         <FlatList
           ref={ref}
-          data={filteredUsers as IUserProps[]}
+          data={filteredUsers as IPublicUser[]}
           keyExtractor={(item) => item.id!}
           renderItem={({ item, index }) => (
             <View className='p-5 m-3 border-b-2 border-primary'>
               <View className='w-full flex-row gap-x-4'>
                 <Image
-                  source={{ uri: (item as IUserProps).avatar }}
+                  source={{ uri: (item as IPublicUser).avatar }}
                   className='w-14 h-14'
                   resizeMode='contain'
                 />
@@ -119,7 +119,7 @@ const usersPanel = () => {
                     <Text
                       className={`${item.isBanned ? 'text-red line-through' : 'text-primary'} text-lg`}
                     >
-                      {`${index + 1}. ${(item as IUserProps).username}`}
+                      {`${index + 1}. ${(item as IPublicUser).username}`}
                     </Text>
                     {constants.suspensionConditions(item.suspensionTimeout) ||
                     !item.isConfirmed ? (
@@ -137,12 +137,12 @@ const usersPanel = () => {
                     ) : null}
                   </View>
                   <Text className='text-primary my-2'>
-                    {`${(item as IUserProps).firstName} ${(item as IUserProps).lastName}`}
+                    {`${(item as IPublicUser).firstName} ${(item as IPublicUser).lastName}`}
                   </Text>
                   <Text
-                    className={`${(item as IUserProps).role?.id < 3 ? 'text-green' : 'text-primary'} my-2 font-mtbold`}
+                    className={`${(item as IPublicUser).role?.id < 3 ? 'text-green' : 'text-primary'} my-2 font-mtbold`}
                   >
-                    {(item as IUserProps).role?.name}
+                    {(item as IPublicUser).role?.name}
                   </Text>
                 </View>
               </View>
@@ -205,7 +205,7 @@ const usersPanel = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         form={formBox}
-        setNewForm={(form) => setNewForm(form as IUsersFiltersProps)}
+        setNewForm={(form) => setNewForm(form as IUsersFilters)}
         filters={filters}
       />
     </SafeAreaView>

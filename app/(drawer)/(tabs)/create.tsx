@@ -23,7 +23,7 @@ import InputCustom from '@/components/InputCustom';
 import { getDistance } from '@/lib/helpers';
 import CameraCustom from '@/components/CameraCustom';
 import ErrorCustom from '@/components/ErrorCustom';
-import { IPeakProps, IPostsProps } from '@/lib/types';
+import { IPublicPeak, IPublicPost } from '@/lib/types';
 import Loader from '@/components/Loader';
 import { pl } from '@/lang';
 
@@ -142,7 +142,7 @@ const createScreen = () => {
     if (peaks) {
       if (location) {
         const allDistances: IDistancesArrayElem[] = [];
-        (peaks as IPeakProps[]).forEach((peak) => {
+        (peaks as IPublicPeak[]).forEach((peak) => {
           const dist = parseInt(
             getDistance(
               location.coords.latitude as number,
@@ -208,7 +208,7 @@ const createScreen = () => {
 
     setGlobalUser({
       ...user,
-      posts: [...(user.posts as IPostsProps[]), postData],
+      posts: [...(user.posts as IPublicPost[]), postData],
     });
 
     router.push('/home');

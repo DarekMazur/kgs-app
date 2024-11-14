@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { IPeakProps, IPostsProps, IRoleTypes, IUserProps } from '@/lib/types';
+import { IPublicPeak, IPublicPost, IRole, IPublicUser } from '@/lib/types';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const useApi = (fn: () => Promise<any>) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<
-    IPostsProps[] | IUserProps[] | IPeakProps[] | IRoleTypes[] | null
+    IPublicPost[] | IPublicUser[] | IPublicPeak[] | IRole[] | null
   >(null);
 
   const fetchData = async () => {
