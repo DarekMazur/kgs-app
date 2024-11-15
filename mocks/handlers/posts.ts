@@ -4,7 +4,6 @@ import JWT from 'expo-jwt';
 import uuid from 'react-native-uuid';
 import { db } from '@/mocks/db';
 import { IPublicPeak, IPublicPost } from '@/lib/types';
-import { constants } from '@/constants';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, ({ request }) => {
