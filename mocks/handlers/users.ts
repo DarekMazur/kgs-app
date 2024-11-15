@@ -150,6 +150,44 @@ export const handlers = [
     },
   ),
 
+  http.post(`${process.env.EXPO_PUBLIC_API_URL}/users`, async ({ request }) => {
+    const timestamp = Date.now();
+    const newUser = (await request.json()) as IRegister;
+
+    const hashedPassword = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      newUser.password + timestamp.toString(),
+    );
+
+    const newUserData = {
+      id: uuid.v4() as string,
+      username: newUser.username as string,
+      email: newUser.email as string,
+      password: hashedPassword,
+      registrationDate: timestamp,
+      firstName: '',
+      lastName: '',
+      avatar: '',
+      description: '',
+      posts: [],
+      isBanned: false,
+      suspensionTimeout: undefined,
+      totalSuspensions: 0,
+      isConfirmed: false,
+      role: db.role.findFirst({
+        where: {
+          type: {
+            equals: 'user',
+          },
+        },
+      })!,
+    };
+
+    db.user.create({ ...newUserData });
+
+    return HttpResponse.json(newUserData, { status: 201 });
+  }),
+
   // http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, () => {
   //   return HttpResponse.json(db.user.getAll());
   // }),
