@@ -1,8 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
 import JWT from 'expo-jwt';
+import uuid from 'react-native-uuid';
 import { db } from '@/mocks/db';
-import { IPublicPost } from '@/lib/types';
+import { IPublicPeak, IPublicPost } from '@/lib/types';
 import { constants } from '@/constants';
 
 export const handlers = [
@@ -25,6 +26,124 @@ export const handlers = [
       }
 
       return HttpResponse.json(db.post.getAll());
+    } catch (error) {
+      return HttpResponse.json('Authentication failed', { status: 403 });
+    }
+  }),
+
+  http.get(
+    `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
+    ({ request, params }) => {
+      const { postId } = params;
+      // @ts-expect-error
+      const token = request.headers.map.authorization?.split(' ')[1];
+
+      if (!token) {
+        return HttpResponse.json('Invalid or expired token', { status: 403 });
+      }
+
+      try {
+        const decode = JWT.decode(
+          token,
+          process.env.EXPO_PUBLIC_SECRET_KEY as string,
+        );
+
+        if (!decode) {
+          return HttpResponse.json('Authentication failed', { status: 403 });
+        }
+
+        return HttpResponse.json(
+          db.post.findFirst({
+            where: {
+              id: {
+                equals: postId as string,
+              },
+            },
+          }),
+        );
+      } catch (error) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+    },
+  ),
+
+  http.post(`${process.env.EXPO_PUBLIC_API_URL}/posts`, async ({ request }) => {
+    interface IInput {
+      notes: string;
+      photo: string;
+      peakId: string;
+      authorId: string;
+    }
+
+    // @ts-expect-error
+    const token = request.headers.map.authorization?.split(' ')[1];
+    const { notes, photo, peakId, authorId } = (await request.json()) as IInput;
+
+    if (!token) {
+      return HttpResponse.json('Invalid or expired token', { status: 403 });
+    }
+
+    try {
+      const decode = JWT.decode(
+        token,
+        process.env.EXPO_PUBLIC_SECRET_KEY as string,
+      );
+
+      if (!notes || !photo || !peakId || !authorId) {
+        return HttpResponse.json('Request failed', { status: 400 });
+      }
+
+      if (!decode || decode.id !== authorId) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+
+      const peak = db.peak.findFirst({
+        where: {
+          id: {
+            equals: peakId,
+          },
+        },
+      });
+
+      const author = db.user.findFirst({
+        where: {
+          id: {
+            equals: authorId,
+          },
+        },
+      });
+
+      if (author && peak) {
+        const newPost: IPublicPost = {
+          id: uuid.v4() as string,
+          notes,
+          photo,
+          peak,
+          isHidden: false,
+          createdAt: new Date(Date.now()),
+          author: {
+            id: authorId,
+            username: author.username,
+            firstName: author.firstName,
+            avatar: author.avatar,
+            isSuspended:
+              !!author.suspensionTimeout &&
+              author.suspensionTimeout > new Date(Date.now()),
+            isBanned: author.isBanned,
+            role: author.role?.id as number,
+          },
+        };
+
+        return HttpResponse.json(newPost, { status: 200 });
+      }
+
+      if (!author) {
+        return HttpResponse.json('Author not found', { status: 404 });
+      }
+
+      if (!peak) {
+        return HttpResponse.json('Peak not found', { status: 403 });
+      }
     } catch (error) {
       return HttpResponse.json('Authentication failed', { status: 403 });
     }
