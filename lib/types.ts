@@ -1,12 +1,12 @@
 import { ImageProps } from 'react-native';
 
-export interface IRoleTypes {
+export interface IRole {
   id: number;
   name: string;
   type: string;
 }
 
-export interface IMessageTypes {
+export interface IMessage {
   id: string;
   priority: number;
   header: string;
@@ -15,81 +15,88 @@ export interface IMessageTypes {
   openedTime: Date | null;
 }
 
-export interface ISignInProps {
+export interface ISignIn {
   email: string | null;
   password: string | null;
 }
 
-export interface IRegisterProps extends ISignInProps {
+export interface IRegister extends ISignIn {
   username: string | null;
 }
 
-export interface IPeakProps {
+export interface IPublicPeak {
   id: string;
   name: string;
-  height: number;
+  height: string;
   description: string;
   trial: string;
-  localizationLat: number;
-  localizationLng: number;
   image: string;
+  localizationLat: string;
+  localizationLng: string;
 }
 
-export interface IPostsProps {
+export interface IPublicPost {
   id: string;
+  notes: string;
+  photo: string;
+  peak: IPublicPeak;
+  isHidden: boolean;
+  createdAt: Date;
   author: {
     id: string;
     username: string;
-    firstName: string;
+    firstName?: string;
     avatar: string;
     isSuspended: boolean;
     isBanned: boolean;
     role: number;
   };
-  createdAt: Date;
-  notes: string;
-  photo: string;
-  peak: IPeakProps | null;
-  isHidden: boolean;
 }
 
-export interface IUserProps extends IRegisterProps {
-  id: string | null;
+export interface IPublicUser extends IRegister {
+  id: string;
+  avatar: string;
+  description?: string;
+  messages: IMessage[];
   firstName?: string;
   lastName?: string;
-  avatar?: string | null;
-  registrationDate: number;
-  description?: string;
-  role: IRoleTypes;
-  posts?: IPostsProps[];
   isBanned: boolean;
-  suspensionTimeout: Date | undefined;
+  suspensionTimeout?: Date;
   totalSuspensions: number;
   isConfirmed: boolean;
-  messages: IMessageTypes[];
+  posts: IPublicPost[];
+  registrationDate: Date;
+  role: IRole;
 }
 
-export interface ITabIconProps {
+export interface IOptions {
+  email: string;
+  text: string;
+  html: string;
+  subject: string;
+}
+
+export interface ITabIcon {
   icon: ImageProps;
   color: string;
   name: string;
   focused: boolean;
 }
 
-export interface IPostFiltersProps {
+export interface IPostFilters {
   isLatest: boolean;
   isHidden: boolean;
   isSuspended: boolean;
   isBanned: boolean;
 }
 
-export interface IUsersFiltersProps {
+export interface IUsersFilters {
   isInTeam: boolean;
   isLatest: boolean;
   isSuspended: boolean;
   isBanned: boolean;
 }
-export interface ITeamFilterProps {
+export interface ITeamFilter {
   showAdmin: boolean;
   showMods: boolean;
 }

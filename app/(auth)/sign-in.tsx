@@ -7,18 +7,18 @@ import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { useGlobalContext } from '@/context/GlobalProvider';
-import { ISignInProps } from '@/lib/types';
+import { ISignIn } from '@/lib/types';
 import { logIn } from '@/lib/getDataFromApi';
 import { pl } from '@/lang';
 
-const initUser: ISignInProps = {
+const initUser: ISignIn = {
   email: null,
   password: null,
 };
 
 const signIn = () => {
   const { setGlobalUser, user } = useGlobalContext();
-  const [loggedUser, setLoggedUser] = useState<ISignInProps>(initUser);
+  const [loggedUser, setLoggedUser] = useState<ISignIn>(initUser);
 
   useEffect(() => {
     if (user.id) {

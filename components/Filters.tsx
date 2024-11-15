@@ -9,19 +9,13 @@ import {
 import { Dispatch, FC, SetStateAction, useState } from 'react';
 import { colors, icons } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
-import {
-  IPostFiltersProps,
-  ITeamFilterProps,
-  IUsersFiltersProps,
-} from '@/lib/types';
+import { IPostFilters, ITeamFilter, IUsersFilters } from '@/lib/types';
 
 interface IFiltersProps {
   isModalOpen: boolean;
   setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-  form: IPostFiltersProps | IUsersFiltersProps | ITeamFilterProps;
-  setNewForm: (
-    form: IPostFiltersProps | IUsersFiltersProps | ITeamFilterProps,
-  ) => void;
+  form: IPostFilters | IUsersFilters | ITeamFilter;
+  setNewForm: (form: IPostFilters | IUsersFilters | ITeamFilter) => void;
   filters: {
     title: string;
     description: string;
@@ -36,12 +30,12 @@ const Filters: FC<IFiltersProps> = ({
   filters,
 }) => {
   const [currentFormBox, setCurrentFormBox] = useState<
-    IPostFiltersProps | IUsersFiltersProps | ITeamFilterProps
+    IPostFilters | IUsersFilters | ITeamFilter
   >(form);
 
   const handleClose = (isCurrent: boolean) => {
     const newForm = isCurrent ? currentFormBox : form;
-    setNewForm(newForm as IPostFiltersProps);
+    setNewForm(newForm as IPostFilters);
   };
 
   return (

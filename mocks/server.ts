@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker';
 import * as Crypto from 'expo-crypto';
 import { handlers } from './handlers';
 import { db } from '@/mocks/db';
-import { IPeakProps } from '@/lib/types';
+import { IPublicPeak } from '@/lib/types';
 import { constants } from '@/constants';
 
 export const server = setupServer(...handlers);
@@ -130,7 +130,7 @@ const updatePosts = () => {
           isBanned: author?.isBanned,
           role: author?.role?.id ?? 3,
         },
-        peak: peak as any | IPeakProps, // eslint-disable-line @typescript-eslint/no-explicit-any
+        peak: peak as any | IPublicPeak, // eslint-disable-line @typescript-eslint/no-explicit-any
       },
     });
   });

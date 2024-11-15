@@ -2,15 +2,15 @@ import { FlatList, View, ImageBackground, ViewToken } from 'react-native';
 import { FC, useState } from 'react';
 import * as Animatable from 'react-native-animatable';
 import { CustomAnimation } from 'react-native-animatable';
-import { IPostsProps } from '@/lib/types';
+import { IPublicPost } from '@/lib/types';
 
 interface IRecentProps {
-  recentPosts: Array<IPostsProps>;
+  recentPosts: Array<IPublicPost>;
 }
 
 interface ILatestProps {
   activeItem: string;
-  item: IPostsProps;
+  item: IPublicPost;
 }
 
 const zoomIn: CustomAnimation = {

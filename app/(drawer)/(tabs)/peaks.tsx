@@ -8,7 +8,7 @@ import Loader from '@/components/Loader';
 import PostCard from '@/components/PostCard';
 import { images } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
-import { IPeakProps } from '@/lib/types';
+import { IPublicPeak } from '@/lib/types';
 import SearchInput from '@/components/SearchInput';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
@@ -30,10 +30,10 @@ const peaksScreen = () => {
           ref={ref}
           data={
             searchQuery
-              ? (peaks as IPeakProps[]).filter((peak) =>
+              ? (peaks as IPublicPeak[]).filter((peak) =>
                   peak.name.toLowerCase().includes(searchQuery.toLowerCase()),
                 )
-              : (peaks as IPeakProps[])
+              : (peaks as IPublicPeak[])
           }
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (

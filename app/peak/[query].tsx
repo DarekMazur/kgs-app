@@ -6,7 +6,7 @@ import useApi from '@/hooks/useApi';
 import { getAllPosts, getSinglePeak } from '@/lib/getDataFromApi';
 import Loader from '@/components/Loader';
 import { formatDate } from '@/lib/helpers';
-import { IPeakProps, IPostsProps } from '@/lib/types';
+import { IPublicPeak, IPublicPost } from '@/lib/types';
 import { pl } from '@/lang';
 
 interface IConquerorsType {
@@ -28,8 +28,8 @@ const peak = () => {
   useEffect(() => {
     if (posts && singlePeak) {
       // eslint-disable-next-line array-callback-return
-      const peakPosts = (posts as IPostsProps[]).filter(
-        (post) => (post.peak as IPeakProps).id === singlePeak[0].id,
+      const peakPosts = (posts as IPublicPost[]).filter(
+        (post) => (post.peak as IPublicPeak).id === singlePeak[0].id,
       );
       const peakConquerors: IConquerorsType[] = [];
 
@@ -48,19 +48,19 @@ const peak = () => {
         <ScrollView className='m-4'>
           <View className='p-3'>
             <Text className='text-primary font-mtblack text-3xl text-center pb-2'>
-              {(singlePeak as IPeakProps[])[0].name} -{' '}
-              {(singlePeak as IPeakProps[])[0].height} m
+              {(singlePeak as IPublicPeak[])[0].name} -{' '}
+              {(singlePeak as IPublicPeak[])[0].height} m
             </Text>
             <Image
-              source={{ uri: (singlePeak as IPeakProps[])[0].image }}
+              source={{ uri: (singlePeak as IPublicPeak[])[0].image }}
               className='w-full h-[300px] self-center my-4'
               resizeMode='cover'
             />
             <Text className='text-secondary text-sm self-end mb-3'>
-              {(singlePeak as IPeakProps[])[0].trial}
+              {(singlePeak as IPublicPeak[])[0].trial}
             </Text>
             <Text className='text-primary text-lg my-4 leading-6'>
-              {(singlePeak as IPeakProps[])[0].description}
+              {(singlePeak as IPublicPeak[])[0].description}
             </Text>
           </View>
           <View>

@@ -14,13 +14,13 @@ import { images, schema } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
-import { IRegisterProps } from '@/lib/types';
+import { IRegister } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
 import { pl } from '@/lang';
 
 const signUp = () => {
   const { user } = useGlobalContext();
-  const [newUser, setNewUser] = useState<IRegisterProps>(initNewUser);
+  const [newUser, setNewUser] = useState<IRegister>(initNewUser);
   const [isChecked, setChecked] = useState(false);
 
   useEffect(() => {

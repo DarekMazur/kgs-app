@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import * as Crypto from 'expo-crypto';
-import { IPostsProps, IUserProps } from '@/lib/types';
+import { IPublicPost, IPublicUser } from '@/lib/types';
 
 export const getAllUsers = async () => {
   const users = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`);
@@ -104,7 +104,7 @@ export const createUser = async (
 };
 
 // eslint-disable-next-line consistent-return
-export const editUser = async (updateData: IUserProps) => {
+export const editUser = async (updateData: IPublicUser) => {
   const updateUser = async () => {
     const update = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/users/${updateData.id}`,
@@ -131,7 +131,7 @@ export const deletePost = async (id: string) => {
 };
 
 // eslint-disable-next-line consistent-return
-export const editPost = async (updatePost: IPostsProps) => {
+export const editPost = async (updatePost: IPublicPost) => {
   const updateData = async () => {
     const update = await fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/posts/${updatePost.id}`,
@@ -152,7 +152,7 @@ export const editPost = async (updatePost: IPostsProps) => {
 };
 
 // eslint-disable-next-line consistent-return
-export const createPost = async (postData: IPostsProps) => {
+export const createPost = async (postData: IPublicPost) => {
   try {
     const newPost = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/posts`, {
       method: 'POST',

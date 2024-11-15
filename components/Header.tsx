@@ -11,7 +11,6 @@ const Header = () => {
     <View className='px-4 my-4'>
       <TouchableOpacity
         onPress={() => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
           navigation.toggleDrawer();
         }}

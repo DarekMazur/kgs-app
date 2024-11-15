@@ -2,11 +2,11 @@ import { Tabs } from 'expo-router';
 import { View, Image, Text } from 'react-native';
 import { FC } from 'react';
 import { colors, constants, icons } from '@/constants';
-import { ITabIconProps } from '@/lib/types';
+import { ITabIcon } from '@/lib/types';
 import { useGlobalContext } from '@/context/GlobalProvider';
 import { pl } from '@/lang';
 
-const TabIcon: FC<ITabIconProps> = ({ icon, color, name, focused }) => {
+const TabIcon: FC<ITabIcon> = ({ icon, color, name, focused }) => {
   return (
     <View className='flex items-center justify-center gap-2'>
       <Image
