@@ -30,7 +30,7 @@ export const handlers = [
 
   http.get(
     `${process.env.EXPO_PUBLIC_API_URL}/peaks/:peakId`,
-    ({ request }) => {
+    ({ request, params }) => {
       // @ts-expect-error
       const token = request.headers.map.authorization?.split(' ')[1];
       const { peakId } = params;
