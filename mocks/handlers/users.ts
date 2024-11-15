@@ -110,6 +110,46 @@ export const handlers = [
     },
   ),
 
+  http.get(
+    `${process.env.EXPO_PUBLIC_API_URL}/users/:userId`,
+    async ({ request, params }) => {
+      // @ts-expect-error
+      const token = request.headers.map.authorization?.split(' ')[1];
+      const { userId } = params;
+
+      if (!token) {
+        return HttpResponse.json('Invalid or expired token', { status: 403 });
+      }
+
+      if (!userId) {
+        return HttpResponse.json('Request failed', { status: 400 });
+      }
+
+      try {
+        const decode = JWT.decode(
+          token,
+          process.env.EXPO_PUBLIC_SECRET_KEY as string,
+        );
+
+        if (!decode) {
+          return HttpResponse.json('Authentication failed', { status: 403 });
+        }
+
+        const user = db.user.findFirst({
+          where: {
+            id: {
+              equals: userId as string,
+            },
+          },
+        });
+
+        return HttpResponse.json(user, { status: 200 });
+      } catch (error) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+    },
+  ),
+
   // http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, () => {
   //   return HttpResponse.json(db.user.getAll());
   // }),
