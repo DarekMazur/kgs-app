@@ -1,21 +1,65 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { http, HttpResponse } from 'msw';
+import JWT from 'expo-jwt';
 import { db } from '@/mocks/db';
 
 export const handlers = [
-  http.get(`${process.env.EXPO_PUBLIC_API_URL}/peaks`, () => {
-    return HttpResponse.json(
-      db.peak.getAll().sort((a, b) => b.height - a.height),
-    );
+  http.get(`${process.env.EXPO_PUBLIC_API_URL}/peaks`, ({ request }) => {
+    // @ts-expect-error
+    const token = request.headers.map.authorization?.split(' ')[1];
+
+    if (!token) {
+      return HttpResponse.json('Invalid or expired token', { status: 403 });
+    }
+
+    try {
+      const decode = JWT.decode(
+        token,
+        process.env.EXPO_PUBLIC_SECRET_KEY as string,
+      );
+
+      if (!decode) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+
+      return HttpResponse.json(db.peak.getAll(), { status: 200 });
+    } catch (error) {
+      return HttpResponse.json('Authentication failed', { status: 403 });
+    }
   }),
 
   http.get(
     `${process.env.EXPO_PUBLIC_API_URL}/peaks/:peakId`,
-    async ({ params }) => {
+    ({ request, params }) => {
+      // @ts-expect-error
+      const token = request.headers.map.authorization?.split(' ')[1];
       const { peakId } = params;
-      return HttpResponse.json(
-        db.peak.getAll().filter((post) => post.id === peakId),
-      );
+
+      if (!token) {
+        return HttpResponse.json('Invalid or expired token', { status: 403 });
+      }
+
+      if (!peakId) {
+        return HttpResponse.json('Request failed', { status: 400 });
+      }
+
+      try {
+        const decode = JWT.decode(
+          token,
+          process.env.EXPO_PUBLIC_SECRET_KEY as string,
+        );
+
+        if (!decode) {
+          return HttpResponse.json('Authentication failed', { status: 403 });
+        }
+
+        return HttpResponse.json(
+          db.peak.getAll().filter((post) => post.id === peakId),
+          { status: 200 },
+        );
+      } catch (error) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
     },
   ),
 ];
