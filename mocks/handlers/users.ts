@@ -4,7 +4,7 @@ import uuid from 'react-native-uuid';
 import * as Crypto from 'expo-crypto';
 import JWT from 'expo-jwt';
 import { db } from '@/mocks/db';
-import { IRegister, IPublicUser } from '@/lib/types';
+import { IRegister, IPublicUser, IMessage } from '@/lib/types';
 import { constants } from '@/constants';
 
 export const handlers = [
@@ -213,19 +213,137 @@ export const handlers = [
           return HttpResponse.json('Authentication failed', { status: 403 });
         }
 
+        const updatedUser = (await request.json()) as IPublicUser;
         const user = db.user.findFirst({
           where: {
             id: {
-              equals: decode.id as string,
+              equals: updatedUser.id as string,
             },
           },
-        });
+        })!;
+
+        const hashedPassword = await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.SHA256,
+          updatedUser.password + user.registrationDate.toString(),
+        );
+
+        const oldData = db.user.findFirst({
+          where: {
+            id: {
+              equals: updatedUser.id as string,
+            },
+          },
+        })!;
+
+        if (updatedUser) {
+          db.user.update({
+            where: {
+              id: {
+                equals: updatedUser.id as string,
+              },
+            },
+            data: {
+              username: (updatedUser.username as string) ?? oldData.username,
+              password: updatedUser.password
+                ? hashedPassword
+                : oldData.password,
+              firstName: updatedUser.firstName ?? oldData.firstName,
+              lastName: updatedUser.lastName ?? oldData.lastName,
+              avatar:
+                updatedUser.avatar === null
+                  ? undefined
+                  : (updatedUser.avatar ?? oldData.avatar),
+              description: updatedUser.description ?? oldData.description,
+              isBanned: updatedUser.isBanned ?? oldData.isBanned,
+              totalSuspensions:
+                updatedUser.totalSuspensions ?? oldData.totalSuspensions,
+              suspensionTimeout:
+                updatedUser.suspensionTimeout ?? oldData.suspensionTimeout,
+              isConfirmed: updatedUser.isConfirmed ?? oldData.isConfirmed, // @ts-ignore
+              messages: updatedUser.messages ?? oldData.messages,
+              role: db.role.findFirst({
+                where: {
+                  id: {
+                    equals: updatedUser.role?.id ?? oldData.role?.id,
+                  },
+                },
+              })!,
+            },
+          });
+
+          db.post.update({
+            where: {
+              author: {
+                id: {
+                  equals: updatedUser.id as string,
+                },
+              },
+            },
+            data: {
+              author: {
+                isBanned: updatedUser.isBanned,
+              },
+            },
+          });
+
+          return HttpResponse.json(updatedUser, { status: 201 });
+        }
+        return HttpResponse.json('User not found', { status: 404 });
+      } catch (error) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+    },
+  ),
+
+  http.put(
+    `${process.env.EXPO_PUBLIC_API_URL}/users/messages/:userId`,
+    async ({ request, params }) => {
+      const { userId } = params;
+      // @ts-expect-error
+      const token = request.headers.map.authorization?.split(' ')[1];
+      // @ts-expect-error
+      const { message, header, priority } = request.body;
+
+      if (!token) {
+        return HttpResponse.json('Invalid or expired token', { status: 403 });
+      }
+
+      if (!userId) {
+        return HttpResponse.json('Request failed', { status: 400 });
+      }
+
+      try {
+        const decode = JWT.decode(
+          token,
+          process.env.EXPO_PUBLIC_SECRET_KEY as string,
+        );
+
+        if (!decode) {
+          return HttpResponse.json('Authentication failed', { status: 403 });
+        }
+
+        const messageBody: IMessage = {
+          id: uuid.v4() as string,
+          priority,
+          header,
+          message,
+          sendTime: new Date(Date.now()),
+          openedTime: null,
+        };
+
+        const user = db.user.findFirst({
+          where: {
+            id: {
+              equals: userId as string,
+            },
+          },
+        })!;
 
         if (user) {
           db.user.update({
             where: {
               id: {
-                equals: user.id as string,
+                equals: userId as string,
               },
             },
             data: {
@@ -238,7 +356,8 @@ export const handlers = [
               isBanned: user.isBanned,
               totalSuspensions: user.totalSuspensions,
               suspensionTimeout: user.suspensionTimeout,
-              isConfirmed: true,
+              isConfirmed: user.isConfirmed, // @ts-ignore
+              messages: [...user.messages, messageBody],
               role: db.role.findFirst({
                 where: {
                   id: {
@@ -248,10 +367,9 @@ export const handlers = [
               })!,
             },
           });
-
-          return HttpResponse.json(user, { status: 200 });
+          return HttpResponse.json(messageBody, { status: 200 });
         }
-        return HttpResponse.json('User not found', { status: 404 });
+        return HttpResponse.json('User not found', { status: 403 });
       } catch (error) {
         return HttpResponse.json('Authentication failed', { status: 403 });
       }
