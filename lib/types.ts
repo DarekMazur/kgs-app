@@ -27,12 +27,12 @@ export interface IRegister extends ISignIn {
 export interface IPublicPeak {
   id: string;
   name: string;
-  height: string;
+  height: number;
   description: string;
   trial: string;
   image: string;
-  localizationLat: string;
-  localizationLng: string;
+  localizationLat: number;
+  localizationLng: number;
 }
 
 export interface IPublicPost {
@@ -46,7 +46,7 @@ export interface IPublicPost {
     id: string;
     username: string;
     firstName?: string;
-    avatar: string;
+    avatar?: string;
     isSuspended: boolean;
     isBanned: boolean;
     role: number;
