@@ -144,6 +144,7 @@ export const handlers = [
       if (!peak) {
         return HttpResponse.json('Peak not found', { status: 403 });
       }
+      return new HttpResponse(null, { status: 404 });
     } catch (error) {
       return HttpResponse.json('Authentication failed', { status: 403 });
     }
@@ -154,7 +155,6 @@ export const handlers = [
     async ({ request, params }) => {
       interface IInput {
         notes: string;
-        photo: string;
         isHidden: boolean;
       }
 
@@ -230,150 +230,68 @@ export const handlers = [
     },
   ),
 
-  //   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
-  //     return HttpResponse.json(
-  //       db.post.getAll().sort((a, b) => {
-  //         if (b.createdAt > a.createdAt) {
-  //           return 1;
-  //         }
-  //
-  //         if (a.createdAt > b.createdAt) {
-  //           return -1;
-  //         }
-  //
-  //         return 0;
-  //       }),
-  //     );
-  //   }),
-  //
-  //   http.get(
-  //     `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
-  //     async ({ params }) => {
-  //       const { postId } = params;
-  //       return HttpResponse.json(
-  //         db.post.getAll().filter((post) => post.id === postId),
-  //       );
-  //     },
-  //   ),
-  //
-  //   http.post(`${process.env.EXPO_PUBLIC_API_URL}/posts`, async ({ request }) => {
-  //     const newPost = (await request.json()) as IPublicPost;
-  //     const createdTime = new Date(Date.now());
-  //
-  //     const user = db.user.findFirst({
-  //       where: {
-  //         id: {
-  //           equals: newPost.author.id as string,
-  //         },
-  //       },
-  //     })!;
-  //
-  //     const newPostData = {
-  //       id: newPost.id,
-  //       createdAt: createdTime,
-  //       author: {
-  //         id: user.id,
-  //         username: user.username,
-  //         firstName: user.firstName,
-  //         avatar: user.avatar,
-  //         isSuspended: constants.suspensionConditions(user.suspensionTimeout),
-  //         isBanned: user.isBanned,
-  //       },
-  //       notes: newPost.notes,
-  //       photo: newPost.photo,
-  //       isHidden: false,
-  //       peak: db.peak.findFirst({
-  //         where: {
-  //           id: {
-  //             equals: newPost.peak?.id as string,
-  //           },
-  //         },
-  //       })!,
-  //     };
-  //
-  //     db.post.create(newPostData);
-  //     db.user.update({
-  //       where: {
-  //         id: {
-  //           equals: user.id,
-  //         },
-  //       },
-  //       data: {
-  //         posts: [...user.posts, newPostData],
-  //       },
-  //     });
-  //
-  //     return HttpResponse.json(newPostData, { status: 201 });
-  //   }),
-  //
-  //   http.put(
-  //     `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
-  //     // eslint-disable-next-line consistent-return
-  //     async ({ request }) => {
-  //       const updatedPost = (await request.json()) as IPublicPost;
-  //
-  //       if (updatedPost) {
-  //         db.post.update({
-  //           where: {
-  //             id: {
-  //               equals: updatedPost.id,
-  //             },
-  //           },
-  //           data: {
-  //             notes: updatedPost.notes,
-  //             isHidden: updatedPost.isHidden,
-  //           },
-  //         });
-  //
-  //         return HttpResponse.json(updatedPost, { status: 201 });
-  //       }
-  //     },
-  //   ),
-  //
-  //   http.delete(
-  //     `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
-  //     async ({ params }) => {
-  //       const { postId } = params;
-  //
-  //       if (postId) {
-  //         const post = db.post.findFirst({
-  //           where: {
-  //             id: {
-  //               equals: postId as string,
-  //             },
-  //           },
-  //         })!;
-  //
-  //         const user = db.user.findFirst({
-  //           where: {
-  //             id: {
-  //               equals: post.author.id as string,
-  //             },
-  //           },
-  //         })!;
-  //
-  //         db.post.delete({
-  //           where: {
-  //             id: {
-  //               equals: postId as string,
-  //             },
-  //           },
-  //         });
-  //
-  //         db.user.update({
-  //           where: {
-  //             id: {
-  //               equals: user.id as string,
-  //             },
-  //           },
-  //           data: {
-  //             posts: user.posts.filter((userPost) => userPost.id !== postId),
-  //           },
-  //         });
-  //         return HttpResponse.json();
-  //       }
-  //
-  //       return new HttpResponse(null, { status: 404 });
-  //     },
-  //   ),
+  http.delete(
+    `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
+    ({ params, request }) => {
+      const { postId } = params;
+      // @ts-expect-error
+      const token = request.headers.map.authorization?.split(' ')[1];
+
+      try {
+        const decode = JWT.decode(
+          token,
+          process.env.EXPO_PUBLIC_SECRET_KEY as string,
+        );
+
+        if (!decode) {
+          return HttpResponse.json('Authentication failed', { status: 403 });
+        }
+
+        if (postId) {
+          const post = db.post.findFirst({
+            where: {
+              id: {
+                equals: postId as string,
+              },
+            },
+          })!;
+
+          if (decode.id !== post.author.id || decode.role === 3) {
+            const user = db.user.findFirst({
+              where: {
+                id: {
+                  equals: post.author.id as string,
+                },
+              },
+            })!;
+
+            db.post.delete({
+              where: {
+                id: {
+                  equals: postId as string,
+                },
+              },
+            });
+
+            db.user.update({
+              where: {
+                id: {
+                  equals: user.id as string,
+                },
+              },
+              data: {
+                posts: user.posts.filter((userPost) => userPost.id !== postId),
+              },
+            });
+            return HttpResponse.json('Post deleted', { status: 200 });
+          }
+          return HttpResponse.json('Authentication failed', { status: 403 });
+        }
+
+        return new HttpResponse(null, { status: 404 });
+      } catch (error) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+    },
+  ),
 ];
