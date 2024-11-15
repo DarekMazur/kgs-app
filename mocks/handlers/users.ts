@@ -73,6 +73,40 @@ export const handlers = [
     return HttpResponse.json('Request failed', { status: 400 });
   }),
 
+  http.get('/current', ({ request }) => {
+    // @ts-expect-error
+    const token = request.headers.map.authorization?.split(' ')[1];
+
+    if (!token) {
+      return HttpResponse.json('Invalid or expired token', { status: 403 });
+    }
+
+    try {
+      const decode = JWT.decode(
+        token,
+        process.env.EXPO_PUBLIC_SECRET_KEY as string,
+      );
+
+      if (!decode) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+
+      const { id } = decode;
+
+      const currentUser = db.user.findFirst({
+        where: {
+          id: {
+            equals: id,
+          },
+        },
+      });
+
+      return HttpResponse.json(currentUser);
+    } catch (error) {
+      return HttpResponse.json('Authentication failed', { status: 403 });
+    }
+  }),
+
   // http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, () => {
   //   return HttpResponse.json(db.user.getAll());
   // }),
