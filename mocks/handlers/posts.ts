@@ -149,6 +149,87 @@ export const handlers = [
     }
   }),
 
+  http.put(
+    `${process.env.EXPO_PUBLIC_API_URL}/posts/:postId`,
+    async ({ request, params }) => {
+      interface IInput {
+        notes: string;
+        photo: string;
+        isHidden: boolean;
+      }
+
+      // @ts-expect-error
+      const token = request.headers.map.authorization?.split(' ')[1];
+      const { postId } = params;
+      const { notes, isHidden } = (await request.json()) as IInput;
+
+      if (!token) {
+        return HttpResponse.json('Invalid or expired token', { status: 403 });
+      }
+
+      try {
+        const decode = JWT.decode(
+          token,
+          process.env.EXPO_PUBLIC_SECRET_KEY as string,
+        );
+
+        if (!notes && !isHidden) {
+          return HttpResponse.json('Request failed', { status: 400 });
+        }
+
+        const post = db.post.findFirst({
+          where: {
+            id: {
+              equals: postId as string,
+            },
+          },
+        });
+
+        if (post) {
+          if (!decode || decode.id !== post.author.id || decode.role === 3) {
+            return HttpResponse.json('Authentication failed', { status: 403 });
+          }
+
+          const updatedPost: IPublicPost = {
+            id: post.id,
+            notes: notes ?? post.notes,
+            photo: post.photo,
+            peak: post.peak as IPublicPeak,
+            isHidden: isHidden !== undefined ? isHidden : post.isHidden,
+            createdAt: post.createdAt,
+            author: {
+              id: post.author.id as string,
+              username: post.author.username as string,
+              firstName: post.author.firstName,
+              avatar: post.author.avatar,
+              isSuspended: !!post.author.isSuspended,
+              isBanned: !!post.author.isBanned,
+              role: post.author.role as number,
+            },
+          };
+
+          db.post.update({
+            where: {
+              id: {
+                equals: postId as string,
+              },
+            },
+            data: {
+              notes: updatedPost.notes,
+              isHidden: updatedPost.isHidden,
+            },
+          });
+
+          return HttpResponse.json(updatedPost, { status: 200 });
+        }
+
+        return HttpResponse.json('Post not found', { status: 404 });
+      } catch (error) {
+        return HttpResponse.json('Authentication failed', { status: 403 });
+      }
+    },
+  ),
+
   //   http.get(`${process.env.EXPO_PUBLIC_API_URL}/posts`, () => {
   //     return HttpResponse.json(
   //       db.post.getAll().sort((a, b) => {

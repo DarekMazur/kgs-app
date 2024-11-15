@@ -46,7 +46,7 @@ export interface IPublicPost {
     id: string;
     username: string;
     firstName?: string;
-    avatar: string;
+    avatar?: string;
     isSuspended: boolean;
     isBanned: boolean;
     role: number;
