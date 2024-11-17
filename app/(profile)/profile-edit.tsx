@@ -15,10 +15,11 @@ import { useGlobalContext } from '@/context/GlobalProvider';
 import InputCustom from '@/components/InputCustom';
 import { IPublicUser } from '@/lib/types';
 import ButtonCustom from '@/components/ButtonCustom';
-import { icons } from '@/constants';
+import { constants, icons } from '@/constants';
 import { editUser, getSingleUser } from '@/lib/getDataFromApi';
 import Footer from '@/components/Footer';
 import { pl } from '@/lang';
+import { entropy } from '@/lib/helpers/entropy';
 
 const profileEdit = () => {
   const { user, setGlobalUser } = useGlobalContext();
@@ -48,11 +49,18 @@ const profileEdit = () => {
   const handleRemoveAvatar = () => {
     setEditedUser({
       ...editedUser,
-      avatar: null,
+      avatar: '',
     });
   };
 
   const handleSave = async () => {
+    if (
+      editedUser.password &&
+      entropy(editedUser.password) < constants.acceptableEntropy
+    ) {
+      Alert.alert(pl.alert.warning, pl.profile.edit.alert.weakPassword);
+      return;
+    }
     try {
       await editUser({
         ...user,

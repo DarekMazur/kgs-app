@@ -6,6 +6,7 @@ import JWT from 'expo-jwt';
 import { db } from '@/mocks/db';
 import { IRegister, IPublicUser, IMessage } from '@/lib/types';
 import { constants } from '@/constants';
+import { entropy } from '@/lib/helpers/entropy';
 
 export const handlers = [
   http.get(`${process.env.EXPO_PUBLIC_API_URL}/users`, ({ request }) => {
@@ -154,6 +155,10 @@ export const handlers = [
     const timestamp = Date.now();
     const newUser = (await request.json()) as IRegister;
 
+    if (entropy(newUser.password as string) < constants.acceptableEntropy) {
+      return HttpResponse.json('Weak password', { status: 503 });
+    }
+
     const hashedPassword = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
       newUser.password + timestamp.toString(),
@@ -221,6 +226,13 @@ export const handlers = [
             },
           },
         })!;
+
+        if (
+          updatedUser.password &&
+          entropy(updatedUser.password as string) < constants.acceptableEntropy
+        ) {
+          return HttpResponse.json('Weak password', { status: 503 });
+        }
 
         const hashedPassword = await Crypto.digestStringAsync(
           Crypto.CryptoDigestAlgorithm.SHA256,
