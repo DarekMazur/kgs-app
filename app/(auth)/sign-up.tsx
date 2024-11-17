@@ -10,13 +10,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Checkbox from 'expo-checkbox';
-import { images, schema } from '@/constants';
+import { constants, images, schema } from '@/constants';
 import ButtonCustom from '@/components/ButtonCustom';
 import InputCustom from '@/components/InputCustom';
 import { initNewUser, useGlobalContext } from '@/context/GlobalProvider';
 import { IRegister } from '@/lib/types';
 import { createUser } from '@/lib/getDataFromApi';
 import { pl } from '@/lang';
+import { entropy } from '@/lib/helpers/entropy';
 
 const signUp = () => {
   const { user } = useGlobalContext();
@@ -37,6 +38,10 @@ const signUp = () => {
       }
       if (!schema.emailRegex.test(newUser.email)) {
         Alert.alert(pl.alert.error, pl.sign.up.alert.missingEmail);
+        return;
+      }
+      if (entropy(newUser.password) < constants.acceptableEntropy) {
+        Alert.alert(pl.alert.warning, pl.sign.up.alert.weakPassword);
         return;
       }
       try {

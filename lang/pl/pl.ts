@@ -26,6 +26,8 @@ export default {
         privacyConsent: 'Musisz zatwierdzić politykę prywatności',
         missingEmail: 'Niepoprawny format adresu email',
         missingData: 'Podaj wymagane dane!',
+        weakPassword:
+          'Twoje hasło jest zbyt łatwe do złamania. Dopisz coś do niego, aby było dłuższe. Możesz np. ułożyć jakieś zdanie.',
       },
       header:
         'Zarejestruj się i zacznij zdobywać szczyty Korony Gór Świętokrzyskich już dziś!',
@@ -136,6 +138,8 @@ export default {
     edit: {
       alert: {
         cancel: 'Anulowano',
+        weakPassword:
+          'Twoje hasło jest zbyt łatwe do złamania. Dopisz coś do niego, aby było dłuższe. Możesz np. ułożyć jakieś zdanie.',
         update: {
           success: 'Dane zaktualizowano poprawnie',
           error: 'nie udało się zaktualizować:',
