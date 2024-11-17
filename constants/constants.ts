@@ -7,4 +7,5 @@ export default {
     return false;
   },
   fullDayMilliseconds: 1000 * 60 * 60 * 24,
+  acceptableEntropy: 70,
 };
