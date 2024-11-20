@@ -1,50 +1,121 @@
-# Welcome to your Expo app 👋
+# Korona Gór Świętokrzyskich
+![KGS Logo](https://res.cloudinary.com/ddyqnp7pp/image/upload/v1731279976/logoFullW_lylrnm.png)
+## Hiking mobile app
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Welcome to the KGS Mobile App documentation! This React Native application helps users earn the Korona Gór Świętokrzyskich badge, issued by the PTTK Kielce. The app supports tracking peak visits, sharing achievements, and includes an administrative module for managing users and posts.
 
-## Get started
+## Table of Contents
+1. [Features](#features)
+2. [Tech Stack](#tech-stack)
+3. [Getting Started](#getting-started)
+4. [Scripts](#scripts)
+5. [Project Structure](#project-structure)
+6. [Community Features](#community-features)
+7. [Administrative Module](#administrative-module)
+8. [Development Tools](#development-tools)
+9. [Contributing](#contributing)
 
-1. Install dependencies
+## Features
+* Peak Tracking: Log your hikes and progress towards earning the badge.
+* Community Sharing: Share your completed peaks with photos.
+* Admin Module: Manage users and posts efficiently.
+* Cross-Platform: Runs seamlessly on Android, iOS, and the web.
 
-   ```bash
-   npm install
-   ```
+## Tech Stack
+### Frontend:
+* React Native: Core framework for building the app.
+* Expo: Simplifies development and testing.
+* NativeWind (TailwindCSS for RN): For consistent and flexible styling.
+* React Navigation: For smooth and dynamic routing.
+* Jest: Testing library.
 
-2. Start the app
+### Backend:
+* Node.js: Server-side runtime for API endpoints.
+* PostgreSQL: Database for storing user and peak data.
 
-   ```bash
-    npx expo start
-   ```
+## Getting Started
+### Prerequisites
+* Node.js (v16 or higher recommended)
+* Expo CLI (npm install -g expo-cli)
+* A connected emulator or device (Android/iOS)
 
-In the output, you'll find options to open the app in a
+### Installation
+1. Clone the repository:
+  ```bash
+  git clone https://github.com/DarekMazur/kgs-app.git
+  cd kgs-app
+  ```
+2. Install dependencies:
+  ```bash
+  npm install
+  ```
+3. Start the app:
+  ```bash
+     npm start
+  ```
+4. Choose the desired platform:
+   * Press a for Android
+   * Press i for iOS
+   * Press w for Web
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Scripts
+Below are available scripts defined in `package.json`:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+| Script                   | Description                                     |
+|--------------------------|-------------------------------------------------|
+| `npm start`	             | Starts the Expo development server.             |
+| `npm run android`	       | Runs the app on an Android emulator/device.     |
+| `npm run ios`	           | Runs the app on an iOS simulator/device.        |
+| `npm run web`	           | Runs the app in a web browser.                  |
+| `npm test`               | Executes unit tests using Jest.                 |
+| `npm run lint`           | Runs lint checks on the project.                |
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+## Project Structure
+Most important app elements:
+```
+kgs/
+├── assets/              # Static assets (images, fonts, etc.)
+├── components/          # Reusable UI components
+├── mocks/               # Mock data (with Mock Service Workers)
+├── hooks/               # Custom React hooks
+├── lib/                 # Utility functions
+├── app/                 # Application structure
+├── app/index.tsx        # Main app entry point
+└── package.json         # Project metadata and dependencies
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Community Features
+Users can:
 
-## Learn more
+1. Log Peaks: Track climbed peaks with timestamps.
+2. Upload Photos: Share photos of completed hikes.
+3. Browse Community Feed: View posts from other hikers.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Administrative Module
+The administrative module provides:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. User Management: Add, edit, or deactivate users.
+2. Post Moderation: Manage user posts (hide, edit, delete).
+3. Activity Logs: Track admin and user activities.
 
-## Join the community
+## Development Tools
+### Linting and Formatting
+* ESLint (Airbnb + TypeScript rules)
+* Prettier (Integrated for consistent code formatting)
+  
+### TailwindCSS
+For styling, use classes like in TailwindCSS:
+```javascript
+<Text className="text-lg font-bold text-primary">
+  Welcome to KGS!
+</Text>
+```
 
-Join our community of developers creating universal apps.
+## Contributing
+To contribute:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Fork the repository.
+1. Create a feature branch (git checkout -b feature-name).
+2. Commit your changes (git commit -m "Add feature").
+3. Push to your branch (git push origin feature-name).
+4. Create a pull request.
